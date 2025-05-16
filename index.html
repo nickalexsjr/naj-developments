@@ -721,6 +721,102 @@
       font-size: 0.9rem;
     }
 
+    /* Form button styles for the different options */
+    .form-btn-1 {
+      background: var(--primary);
+      color: var(--dark);
+    }
+    
+    .form-btn-2 {
+      background: var(--secondary);
+      color: white;
+    }
+    
+    .form-btn-3 {
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: var(--dark);
+    }
+    
+    .form-btn-4 {
+      background: #333;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+    
+    .form-btn-5 {
+      background: transparent;
+      color: white;
+      border: 2px solid white;
+    }
+    
+    .form-btn-6 {
+      background: #222;
+      color: var(--primary);
+      border-bottom: 3px solid var(--primary);
+      border-radius: 5px;
+    }
+    
+    .form-btn-7 {
+      background: var(--primary-dark);
+      color: white;
+    }
+    
+    .form-btn-8 {
+      background: rgba(108, 99, 255, 0.8);
+      color: white;
+    }
+    
+    .form-btn-9 {
+      background: #111;
+      color: var(--primary);
+      border: 1px dashed var(--primary);
+    }
+    
+    .form-btn-10 {
+      background: rgba(0, 230, 168, 0.2);
+      color: white;
+      border: 1px solid var(--primary);
+    }
+
+    /* Mobile-specific animation adjustments */
+    @media (max-width: 768px) {
+      /* Reduce number of floating dots for mobile */
+      .dot {
+        opacity: 0.1 !important;
+      }
+      
+      /* Disable some animations on mobile */
+      .pulse-effect {
+        animation: none !important;
+      }
+      
+      .glow-effect {
+        display: none !important;
+      }
+      
+      /* Simplify hover effects on mobile */
+      .nav-link:hover, 
+      .pricing-btn:hover, 
+      .content-card:hover, 
+      .about-image:hover img {
+        transform: none !important;
+      }
+      
+      /* Adjusted logo positioning on mobile to prevent overlap */
+      .logo-header {
+        top: 10%;
+        margin-bottom: 30px;
+      }
+      
+      .hero-content {
+        margin-top: 180px;
+      }
+      
+      .hero-content h1 {
+        font-size: 3.5rem;
+      }
+    }
+    
     /* Responsive styles */
     @media (max-width: 992px) {
       .hero-content h1 {
@@ -787,19 +883,6 @@
 <body>
   <!-- Top Navigation -->
   <nav class="top-nav">
-    <div class="nav-container">
-      <ul class="nav-items">
-        <li class="nav-item"><a href="#" class="nav-link" data-section="home">Home</a></li>
-        <li class="nav-item"><a href="#" class="nav-link" data-section="web-development">Web Development</a></li>
-        <li class="nav-item"><a href="#" class="nav-link" data-section="app-development">App Development</a></li>
-        <li class="nav-item"><a href="#" class="nav-link" data-section="program-development">Program Development</a></li>
-        <li class="nav-item"><a href="#" class="nav-link" data-section="bot-creation">Bot Creation</a></li>
-        <li class="nav-item"><a href="#" class="nav-link" data-section="business-assistance">Business Assistance</a></li>
-        <li class="nav-item"><a href="#" class="nav-link" data-section="about">About</a></li>
-        <li class="nav-item"><a href="#" class="nav-link" data-section="contact">Contact</a></li>
-      </ul>
-    </div>
-  </nav>
     <div class="nav-container">
       <ul class="nav-items">
         <li class="nav-item"><a href="#" class="nav-link" data-section="home">Home</a></li>
@@ -1069,41 +1152,267 @@
             <li>Email: support@najdevelopments.com.au</li>
             <li>Phone: +61 449 218 224</li>
             <li>Location: Melbourne, Victoria, Australia</li>
-            <li>Hours: Monday - Friday, 9 AM - 6 PM AEST</li>
           </ul>
         </div>
         
+        <!-- Multiple different Send Message button implementations -->
         <div class="content-card">
           <h3>Send Us a Message</h3>
-          <form action="https://formspree.io/f/mzzeonzn" method="POST" id="appForm">
-            <div style="margin-bottom: 15px;">
-              <input type="text" name="name" placeholder="Your Name" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
-            </div>
-            
-            <div style="margin-bottom: 15px;">
-              <input type="email" name="email" placeholder="Your Email" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
-            </div>
-            
-            <div style="margin-bottom: 15px;">
-              <select name="service" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #6c63ff; font-weight: 500;">
-                <option value="" disabled selected>Select Service</option>
-                <option value="web" style="color: #6c63ff;">Web Development</option>
-                <option value="app" style="color: #6c63ff;">App Development</option>
-                <option value="program" style="color: #6c63ff;">Program Development</option>
-                <option value="bot" style="color: #6c63ff;">Bot Creation</option>
-                <option value="business" style="color: #6c63ff;">Business Assistance</option>
-                <option value="other" style="color: #6c63ff;">Other</option>
-              </select>
-            </div>
-            
-            <div style="margin-bottom: 15px;">
-              <textarea name="message" rows="5" placeholder="Tell us about your project..." required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white; min-height: 120px;"></textarea>
-            </div>
-            
-            <button type="submit" class="pricing-btn pulse-effect" style="width: 100%; background: var(--primary); color: var(--dark); border: none; cursor: pointer;">Send Message</button>
-            
-            <div id="form-message" style="text-align: center; margin-top: 15px;"></div>
-          </form>
+          <div style="margin-bottom: 40px;">
+            <form action="https://formspree.io/f/mzzeonzn" method="POST" id="contactForm1">
+              <div style="margin-bottom: 15px;">
+                <input type="text" name="name" placeholder="Your Name" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
+              </div>
+              
+              <div style="margin-bottom: 15px;">
+                <input type="email" name="email" placeholder="Your Email" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
+              </div>
+              
+              <div style="margin-bottom: 15px;">
+                <select name="service" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #6c63ff; font-weight: 500;">
+                  <option value="" disabled selected>Select Service</option>
+                  <option value="web" style="color: #6c63ff;">Web Development</option>
+                  <option value="app" style="color: #6c63ff;">App Development</option>
+                  <option value="program" style="color: #6c63ff;">Program Development</option>
+                  <option value="bot" style="color: #6c63ff;">Bot Creation</option>
+                  <option value="business" style="color: #6c63ff;">Business Assistance</option>
+                  <option value="other" style="color: #6c63ff;">Other</option>
+                </select>
+              </div>
+              
+              <div style="margin-bottom: 15px;">
+                <textarea name="message" rows="5" placeholder="Tell us about your project..." required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white; min-height: 120px;"></textarea>
+              </div>
+              
+              <button type="submit" class="pricing-btn form-btn-1 pulse-effect" style="width: 100%; cursor: pointer;">Send Message #1 (Standard)</button>
+              
+              <div id="form-message-1" style="text-align: center; margin-top: 15px;"></div>
+            </form>
+          </div>
+          
+          <!-- Option 2 -->
+          <div style="margin-bottom: 40px;">
+            <form action="https://formspree.io/f/mjkyzpvn" method="POST" id="contactForm2">
+              <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                <input type="text" name="name" placeholder="Your Name" required style="width: 50%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
+                <input type="email" name="email" placeholder="Your Email" required style="width: 50%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
+              </div>
+              
+              <div style="margin-bottom: 15px;">
+                <textarea name="message" rows="3" placeholder="Your message..." required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;"></textarea>
+              </div>
+              
+              <button type="submit" class="pricing-btn form-btn-2" style="width: 100%; cursor: pointer;">Send Message #2 (Purple)</button>
+              <div id="form-message-2" style="text-align: center; margin-top: 15px;"></div>
+            </form>
+          </div>
+          
+          <!-- Option 3 -->
+          <div style="margin-bottom: 40px;">
+            <form action="https://formspree.io/f/mjkyzpvn" method="POST" id="contactForm3">
+              <div style="margin-bottom: 15px;">
+                <input type="text" name="name" placeholder="Your Name" required style="width: 100%; padding: 15px; border-radius: 50px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
+              </div>
+              
+              <div style="margin-bottom: 15px;">
+                <input type="email" name="email" placeholder="Your Email" required style="width: 100%; padding: 15px; border-radius: 50px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
+              </div>
+              
+              <div style="margin-bottom: 15px;">
+                <textarea name="message" rows="3" placeholder="Your message..." required style="width: 100%; padding: 15px; border-radius: 15px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;"></textarea>
+              </div>
+              
+              <button type="submit" class="pricing-btn form-btn-3" style="width: 100%; border: none; cursor: pointer;">Send Message #3 (Gradient)</button>
+              <div id="form-message-3" style="text-align: center; margin-top: 15px;"></div>
+            </form>
+          </div>
+          
+          <!-- Option 4 -->
+          <div style="margin-bottom: 40px;">
+            <form action="https://formspree.io/f/mjkyzpvn" method="POST" id="contactForm4" style="background: rgba(30, 30, 30, 0.5); padding: 20px; border-radius: 10px;">
+              <h4 style="margin-bottom: 15px; color: var(--primary);">Quick Contact</h4>
+              <div style="margin-bottom: 15px;">
+                <input type="text" name="name" placeholder="Name" required style="width: 100%; padding: 10px; border-radius: 4px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); color: white;">
+              </div>
+              
+              <div style="margin-bottom: 15px;">
+                <input type="email" name="email" placeholder="Email" required style="width: 100%; padding: 10px; border-radius: 4px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); color: white;">
+              </div>
+              
+              <button type="submit" class="form-btn-4" style="width: 100%; padding: 10px; border-radius: 4px; cursor: pointer;">Send Message #4 (Outlined)</button>
+              <div id="form-message-4" style="text-align: center; margin-top: 15px;"></div>
+            </form>
+          </div>
+          
+          <!-- Option 5 -->
+          <div style="margin-bottom: 40px;">
+            <form action="https://formspree.io/f/mjkyzpvn" method="POST" id="contactForm5">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div>
+                  <label style="display: block; margin-bottom: 5px; color: #aaa; font-size: 0.9rem;">Your Name</label>
+                  <input type="text" name="name" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
+                </div>
+                <div>
+                  <label style="display: block; margin-bottom: 5px; color: #aaa; font-size: 0.9rem;">Your Email</label>
+                  <input type="email" name="email" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
+                </div>
+              </div>
+              
+              <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; color: #aaa; font-size: 0.9rem;">Your Message</label>
+                <textarea name="message" rows="3" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;"></textarea>
+              </div>
+              
+              <button type="submit" class="form-btn-5" style="width: 100%; padding: 12px; border-radius: 8px; cursor: pointer;">Send Message #5 (White Outline)</button>
+              <div id="form-message-5" style="text-align: center; margin-top: 15px;"></div>
+            </form>
+          </div>
+          
+          <!-- Option 6 -->
+          <div style="margin-bottom: 40px;">
+            <form action="https://formspree.io/f/mjkyzpvn" method="POST" id="contactForm6" style="background: linear-gradient(135deg, rgba(0, 0, 0, 0.3), rgba(20, 20, 20, 0.5)); padding: 25px; border-radius: 15px; border: 1px solid rgba(108, 99, 255, 0.2);">
+              <h4 style="text-align: center; margin-bottom: 25px; font-size: 1.2rem; color: white;">Send Your Inquiry</h4>
+              
+              <div style="margin-bottom: 20px;">
+                <input type="text" name="name" placeholder="Name" required style="width: 100%; padding: 12px; border-radius: 5px; background: rgba(0, 0, 0, 0.3); border: none; color: white;">
+              </div>
+              
+              <div style="margin-bottom: 20px;">
+                <input type="email" name="email" placeholder="Email" required style="width: 100%; padding: 12px; border-radius: 5px; background: rgba(0, 0, 0, 0.3); border: none; color: white;">
+              </div>
+              
+              <div style="margin-bottom: 20px;">
+                <textarea name="message" rows="3" placeholder="Your message" required style="width: 100%; padding: 12px; border-radius: 5px; background: rgba(0, 0, 0, 0.3); border: none; color: white;"></textarea>
+              </div>
+              
+              <button type="submit" class="form-btn-6" style="width: 100%; padding: 12px; cursor: pointer;">Send Message #6 (Bottom Border)</button>
+              <div id="form-message-6" style="text-align: center; margin-top: 15px;"></div>
+            </form>
+          </div>
+          
+          <!-- Option 7 -->
+          <div style="margin-bottom: 40px;">
+            <form action="https://formspree.io/f/mjkyzpvn" method="POST" id="contactForm7">
+              <div style="position: relative; margin-bottom: 25px;">
+                <input type="text" name="name" required style="width: 100%; padding: 15px 15px 10px; border: none; border-bottom: 2px solid rgba(255, 255, 255, 0.1); background: transparent; color: white; outline: none;">
+                <label style="position: absolute; left: 15px; top: 15px; color: #999; transition: all 0.3s ease; pointer-events: none;">Your Name</label>
+                <script>
+                  document.querySelectorAll('#contactForm7 input, #contactForm7 textarea').forEach(field => {
+                    field.addEventListener('focus', function() {
+                      this.previousElementSibling.style.top = '-5px';
+                      this.previousElementSibling.style.fontSize = '0.75rem';
+                      this.previousElementSibling.style.color = '#00e6a8';
+                    });
+                    field.addEventListener('blur', function() {
+                      if (this.value === '') {
+                        this.previousElementSibling.style.top = '15px';
+                        this.previousElementSibling.style.fontSize = '1rem';
+                        this.previousElementSibling.style.color = '#999';
+                      }
+                    });
+                  });
+                </script>
+              </div>
+              
+              <div style="position: relative; margin-bottom: 25px;">
+                <input type="email" name="email" required style="width: 100%; padding: 15px 15px 10px; border: none; border-bottom: 2px solid rgba(255, 255, 255, 0.1); background: transparent; color: white; outline: none;">
+                <label style="position: absolute; left: 15px; top: 15px; color: #999; transition: all 0.3s ease; pointer-events: none;">Your Email</label>
+              </div>
+              
+              <div style="position: relative; margin-bottom: 25px;">
+                <textarea name="message" required rows="3" style="width: 100%; padding: 15px 15px 10px; border: none; border-bottom: 2px solid rgba(255, 255, 255, 0.1); background: transparent; color: white; outline: none; resize: none;"></textarea>
+                <label style="position: absolute; left: 15px; top: 15px; color: #999; transition: all 0.3s ease; pointer-events: none;">Your Message</label>
+              </div>
+              
+              <button type="submit" class="form-btn-7" style="width: 100%; padding: 12px; border: none; border-radius: 4px; cursor: pointer;">Send Message #7 (Material Design)</button>
+              <div id="form-message-7" style="text-align: center; margin-top: 15px;"></div>
+            </form>
+          </div>
+          
+          <!-- Option 8 -->
+          <div style="margin-bottom: 40px;">
+            <form action="https://formspree.io/f/mjkyzpvn" method="POST" id="contactForm8" style="background: rgba(0, 0, 0, 0.2); padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);">
+              <div style="text-align: center; margin-bottom: 20px;">
+                <h4 style="font-size: 1.3rem; margin-bottom: 5px; color: white;">Contact NAJ Developments</h4>
+                <p style="color: #aaa; font-size: 0.9rem;">We'll get back to you within 24 hours</p>
+              </div>
+              
+              <div style="margin-bottom: 15px;">
+                <input type="text" name="name" placeholder="Your Name" required style="width: 100%; padding: 12px; border-radius: 4px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
+              </div>
+              
+              <div style="margin-bottom: 15px;">
+                <input type="email" name="email" placeholder="Your Email" required style="width: 100%; padding: 12px; border-radius: 4px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
+              </div>
+              
+              <div style="margin-bottom: 15px;">
+                <textarea name="message" rows="3" placeholder="How can we help you?" required style="width: 100%; padding: 12px; border-radius: 4px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;"></textarea>
+              </div>
+              
+              <button type="submit" class="form-btn-8" style="width: 100%; padding: 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Send Message #8 (Purple)</button>
+              <div id="form-message-8" style="text-align: center; margin-top: 15px;"></div>
+            </form>
+          </div>
+          
+          <!-- Option 9 -->
+          <div style="margin-bottom: 40px;">
+            <form action="https://formspree.io/f/mjkyzpvn" method="POST" id="contactForm9">
+              <div style="display: flex; flex-direction: column; gap: 20px;">
+                <div style="display: flex; gap: 15px;">
+                  <div style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--primary); color: var(--dark); border-radius: 50%; font-weight: bold;">1</div>
+                  <div style="flex-grow: 1;">
+                    <h5 style="margin-bottom: 5px; color: var(--primary);">Your Details</h5>
+                    <div style="display: flex; gap: 10px;">
+                      <input type="text" name="name" placeholder="Name" required style="flex: 1; padding: 10px; border-radius: 4px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
+                      <input type="email" name="email" placeholder="Email" required style="flex: 1; padding: 10px; border-radius: 4px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
+                    </div>
+                  </div>
+                </div>
+                
+                <div style="display: flex; gap: 15px;">
+                  <div style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--primary); color: var(--dark); border-radius: 50%; font-weight: bold;">2</div>
+                  <div style="flex-grow: 1;">
+                    <h5 style="margin-bottom: 5px; color: var(--primary);">Your Message</h5>
+                    <textarea name="message" rows="3" placeholder="Tell us about your project..." required style="width: 100%; padding: 10px; border-radius: 4px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;"></textarea>
+                  </div>
+                </div>
+                
+                <div style="display: flex; gap: 15px;">
+                  <div style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--primary); color: var(--dark); border-radius: 50%; font-weight: bold;">3</div>
+                  <div style="flex-grow: 1;">
+                    <h5 style="margin-bottom: 5px; color: var(--primary);">Submit</h5>
+                    <button type="submit" class="form-btn-9" style="width: 100%; padding: 10px; cursor: pointer;">Send Message #9 (Stepped Form)</button>
+                  </div>
+                </div>
+              </div>
+              <div id="form-message-9" style="text-align: center; margin-top: 15px;"></div>
+            </form>
+          </div>
+          
+          <!-- Option 10 -->
+          <div style="margin-bottom: 40px;">
+            <form action="https://formspree.io/f/mjkyzpvn" method="POST" id="contactForm10" style="position: relative; overflow: hidden; border-radius: 10px; background: rgba(0, 0, 0, 0.3); padding: 30px;">
+              <div style="position: absolute; top: -80px; right: -80px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(0, 230, 168, 0.1), transparent 70%); z-index: -1; border-radius: 50%;"></div>
+              <div style="position: absolute; bottom: -80px; left: -80px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(108, 99, 255, 0.1), transparent 70%); z-index: -1; border-radius: 50%;"></div>
+              
+              <h4 style="text-align: center; color: white; margin-bottom: 20px; font-size: 1.2rem;">Let's Work Together</h4>
+              
+              <div style="margin-bottom: 15px;">
+                <input type="text" name="name" placeholder="Your Name" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(0, 230, 168, 0.2); color: white;">
+              </div>
+              
+              <div style="margin-bottom: 15px;">
+                <input type="email" name="email" placeholder="Your Email" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(0, 230, 168, 0.2); color: white;">
+              </div>
+              
+              <div style="margin-bottom: 15px;">
+                <textarea name="message" rows="3" placeholder="Tell us about your project..." required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(0, 230, 168, 0.2); color: white;"></textarea>
+              </div>
+              
+              <button type="submit" class="form-btn-10" style="width: 100%; padding: 12px; border-radius: 8px; cursor: pointer;">Send Message #10 (Glowing Accents)</button>
+              <div id="form-message-10" style="text-align: center; margin-top: 15px;"></div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
@@ -1269,49 +1578,49 @@
         });
       }
       
-      // Mobile menu handling - REMOVED
-      // Form idea feature functionality
-      const hasIdeaYes = document.getElementById('hasIdeaYes');
-      const hasIdeaNo = document.getElementById('hasIdeaNo');
-      const ideaFeatures = document.getElementById('ideaFeatures');
+      // Form submission handling for all forms
+      const forms = [
+        { id: 'contactForm1', messageId: 'form-message-1' },
+        { id: 'contactForm2', messageId: 'form-message-2' },
+        { id: 'contactForm3', messageId: 'form-message-3' },
+        { id: 'contactForm4', messageId: 'form-message-4' },
+        { id: 'contactForm5', messageId: 'form-message-5' },
+        { id: 'contactForm6', messageId: 'form-message-6' },
+        { id: 'contactForm7', messageId: 'form-message-7' },
+        { id: 'contactForm8', messageId: 'form-message-8' },
+        { id: 'contactForm9', messageId: 'form-message-9' },
+        { id: 'contactForm10', messageId: 'form-message-10' }
+      ];
       
-      if (hasIdeaYes && hasIdeaNo && ideaFeatures) {
-        hasIdeaYes.addEventListener('change', function() {
-          if (this.checked) {
-            ideaFeatures.style.display = 'block';
-          }
-        });
+      forms.forEach(formInfo => {
+        const form = document.getElementById(formInfo.id);
+        const formMessage = document.getElementById(formInfo.messageId);
         
-        hasIdeaNo.addEventListener('change', function() {
-          if (this.checked) {
-            ideaFeatures.style.display = 'none';
-          }
-        });
-      }
-      
-      // Form submission handling (directly copied from Sosha Jay example)
-      const form = document.getElementById('contactForm');
-      const formMessage = document.getElementById('formMessage');
-
-      if (form) {
-        form.addEventListener('submit', async function (e) {
-          e.preventDefault();
-          
-          const data = new FormData(form);
-          const response = await fetch(form.action, {
-            method: 'POST',
-            body: data,
-            headers: { 'Accept': 'application/json' }
+        if (form && formMessage) {
+          form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const data = new FormData(form);
+            
+            try {
+              const response = await fetch(form.action, {
+                method: 'POST',
+                body: data,
+                headers: { 'Accept': 'application/json' }
+              });
+              
+              if (response.ok) {
+                formMessage.innerHTML = "<span style='color: var(--primary);'>✅ Thank you! Your message has been sent.</span>";
+                form.reset();
+              } else {
+                formMessage.innerHTML = "<span style='color: #ff4d4d;'>❌ Oops! Something went wrong.</span>";
+              }
+            } catch (error) {
+              formMessage.innerHTML = "<span style='color: #ff4d4d;'>❌ Network error. Please try again.</span>";
+            }
           });
-
-          if (response.ok) {
-            formMessage.innerText = "✅ Thank you! Your message has been sent.";
-            form.reset();
-          } else {
-            formMessage.innerText = "❌ Oops! Something went wrong.";
-          }
-        });
-      }
+        }
+      });
       
       // Mouse follow effect for glow
       const glowEffect = document.querySelector('.glow-effect');
