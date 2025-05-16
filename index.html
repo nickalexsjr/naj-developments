@@ -1155,58 +1155,27 @@
           </ul>
         </div>
         
-        <!-- Form Option 4 (with service dropdown) -->
         <div class="content-card">
           <h3>Send Us a Message</h3>
           <div style="margin-bottom: 40px;">
-            <form action="https://formspree.io/f/mjkyzpvn" method="POST" id="contactForm4">
-              <div style="margin-bottom: 15px;">
-                <input type="text" name="name" placeholder="Your Name" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
-              </div>
-              
-              <div style="margin-bottom: 15px;">
-                <input type="email" name="email" placeholder="Your Email" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
-              </div>
-              
-              <div style="margin-bottom: 15px;">
-                <select name="service" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #6c63ff; font-weight: 500;">
-                  <option value="" disabled selected>Select Service</option>
-                  <option value="web" style="color: #6c63ff;">Web Development</option>
-                  <option value="app" style="color: #6c63ff;">App Development</option>
-                  <option value="program" style="color: #6c63ff;">Program Development</option>
-                  <option value="bot" style="color: #6c63ff;">Bot Creation</option>
-                  <option value="business" style="color: #6c63ff;">Business Assistance</option>
-                  <option value="other" style="color: #6c63ff;">Other</option>
-                </select>
-              </div>
-              
-              <div style="margin-bottom: 15px;">
-                <textarea name="message" rows="5" placeholder="Tell us about your project..." required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white; min-height: 120px;"></textarea>
-              </div>
-              
-              <button type="submit" class="pricing-btn pulse-effect" style="width: 100%; background: var(--primary); color: var(--dark); border: none; cursor: pointer;">Send Message</button>
-              
-              <div id="form-message-4" style="text-align: center; margin-top: 15px;"></div>
-            </form>
-          </div>
-          
-          <!-- Form Option 5 (without service dropdown) -->
-          <div style="margin-bottom: 40px;">
             <form action="https://formspree.io/f/mjkyzpvn" method="POST" id="contactForm5">
-              <div style="margin-bottom: 15px;">
-                <input type="text" name="name" placeholder="Your Name" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div>
+                  <label style="display: block; margin-bottom: 5px; color: #aaa; font-size: 0.9rem;">Your Name</label>
+                  <input type="text" name="name" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
+                </div>
+                <div>
+                  <label style="display: block; margin-bottom: 5px; color: #aaa; font-size: 0.9rem;">Your Email</label>
+                  <input type="email" name="email" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
+                </div>
               </div>
               
               <div style="margin-bottom: 15px;">
-                <input type="email" name="email" placeholder="Your Email" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
+                <label style="display: block; margin-bottom: 5px; color: #aaa; font-size: 0.9rem;">Your Message</label>
+                <textarea name="message" rows="3" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;"></textarea>
               </div>
               
-              <div style="margin-bottom: 15px;">
-                <textarea name="message" rows="5" placeholder="Tell us about your project..." required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white; min-height: 120px;"></textarea>
-              </div>
-              
-              <button type="submit" class="pricing-btn pulse-effect" style="width: 100%; background: var(--primary); color: var(--dark); border: none; cursor: pointer;">Quick Message</button>
-              
+              <button type="submit" class="form-btn-5" style="width: 100%; padding: 12px; border-radius: 8px; cursor: pointer;">Send Message</button>
               <div id="form-message-5" style="text-align: center; margin-top: 15px;"></div>
             </form>
           </div>
@@ -1375,41 +1344,34 @@
         });
       }
       
-      // Form submission handling for all forms
-      const forms = [
-        { id: 'contactForm4', messageId: 'form-message-4' },
-        { id: 'contactForm5', messageId: 'form-message-5' }
-      ];
+      // Form submission handling for form #5
+      const form = document.getElementById('contactForm5');
+      const formMessage = document.getElementById('form-message-5');
       
-      forms.forEach(formInfo => {
-        const form = document.getElementById(formInfo.id);
-        const formMessage = document.getElementById(formInfo.messageId);
-        
-        if (form && formMessage) {
-          form.addEventListener('submit', async function(e) {
-            e.preventDefault();
+      if (form && formMessage) {
+        form.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          
+          const data = new FormData(form);
+          
+          try {
+            const response = await fetch(form.action, {
+              method: 'POST',
+              body: data,
+              headers: { 'Accept': 'application/json' }
+            });
             
-            const data = new FormData(form);
-            
-            try {
-              const response = await fetch(form.action, {
-                method: 'POST',
-                body: data,
-                headers: { 'Accept': 'application/json' }
-              });
-              
-              if (response.ok) {
-                formMessage.innerHTML = "<span style='color: var(--primary);'>✅ Thank you! Your message has been sent.</span>";
-                form.reset();
-              } else {
-                formMessage.innerHTML = "<span style='color: #ff4d4d;'>❌ Oops! Something went wrong.</span>";
-              }
-            } catch (error) {
-              formMessage.innerHTML = "<span style='color: #ff4d4d;'>❌ Network error. Please try again.</span>";
+            if (response.ok) {
+              formMessage.innerHTML = "<span style='color: var(--primary);'>✅ Thank you! Your message has been sent.</span>";
+              form.reset();
+            } else {
+              formMessage.innerHTML = "<span style='color: #ff4d4d;'>❌ Oops! Something went wrong.</span>";
             }
-          });
-        }
-      });
+          } catch (error) {
+            formMessage.innerHTML = "<span style='color: #ff4d4d;'>❌ Network error. Please try again.</span>";
+          }
+        });
+      }
       
       // Mouse follow effect for glow
       const glowEffect = document.querySelector('.glow-effect');
