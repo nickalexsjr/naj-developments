@@ -9,7 +9,6 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="NAJ Developments">
-  <link rel="manifest" href="/manifest.json">
   <style>
     /* Base Styles */
     * {
@@ -224,10 +223,25 @@
     }
 
     .nav-items {
-      display: grid;
-      grid-template-columns: repeat(8, auto);
+      display: flex;
       width: 100%;
-      gap: 5px;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: nowrap;
+    }
+
+    @media (max-width: 992px) {
+      .nav-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 0 5px;
+      }
+      
+      .nav-items {
+        width: auto;
+        min-width: 780px;
+        padding: 0 10px;
+      }
     }
 
     .nav-item {
@@ -1236,35 +1250,6 @@
             top: 0,
             behavior: 'smooth'
           });
-        });
-      }
-      
-      // Form handling
-      const contactForm = document.getElementById('contactForm');
-      const formMessage = document.getElementById('formMessage');
-
-      if (contactForm) {
-        contactForm.addEventListener('submit', async function (e) {
-          e.preventDefault();
-          formMessage.innerText = "Sending message...";
-          
-          try {
-            const formData = new FormData(contactForm);
-            const response = await fetch(contactForm.action, {
-              method: 'POST',
-              body: formData,
-              headers: { 'Accept': 'application/json' }
-            });
-
-            if (response.ok) {
-              formMessage.innerText = "✅ Thank you! Your message has been sent.";
-              contactForm.reset();
-            } else {
-              formMessage.innerText = "❌ Oops! Something went wrong.";
-            }
-          } catch (error) {
-            formMessage.innerText = "❌ Network error. Please check your connection.";
-          }
         });
       }
       
