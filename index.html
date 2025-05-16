@@ -1130,7 +1130,9 @@
       // Clear existing dots if any
       dotsContainer.innerHTML = '';
       
-      const numberOfDots = 80; // Not too overwhelming
+      // Reduce number of dots on mobile
+      const isMobile = window.innerWidth <= 768;
+      const numberOfDots = isMobile ? 20 : 80; // Fewer dots on mobile
       
       for (let i = 0; i < numberOfDots; i++) {
         const dot = document.createElement('div');
@@ -1180,6 +1182,11 @@
     document.addEventListener('DOMContentLoaded', function() {
       // Create floating dots animation
       createFloatingDots();
+      
+      // Recreate dots when window is resized
+      window.addEventListener('resize', function() {
+        createFloatingDots();
+      });
       
       // Navigation links functionality
       const navLinks = document.querySelectorAll('.nav-link');
@@ -1268,6 +1275,30 @@
         hasIdeaNo.addEventListener('change', function() {
           if (this.checked) {
             ideaFeatures.style.display = 'none';
+          }
+        });
+      }
+      
+      // Form submission handling (directly copied from Sosha Jay example)
+      const form = document.getElementById('contactForm');
+      const formMessage = document.getElementById('formMessage');
+
+      if (form) {
+        form.addEventListener('submit', async function (e) {
+          e.preventDefault();
+          
+          const data = new FormData(form);
+          const response = await fetch(form.action, {
+            method: 'POST',
+            body: data,
+            headers: { 'Accept': 'application/json' }
+          });
+
+          if (response.ok) {
+            formMessage.innerText = "✅ Thank you! Your message has been sent.";
+            form.reset();
+          } else {
+            formMessage.innerText = "❌ Oops! Something went wrong.";
           }
         });
       }
