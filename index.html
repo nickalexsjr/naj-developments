@@ -1,4 +1,27 @@
-<!DOCTYPE html>
+  /* Mobile-specific animation adjustments */
+    @media (max-width: 768px) {
+      /* Reduce number of floating dots for mobile */
+      .dot {
+        opacity: 0.1 !important;
+      }
+      
+      /* Disable some animations on mobile */
+      .pulse-effect {
+        animation: none !important;
+      }
+      
+      .glow-effect {
+        display: none !important;
+      }
+      
+      /* Simplify hover effects on mobile */
+      .nav-link:hover, 
+      .pricing-btn:hover,
+      .content-card:hover,
+      .about-image:hover img {
+        transform: none !important;
+      }
+    }<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -789,6 +812,22 @@
   </style>
 </head>
 <body>
+  <button class="mobile-menu-toggle">☰</button>
+  
+  <div class="mobile-menu">
+    <button class="mobile-menu-close">×</button>
+    <ul>
+      <li><a href="#" data-section="home">Home</a></li>
+      <li><a href="#" data-section="web-development">Web Development</a></li>
+      <li><a href="#" data-section="app-development">App Development</a></li>
+      <li><a href="#" data-section="program-development">Program Development</a></li>
+      <li><a href="#" data-section="bot-creation">Bot Creation</a></li>
+      <li><a href="#" data-section="business-assistance">Business Assistance</a></li>
+      <li><a href="#" data-section="about">About</a></li>
+      <li><a href="#" data-section="contact">Contact</a></li>
+    </ul>
+  </div>
+  
   <!-- Top Navigation -->
   <nav class="top-nav">
     <div class="nav-container">
@@ -1256,6 +1295,31 @@
           window.scrollTo({
             top: 0,
             behavior: 'smooth'
+          });
+        });
+      }
+      
+      // Mobile menu handling
+      const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+      const mobileMenuClose = document.querySelector('.mobile-menu-close');
+      const mobileMenu = document.querySelector('.mobile-menu');
+      const mobileMenuLinks = document.querySelectorAll('.mobile-menu a');
+      
+      if (mobileMenuToggle && mobileMenu && mobileMenuClose) {
+        mobileMenuToggle.addEventListener('click', function() {
+          mobileMenu.classList.add('active');
+        });
+        
+        mobileMenuClose.addEventListener('click', function() {
+          mobileMenu.classList.remove('active');
+        });
+        
+        mobileMenuLinks.forEach(link => {
+          link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const sectionId = this.getAttribute('data-section');
+            showSection(sectionId);
+            mobileMenu.classList.remove('active');
           });
         });
       }
