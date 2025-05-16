@@ -1062,14 +1062,14 @@
             </div>
             
             <div style="margin-bottom: 15px;">
-              <select name="service" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #cc0000; font-weight: 500;">
+              <select name="service" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #6c63ff; font-weight: 500;">
                 <option value="" disabled selected>Select Service</option>
-                <option value="web" style="color: #cc0000;">Web Development</option>
-                <option value="app" style="color: #cc0000;">App Development</option>
-                <option value="program" style="color: #cc0000;">Program Development</option>
-                <option value="bot" style="color: #cc0000;">Bot Creation</option>
-                <option value="business" style="color: #cc0000;">Business Assistance</option>
-                <option value="other" style="color: #cc0000;">Other</option>
+                <option value="web" style="color: #6c63ff;">Web Development</option>
+                <option value="app" style="color: #6c63ff;">App Development</option>
+                <option value="program" style="color: #6c63ff;">Program Development</option>
+                <option value="bot" style="color: #6c63ff;">Bot Creation</option>
+                <option value="business" style="color: #6c63ff;">Business Assistance</option>
+                <option value="other" style="color: #6c63ff;">Other</option>
               </select>
             </div>
             
@@ -1239,6 +1239,35 @@
         });
       }
       
+      // Form handling
+      const contactForm = document.getElementById('contactForm');
+      const formMessage = document.getElementById('formMessage');
+
+      if (contactForm) {
+        contactForm.addEventListener('submit', async function (e) {
+          e.preventDefault();
+          formMessage.innerText = "Sending message...";
+          
+          try {
+            const formData = new FormData(contactForm);
+            const response = await fetch(contactForm.action, {
+              method: 'POST',
+              body: formData,
+              headers: { 'Accept': 'application/json' }
+            });
+
+            if (response.ok) {
+              formMessage.innerText = "✅ Thank you! Your message has been sent.";
+              contactForm.reset();
+            } else {
+              formMessage.innerText = "❌ Oops! Something went wrong.";
+            }
+          } catch (error) {
+            formMessage.innerText = "❌ Network error. Please check your connection.";
+          }
+        });
+      }
+      
       // Form idea feature functionality
       const hasIdeaYes = document.getElementById('hasIdeaYes');
       const hasIdeaNo = document.getElementById('hasIdeaNo');
@@ -1254,34 +1283,6 @@
         hasIdeaNo.addEventListener('change', function() {
           if (this.checked) {
             ideaFeatures.style.display = 'none';
-          }
-        });
-      }
-      
-      // Form submission
-      const form = document.getElementById("appForm");
-      const messageBox = document.getElementById("form-message");
-
-      if (form) {
-        form.addEventListener("submit", async (e) => {
-          e.preventDefault();
-          const formData = new FormData(form);
-          
-          try {
-            const response = await fetch(form.action, {
-              method: "POST",
-              body: formData,
-              headers: { Accept: "application/json" },
-            });
-
-            if (response.ok) {
-              form.reset();
-              messageBox.innerHTML = "<p style='color: var(--primary);'>Thanks! We'll be in touch shortly.</p>";
-            } else {
-              messageBox.innerHTML = "<p style='color: tomato;'>Oops! Something went wrong. Please try again.</p>";
-            }
-          } catch (error) {
-            messageBox.innerHTML = "<p style='color: tomato;'>Network error. Please check your connection.</p>";
           }
         });
       }
