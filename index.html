@@ -259,45 +259,149 @@
     }
 
     @media (max-width: 992px) {
-      .nav-container {
-        justify-content: space-between;
-        padding: 0 20px;
-      }
-      
-      .mobile-nav-toggle {
-        display: block;
-      }
-      
-      .nav-items {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100vh;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 30px;
-        background: rgba(17, 17, 17, 0.95);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        transform: translateX(-100%);
-        transition: transform 0.4s ease;
-        padding: 120px 0;
-      }
-      
-      .nav-items.active {
-        transform: translateX(0);
-      }
-      
-      .nav-item {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      
-      .nav-items.active .nav-item {
-        animation: fadeIn 0.5s ease forwards;
-      }
+  .nav-container {
+    justify-content: space-between;
+    padding: 0 20px;
+  }
+  
+  .mobile-nav-toggle {
+    display: block;
+  }
+  
+  .mobile-nav-toggle span {
+    font-size: 0.9rem; /* Smaller text for mobile menu toggle */
+  }
+  
+  .nav-items {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    background: rgba(17, 17, 17, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transform: translateX(-100%);
+    transition: transform 0.4s ease;
+    padding: 120px 0;
+  }
+  
+  .nav-items.active {
+    transform: translateX(0);
+  }
+  
+  .nav-item {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  
+  .nav-items.active .nav-item {
+    animation: fadeIn 0.5s ease forwards;
+  }
+  
+  .nav-items.active .nav-item:nth-child(1) { animation-delay: 0.1s; }
+  .nav-items.active .nav-item:nth-child(2) { animation-delay: 0.2s; }
+  .nav-items.active .nav-item:nth-child(3) { animation-delay: 0.3s; }
+  .nav-items.active .nav-item:nth-child(4) { animation-delay: 0.4s; }
+  .nav-items.active .nav-item:nth-child(5) { animation-delay: 0.5s; }
+  .nav-items.active .nav-item:nth-child(6) { animation-delay: 0.6s; }
+  .nav-items.active .nav-item:nth-child(7) { animation-delay: 0.7s; }
+  .nav-items.active .nav-item:nth-child(8) { animation-delay: 0.8s; }
+  .nav-items.active .nav-item:nth-child(9) { animation-delay: 0.9s; }
+  
+  .nav-link {
+    font-size: 0.95rem; /* Smaller text for nav items on mobile */
+  }
+  
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+.nav-item {
+  list-style: none;
+  text-align: center;
+}
+
+.nav-item:first-child {
+  text-align: left;
+}
+
+.nav-item:last-child {
+  text-align: right;
+}
+
+.nav-link {
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 15px;
+  border-radius: 20px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  font-weight: 500;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+  display: inline-block;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--primary);
+  transform: translateX(-50%);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover {
+  color: var(--primary);
+  background-color: rgba(0, 230, 168, 0.1);
+  transform: translateY(-2px);
+}
+
+.nav-link:hover::after {
+  width: 70%;
+}
+
+.nav-link.active {
+  color: var(--primary);
+  background-color: rgba(0, 230, 168, 0.15);
+}
+
+.nav-link.active::after {
+  width: 70%;
+}
+
+/* Background effect - Enhanced with animated gradient */
+.bg-effect {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -2;
+  opacity: 0.4;
+}
+
+.bg-gradient {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at top right, rgba(0,230,168,0.1), transparent 50%),
+              radial-gradient(ellipse at bottom left, rgba(108,99,255,0.1), transparent 50%);
+  animation: gradientShift 15s ease infinite alternate;
+}
       
       .nav-items.active .nav-item:nth-child(1) { animation-delay: 0.1s; }
       .nav-items.active .nav-item:nth-child(2) { animation-delay: 0.2s; }
