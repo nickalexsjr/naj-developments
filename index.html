@@ -240,12 +240,13 @@
     }
 
     .nav-items {
-      display: flex;
-      width: 100%;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: nowrap;
-    }
+  display: flex;
+  width: 100%;
+  justify-content: center; /* Change from space-between to center */
+  align-items: center;
+  gap: 20px; /* Add a gap between items */
+  flex-wrap: nowrap;
+}
     
     .mobile-nav-toggle {
       display: none;
@@ -1826,7 +1827,7 @@
           <li>Flexible canvas with adjustable grid and background options</li>
           <li>Connect tasks with lines and arrows to visualize workflows</li>
         </ul>
-        <a href="/taskmanager" class="pricing-btn pulse-effect" style="display: inline-block; margin-top: 20px;">Launch NAJ Task Manager</a>
+        <a href="taskmanager.html" class="pricing-btn pulse-effect" style="display: inline-block; margin-top: 20px;">Launch NAJ Task Manager</a>
       </div>
       
       <div class="content-card">
