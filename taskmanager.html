@@ -116,7 +116,7 @@
       backdrop-filter: blur(10px);
     }
 
-    .dropdown:hover .dropdown-content {
+    .dropdown.active .dropdown-content {
       display: block;
     }
 
@@ -183,17 +183,18 @@
     .canvas-container {
       flex: 1;
       position: relative;
-      overflow: hidden;
+      overflow: auto;
     }
 
     .canvas {
-      width: 100%;
-      height: 100%;
+      width: 2000px;
+      height: 2000px;
       position: relative;
       background-color: #1a1a1a;
       background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
       background-size: 20px 20px;
-      transition: background-size 0.3s ease;
+      transition: transform 0.3s ease;
+      transform-origin: 0 0;
     }
 
     /* Task Box */
@@ -213,7 +214,6 @@
 
     .task-box:hover {
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-      transform: translateY(-2px);
     }
 
     .task-box.selected {
@@ -239,6 +239,24 @@
       font-size: 12px;
       color: rgba(255, 255, 255, 0.5);
     }
+
+    /* Resize Handles */
+    .resize-handle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: var(--primary);
+      border-radius: 50%;
+    }
+    
+    .resize-handle.ne { top: -5px; right: -5px; cursor: ne-resize; }
+    .resize-handle.se { bottom: -5px; right: -5px; cursor: se-resize; }
+    .resize-handle.sw { bottom: -5px; left: -5px; cursor: sw-resize; }
+    .resize-handle.nw { top: -5px; left: -5px; cursor: nw-resize; }
+    .resize-handle.n { top: -5px; left: 50%; transform: translateX(-50%); cursor: n-resize; }
+    .resize-handle.e { right: -5px; top: 50%; transform: translateY(-50%); cursor: e-resize; }
+    .resize-handle.s { bottom: -5px; left: 50%; transform: translateX(-50%); cursor: s-resize; }
+    .resize-handle.w { left: -5px; top: 50%; transform: translateY(-50%); cursor: w-resize; }
 
     /* Properties Panel */
     .properties-panel {
@@ -435,6 +453,191 @@
       background: rgba(255, 255, 255, 0.1);
       margin: 5px 0;
     }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background-color: rgba(30, 30, 30, 0.95);
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 8px;
+      width: 50%;
+      max-width: 500px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-header {
+      font-size: 18px;
+      margin-bottom: 15px;
+      color: var(--primary);
+    }
+
+    .modal-body {
+      margin-bottom: 20px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .modal-button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .modal-button.primary {
+      background-color: var(--primary);
+      color: var(--dark);
+    }
+
+    .modal-button.secondary {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    .modal-button:hover {
+      opacity: 0.9;
+    }
+
+    /* Connection line styles */
+    .connection-line {
+      position: absolute;
+      height: 2px;
+      background-color: var(--primary);
+      transform-origin: 0 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .connection-arrow {
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 6px 0 6px 10px;
+      border-color: transparent transparent transparent var(--primary);
+      transform-origin: 0 50%;
+      pointer-events: none;
+    }
+
+    /* File list style */
+    .file-list {
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      margin-bottom: 15px;
+    }
+
+    .file-item {
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: var(--transition);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .file-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .file-item:last-child {
+      border-bottom: none;
+    }
+
+    /* Keyboard shortcuts style */
+    .shortcuts-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .shortcuts-table td {
+      padding: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .shortcuts-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .key {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: monospace;
+      margin-right: 5px;
+    }
+
+    /* Notification */
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px 15px;
+      background: rgba(0, 230, 168, 0.9);
+      color: #111;
+      border-radius: 4px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      z-index: 1000;
+    }
+
+    .notification.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Loading indicator */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .loading-overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-left-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -451,7 +654,7 @@
 
   <!-- Menu Bar -->
   <div class="menu-bar">
-    <div class="dropdown">
+    <div class="dropdown" id="fileDropdown">
       <button class="menu-button">File</button>
       <div class="dropdown-content">
         <a href="#" class="dropdown-item" id="newDiagram">New</a>
@@ -464,7 +667,7 @@
         <a href="#" class="dropdown-item" id="exportPDF">Export as PDF</a>
       </div>
     </div>
-    <div class="dropdown">
+    <div class="dropdown" id="editDropdown">
       <button class="menu-button">Edit</button>
       <div class="dropdown-content">
         <a href="#" class="dropdown-item" id="undoAction">Undo</a>
@@ -478,7 +681,7 @@
         <a href="#" class="dropdown-item" id="deleteItem">Delete</a>
       </div>
     </div>
-    <div class="dropdown">
+    <div class="dropdown" id="viewDropdown">
       <button class="menu-button">View</button>
       <div class="dropdown-content">
         <a href="#" class="dropdown-item" id="zoomIn">Zoom In</a>
@@ -489,7 +692,7 @@
         <a href="#" class="dropdown-item" id="changeBackground">Change Background Color</a>
       </div>
     </div>
-    <div class="dropdown">
+    <div class="dropdown" id="taskDropdown">
       <button class="menu-button">Task</button>
       <div class="dropdown-content">
         <a href="#" class="dropdown-item" id="addTask">Add Task</a>
@@ -499,7 +702,7 @@
         <a href="#" class="dropdown-item" id="ungroupTasks">Ungroup</a>
       </div>
     </div>
-    <div class="dropdown">
+    <div class="dropdown" id="helpDropdown">
       <button class="menu-button">Help</button>
       <div class="dropdown-content">
         <a href="#" class="dropdown-item" id="viewHelp">View Help</a>
@@ -536,16 +739,17 @@
     </div>
 
     <!-- Canvas Area -->
-    <div class="canvas-container">
+    <div class="canvas-container" id="canvasContainer">
       <div class="canvas" id="canvas">
         <!-- Sample Task Box -->
-        <div class="task-box" style="left: 100px; top: 100px; border-color: #00e6a8;">
+        <div class="task-box" id="welcomeTask" style="left: 100px; top: 100px; border-color: #00e6a8; background-color: rgba(40, 40, 40, 0.9);">
           <div class="task-title">Welcome to NAJ Task Manager</div>
           <div class="task-description">Right-click to add new tasks, delete items, or customize your workspace. Drag task boxes to move them.</div>
           <div class="task-footer">
             <span>Priority: High</span>
             <span>Status: Active</span>
           </div>
+          <!-- Resize handles will be added by JavaScript -->
         </div>
       </div>
 
@@ -576,7 +780,7 @@
           <textarea class="form-input" id="taskDescription" rows="3">Right-click to add new tasks, delete items, or customize your workspace. Drag task boxes to move them.</textarea>
         </div>
         <div class="form-group">
-          <label class="form-label">Color</label>
+          <label class="form-label">Border Color</label>
           <div class="color-options">
             <div class="color-option selected" style="background-color: #00e6a8;" data-color="#00e6a8"></div>
             <div class="color-option" style="background-color: #6c63ff;" data-color="#6c63ff"></div>
@@ -585,6 +789,10 @@
             <div class="color-option" style="background-color: #4fc1e9;" data-color="#4fc1e9"></div>
             <div class="color-option" style="background-color: #ac92ec;" data-color="#ac92ec"></div>
           </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Fill Color</label>
+          <input type="color" class="form-input" id="taskFillColor" value="#282828">
         </div>
         <div class="form-group">
           <label class="form-label">Style</label>
@@ -642,14 +850,141 @@
     </div>
   </div>
 
+  <!-- Modals -->
+  <!-- Save As Modal -->
+  <div class="modal" id="saveAsModal">
+    <div class="modal-content">
+      <div class="modal-header">Save As</div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">File Name</label>
+          <input type="text" class="form-input" id="saveFileName" value="MyTaskDiagram">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-button secondary" id="cancelSaveAs">Cancel</button>
+        <button class="modal-button primary" id="confirmSaveAs">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Open Modal -->
+  <div class="modal" id="openModal">
+    <div class="modal-content">
+      <div class="modal-header">Open Diagram</div>
+      <div class="modal-body">
+        <div class="file-list" id="fileList">
+          <!-- File items will be added here -->
+          <div class="file-item">MyTaskDiagram.naj</div>
+          <div class="file-item">ProjectPlanning.naj</div>
+          <div class="file-item">WorkflowChart.naj</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-button secondary" id="cancelOpen">Cancel</button>
+        <button class="modal-button primary" id="confirmOpen">Open</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Keyboard Shortcuts Modal -->
+  <div class="modal" id="shortcutsModal">
+    <div class="modal-content">
+      <div class="modal-header">Keyboard Shortcuts</div>
+      <div class="modal-body">
+        <table class="shortcuts-table">
+          <tr>
+            <td><span class="key">Ctrl</span>+<span class="key">S</span></td>
+            <td>Save diagram</td>
+          </tr>
+          <tr>
+            <td><span class="key">Ctrl</span>+<span class="key">O</span></td>
+            <td>Open diagram</td>
+          </tr>
+          <tr>
+            <td><span class="key">Ctrl</span>+<span class="key">N</span></td>
+            <td>New diagram</td>
+          </tr>
+          <tr>
+            <td><span class="key">Delete</span></td>
+            <td>Delete selected item</td>
+          </tr>
+          <tr>
+            <td><span class="key">Ctrl</span>+<span class="key">C</span></td>
+            <td>Copy selected item</td>
+          </tr>
+          <tr>
+            <td><span class="key">Ctrl</span>+<span class="key">V</span></td>
+            <td>Paste item</td>
+          </tr>
+          <tr>
+            <td><span class="key">Ctrl</span>+<span class="key">X</span></td>
+            <td>Cut selected item</td>
+          </tr>
+          <tr>
+            <td><span class="key">Ctrl</span>+<span class="key">Z</span></td>
+            <td>Undo action</td>
+          </tr>
+          <tr>
+            <td><span class="key">Ctrl</span>+<span class="key">Y</span></td>
+            <td>Redo action</td>
+          </tr>
+          <tr>
+            <td><span class="key">Ctrl</span>+<span class="key">+</span></td>
+            <td>Zoom in</td>
+          </tr>
+          <tr>
+            <td><span class="key">Ctrl</span>+<span class="key">-</span></td>
+            <td>Zoom out</td>
+          </tr>
+          <tr>
+            <td><span class="key">Ctrl</span>+<span class="key">0</span></td>
+            <td>Reset zoom</td>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-button primary" id="closeShortcuts">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- About Modal -->
+  <div class="modal" id="aboutModal">
+    <div class="modal-content">
+      <div class="modal-header">About NAJ Task Manager</div>
+      <div class="modal-body">
+        <div style="text-align: center; margin-bottom: 15px;">
+          <img src="https://i.imgur.com/vksyj5W.png" alt="NAJ Logo" style="height: 60px;">
+        </div>
+        <p style="margin-bottom: 10px;">NAJ Task Manager v1.0</p>
+        <p style="margin-bottom: 10px;">Developed by NAJ Developments</p>
+        <p>A fully customizable diagram and task management tool designed to help you organize projects, workflows, and ideas visually.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-button primary" id="closeAbout">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification -->
+  <div class="notification" id="notification"></div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+  </div>
+
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       // DOM Elements
       const canvas = document.getElementById('canvas');
+      const canvasContainer = document.getElementById('canvasContainer');
       const contextMenu = document.getElementById('contextMenu');
       const toolButtons = document.querySelectorAll('.tool-button');
       const taskTitle = document.getElementById('taskTitle');
       const taskDescription = document.getElementById('taskDescription');
+      const taskFillColor = document.getElementById('taskFillColor');
       const colorOptions = document.querySelectorAll('.color-option');
       const styleOptions = document.querySelectorAll('.style-option');
       const bgColorInput = document.getElementById('bgColor');
@@ -660,205 +995,351 @@
       const zoomLevel = document.querySelector('.zoom-level');
       const addChecklistItem = document.getElementById('addChecklistItem');
       const checklistContainer = document.getElementById('checklistContainer');
+      const dropdowns = document.querySelectorAll('.dropdown');
+      const menuButtons = document.querySelectorAll('.menu-button');
+      const notification = document.getElementById('notification');
+      const loadingOverlay = document.getElementById('loadingOverlay');
       
-      // Tool Selection
-      toolButtons.forEach(button => {
-        button.addEventListener('click', () => {
-          toolButtons.forEach(b => b.classList.remove('active'));
-          button.classList.add('active');
-        });
-      });
+      // Modals
+      const saveAsModal = document.getElementById('saveAsModal');
+      const openModal = document.getElementById('openModal');
+      const shortcutsModal = document.getElementById('shortcutsModal');
+      const aboutModal = document.getElementById('aboutModal');
       
-      // Task Box Dragging
+      // Modal buttons
+      const saveFileName = document.getElementById('saveFileName');
+      const cancelSaveAs = document.getElementById('cancelSaveAs');
+      const confirmSaveAs = document.getElementById('confirmSaveAs');
+      const cancelOpen = document.getElementById('cancelOpen');
+      const confirmOpen = document.getElementById('confirmOpen');
+      const closeShortcuts = document.getElementById('closeShortcuts');
+      const closeAbout = document.getElementById('closeAbout');
+      
+      // App state
+      let currentTool = 'select';
+      let currentDiagramName = 'Untitled';
+      let diagramChanged = false;
+      let isConnecting = false;
+      let connectionSource = null;
       let selectedTask = null;
-      let isDragging = false;
-      let startX, startY;
-      let taskX, taskY;
+      let selectedConnection = null;
+      let clipboardData = null;
+      let undoStack = [];
+      let redoStack = [];
       
-      document.querySelectorAll('.task-box').forEach(task => {
-        task.addEventListener('mousedown', (e) => {
-          if (e.button === 0) { // Left click
-            selectedTask = task;
-            document.querySelectorAll('.task-box').forEach(t => t.classList.remove('selected'));
-            task.classList.add('selected');
-            
-            isDragging = true;
-            startX = e.clientX;
-            startY = e.clientY;
-            taskX = parseInt(task.style.left) || 0;
-            taskY = parseInt(task.style.top) || 0;
-            
-            // Update properties panel
-            taskTitle.value = task.querySelector('.task-title').textContent;
-            taskDescription.value = task.querySelector('.task-description').textContent;
-            
-            // Update color selection
-            const taskColor = task.style.borderColor;
-            colorOptions.forEach(option => {
-              option.classList.remove('selected');
-              if (option.getAttribute('data-color') === taskColor) {
-                option.classList.add('selected');
-              }
-            });
-            
-            // Update style selection
-            const taskBorderStyle = task.style.borderStyle || 'solid';
-            styleOptions.forEach(option => {
-              option.classList.remove('selected');
-              if (option.getAttribute('data-style') === taskBorderStyle) {
-                option.classList.add('selected');
-              }
-            });
-            
+      // Initialize the application
+      function initApp() {
+        // Add resize handles to all task boxes
+        document.querySelectorAll('.task-box').forEach(task => {
+          addResizeHandlesToTask(task);
+        });
+        
+        // Set the current zoom level
+        updateZoom();
+        
+        // Register keyboard shortcuts
+        registerKeyboardShortcuts();
+        
+        // Initialize the context menu
+        initializeContextMenu();
+        
+        // Set up event listeners for task interactions
+        setupTaskInteractions();
+        
+        // Set up menu interactions
+        setupMenuInteractions();
+        
+        // Initialize modals
+        initializeModals();
+        
+        // Set up tool buttons
+        setupToolButtons();
+        
+        // Set up property panel interactions
+        setupPropertyPanel();
+        
+        // Set up canvas interactions
+        setupCanvasInteractions();
+        
+        // Save initial state for undo
+        saveState();
+      }
+      
+      // Add resize handles to a task
+      function addResizeHandlesToTask(task) {
+        const positions = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'];
+        positions.forEach(pos => {
+          const handle = document.createElement('div');
+          handle.className = `resize-handle ${pos}`;
+          handle.setAttribute('data-position', pos);
+          task.appendChild(handle);
+        });
+        
+        // Set up event listeners for resize handles
+        setupResizeHandles(task);
+      }
+      
+      // Set up resize handles for a task
+      function setupResizeHandles(task) {
+        const handles = task.querySelectorAll('.resize-handle');
+        
+        handles.forEach(handle => {
+          handle.addEventListener('mousedown', (e) => {
             e.stopPropagation();
-          }
-        });
-      });
-      
-      document.addEventListener('mousemove', (e) => {
-        if (isDragging && selectedTask) {
-          const newX = taskX + (e.clientX - startX);
-          const newY = taskY + (e.clientY - startY);
-          
-          selectedTask.style.left = `${newX}px`;
-          selectedTask.style.top = `${newY}px`;
-        }
-      });
-      
-      document.addEventListener('mouseup', () => {
-        isDragging = false;
-      });
-      
-      // Canvas click to deselect
-      canvas.addEventListener('mousedown', (e) => {
-        if (e.target === canvas) {
-          document.querySelectorAll('.task-box').forEach(task => {
-            task.classList.remove('selected');
+            
+            const position = handle.getAttribute('data-position');
+            const startX = e.clientX;
+            const startY = e.clientY;
+            const taskRect = task.getBoundingClientRect();
+            const taskLeft = parseInt(task.style.left) || 0;
+            const taskTop = parseInt(task.style.top) || 0;
+            const taskWidth = taskRect.width;
+            const taskHeight = taskRect.height;
+            
+            // Function to handle resizing
+            function handleResize(e) {
+              const dx = e.clientX - startX;
+              const dy = e.clientY - startY;
+              
+              // Define minimum size
+              const minWidth = 150;
+              const minHeight = 100;
+              
+              // Resize based on the handle position
+              if (position.includes('e')) {
+                const newWidth = Math.max(taskWidth + dx, minWidth);
+                task.style.width = `${newWidth}px`;
+              }
+              
+              if (position.includes('w')) {
+                const newWidth = Math.max(taskWidth - dx, minWidth);
+                if (newWidth > minWidth) {
+                  task.style.width = `${newWidth}px`;
+                  task.style.left = `${taskLeft + dx}px`;
+                }
+              }
+              
+              if (position.includes('s')) {
+                const newHeight = Math.max(taskHeight + dy, minHeight);
+                task.style.height = `${newHeight}px`;
+              }
+              
+              if (position.includes('n')) {
+                const newHeight = Math.max(taskHeight - dy, minHeight);
+                if (newHeight > minHeight) {
+                  task.style.height = `${newHeight}px`;
+                  task.style.top = `${taskTop + dy}px`;
+                }
+              }
+              
+              // Update any connections
+              updateConnections();
+              diagramChanged = true;
+            }
+            
+            function endResize() {
+              document.removeEventListener('mousemove', handleResize);
+              document.removeEventListener('mouseup', endResize);
+              saveState();
+            }
+            
+            document.addEventListener('mousemove', handleResize);
+            document.addEventListener('mouseup', endResize);
           });
-          selectedTask = null;
-        }
-      });
-      
-      // Context Menu
-      canvas.addEventListener('contextmenu', (e) => {
-        e.preventDefault();
-        contextMenu.style.display = 'block';
-        contextMenu.style.left = `${e.clientX}px`;
-        contextMenu.style.top = `${e.clientY}px`;
-      });
-      
-      // Hide context menu on click outside
-      document.addEventListener('click', () => {
-        contextMenu.style.display = 'none';
-      });
-      
-      // Color Options
-      colorOptions.forEach(option => {
-        option.addEventListener('click', () => {
-          colorOptions.forEach(o => o.classList.remove('selected'));
-          option.classList.add('selected');
-          
-          if (selectedTask) {
-            const color = option.getAttribute('data-color');
-            selectedTask.style.borderColor = color;
-          }
         });
-      });
+      }
       
-      // Style Options
-      styleOptions.forEach(option => {
-        option.addEventListener('click', () => {
-          styleOptions.forEach(o => o.classList.remove('selected'));
-          option.classList.add('selected');
-          
-          if (selectedTask) {
-            const style = option.getAttribute('data-style');
-            selectedTask.style.borderStyle = style;
-          }
-        });
-      });
-      
-      // Task Title and Description Update
-      taskTitle.addEventListener('input', () => {
-        if (selectedTask) {
-          selectedTask.querySelector('.task-title').textContent = taskTitle.value;
-        }
-      });
-      
-      taskDescription.addEventListener('input', () => {
-        if (selectedTask) {
-          selectedTask.querySelector('.task-description').textContent = taskDescription.value;
-        }
-      });
-      
-      // Background Color
-      bgColorInput.addEventListener('input', () => {
-        canvas.style.backgroundColor = bgColorInput.value;
-      });
-      
-      // Toggle Grid
-      toggleGridBtn.addEventListener('click', () => {
-        if (canvas.style.backgroundImage) {
-          canvas.style.backgroundImage = '';
-        } else {
-          canvas.style.backgroundImage = 'radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px)';
-        }
-      });
-      
-      // Grid Size
-      gridSizeBtn.addEventListener('click', () => {
-        const sizes = ['10px 10px', '20px 20px', '30px 30px', '50px 50px'];
-        const currentSize = canvas.style.backgroundSize || '20px 20px';
-        const currentIndex = sizes.indexOf(currentSize);
-        const nextIndex = (currentIndex + 1) % sizes.length;
-        canvas.style.backgroundSize = sizes[nextIndex];
-      });
-      
-      // Zoom Controls
+      // Zoom functionality
       let zoom = 100;
-      
-      zoomInBtn.addEventListener('click', () => {
-        if (zoom < 200) {
-          zoom += 10;
-          updateZoom();
-        }
-      });
-      
-      zoomOutBtn.addEventListener('click', () => {
-        if (zoom > 50) {
-          zoom -= 10;
-          updateZoom();
-        }
-      });
       
       function updateZoom() {
         zoomLevel.textContent = `${zoom}%`;
         canvas.style.transform = `scale(${zoom / 100})`;
-        canvas.style.transformOrigin = 'center center';
+        
+        // Adjust the cursor position calculation based on zoom
+        const zoomFactor = zoom / 100;
       }
       
-      // Add Checklist Item
-      addChecklistItem.addEventListener('click', () => {
-        const newItem = document.createElement('div');
-        newItem.className = 'checklist-item';
-        newItem.innerHTML = `
-          <input type="checkbox" class="checklist-checkbox">
-          <input type="text" class="checklist-input" value="New item">
-        `;
-        checklistContainer.appendChild(newItem);
-      });
+      function zoomIn() {
+        if (zoom < 200) {
+          zoom += 10;
+          updateZoom();
+        }
+      }
       
-      // Context Menu Actions
-      document.getElementById('cmAddTask').addEventListener('click', (e) => {
-        const rect = canvas.getBoundingClientRect();
-        const mouseX = parseInt(contextMenu.style.left) - rect.left;
-        const mouseY = parseInt(contextMenu.style.top) - rect.top;
+      function zoomOut() {
+        if (zoom > 30) {
+          zoom -= 10;
+          updateZoom();
+        }
+      }
+      
+      function zoomFit() {
+        zoom = 100;
+        updateZoom();
+        // Also center the canvas
+        canvasContainer.scrollLeft = (canvas.offsetWidth - canvasContainer.offsetWidth) / 2;
+        canvasContainer.scrollTop = (canvas.offsetHeight - canvasContainer.offsetHeight) / 2;
+      }
+      
+      // Register keyboard shortcuts
+      function registerKeyboardShortcuts() {
+        document.addEventListener('keydown', (e) => {
+          // Check if an input is focused
+          const isInputFocused = document.activeElement.tagName === 'INPUT' || 
+                                document.activeElement.tagName === 'TEXTAREA';
+          
+          // Don't trigger shortcuts when typing in form fields
+          if (isInputFocused) return;
+          
+          // Ctrl + S: Save
+          if (e.ctrlKey && e.key === 's') {
+            e.preventDefault();
+            if (currentDiagramName === 'Untitled') {
+              openModal(saveAsModal);
+            } else {
+              saveDiagram();
+            }
+          }
+          
+          // Ctrl + O: Open
+          if (e.ctrlKey && e.key === 'o') {
+            e.preventDefault();
+            openModal(openModal);
+          }
+          
+          // Ctrl + N: New
+          if (e.ctrlKey && e.key === 'n') {
+            e.preventDefault();
+            newDiagram();
+          }
+          
+          // Delete: Delete selected
+          if (e.key === 'Delete') {
+            if (selectedTask) {
+              deleteTask(selectedTask);
+            }
+          }
+          
+          // Ctrl + C: Copy
+          if (e.ctrlKey && e.key === 'c') {
+            if (selectedTask) {
+              copyTask();
+            }
+          }
+          
+          // Ctrl + V: Paste
+          if (e.ctrlKey && e.key === 'v') {
+            pasteTask();
+          }
+          
+          // Ctrl + X: Cut
+          if (e.ctrlKey && e.key === 'x') {
+            if (selectedTask) {
+              cutTask();
+            }
+          }
+          
+          // Ctrl + Z: Undo
+          if (e.ctrlKey && e.key === 'z') {
+            e.preventDefault();
+            undo();
+          }
+          
+          // Ctrl + Y: Redo
+          if (e.ctrlKey && e.key === 'y') {
+            e.preventDefault();
+            redo();
+          }
+          
+          // Ctrl + Plus: Zoom in
+          if (e.ctrlKey && (e.key === '+' || e.key === '=')) {
+            e.preventDefault();
+            zoomIn();
+          }
+          
+          // Ctrl + Minus: Zoom out
+          if (e.ctrlKey && e.key === '-') {
+            e.preventDefault();
+            zoomOut();
+          }
+          
+          // Ctrl + 0: Reset zoom
+          if (e.ctrlKey && e.key === '0') {
+            e.preventDefault();
+            zoomFit();
+          }
+        });
+      }
+      
+      // Initialize the context menu
+      function initializeContextMenu() {
+        // Close context menu when clicking elsewhere
+        document.addEventListener('click', () => {
+          contextMenu.style.display = 'none';
+        });
         
+        // Show context menu on right-click
+        canvas.addEventListener('contextmenu', (e) => {
+          e.preventDefault();
+          
+          // Calculate position considering scroll and zoom
+          const rect = canvasContainer.getBoundingClientRect();
+          const scaleX = canvas.offsetWidth / canvas.getBoundingClientRect().width;
+          const scaleY = canvas.offsetHeight / canvas.getBoundingClientRect().height;
+          
+          const x = e.clientX;
+          const y = e.clientY;
+          
+          contextMenu.style.display = 'block';
+          contextMenu.style.left = `${x}px`;
+          contextMenu.style.top = `${y}px`;
+          
+          // Store the mouse position for adding new items
+          contextMenu.dataset.x = (x - rect.left + canvasContainer.scrollLeft) * scaleX;
+          contextMenu.dataset.y = (y - rect.top + canvasContainer.scrollTop) * scaleY;
+        });
+        
+        // Context menu actions
+        document.getElementById('cmAddTask').addEventListener('click', () => {
+          const x = parseInt(contextMenu.dataset.x);
+          const y = parseInt(contextMenu.dataset.y);
+          createTask(x, y);
+        });
+        
+        document.getElementById('cmDelete').addEventListener('click', () => {
+          if (selectedTask) {
+            deleteTask(selectedTask);
+          }
+        });
+        
+        document.getElementById('cmCopy').addEventListener('click', () => {
+          if (selectedTask) {
+            copyTask();
+          }
+        });
+        
+        document.getElementById('cmPaste').addEventListener('click', () => {
+          const x = parseInt(contextMenu.dataset.x);
+          const y = parseInt(contextMenu.dataset.y);
+          pasteTask(x, y);
+        });
+        
+        document.getElementById('cmCut').addEventListener('click', () => {
+          if (selectedTask) {
+            cutTask();
+          }
+        });
+      }
+      
+      // Create a new task
+      function createTask(x, y) {
         const newTask = document.createElement('div');
         newTask.className = 'task-box';
-        newTask.style.left = `${mouseX}px`;
-        newTask.style.top = `${mouseY}px`;
+        newTask.style.left = `${x}px`;
+        newTask.style.top = `${y}px`;
         newTask.style.borderColor = '#00e6a8';
+        newTask.style.backgroundColor = 'rgba(40, 40, 40, 0.9)';
         newTask.innerHTML = `
           <div class="task-title">New Task</div>
           <div class="task-description">Task description here</div>
@@ -868,77 +1349,832 @@
           </div>
         `;
         
+        // Add resize handles
+        addResizeHandlesToTask(newTask);
+        
+        // Add to canvas
         canvas.appendChild(newTask);
         
-        // Add event listeners to the new task
-        newTask.addEventListener('mousedown', (e) => {
-          if (e.button === 0) {
-            selectedTask = newTask;
-            document.querySelectorAll('.task-box').forEach(t => t.classList.remove('selected'));
-            newTask.classList.add('selected');
-            
+        // Select the new task
+        selectTask(newTask);
+        
+        // Set up interactions
+        setupTaskInteractions(newTask);
+        
+        // Save state for undo
+        saveState();
+        
+        // Mark diagram as changed
+        diagramChanged = true;
+        
+        // Show notification
+        showNotification('New task created');
+      }
+      
+      // Set up task interactions
+      function setupTaskInteractions(task) {
+        if (task) {
+          // Single task setup
+          addDragBehavior(task);
+          addSelectionBehavior(task);
+        } else {
+          // Setup all tasks
+          document.querySelectorAll('.task-box').forEach(t => {
+            addDragBehavior(t);
+            addSelectionBehavior(t);
+          });
+        }
+      }
+      
+      // Add drag behavior to a task
+      function addDragBehavior(task) {
+        let isDragging = false;
+        let startX, startY;
+        let taskX, taskY;
+        
+        task.addEventListener('mousedown', (e) => {
+          // Check if we clicked on a resize handle
+          if (e.target.classList.contains('resize-handle')) {
+            return; // Let the resize handle events take priority
+          }
+          
+          if (e.button === 0) { // Left click
             isDragging = true;
             startX = e.clientX;
             startY = e.clientY;
-            taskX = parseInt(newTask.style.left) || 0;
-            taskY = parseInt(newTask.style.top) || 0;
-            
-            taskTitle.value = newTask.querySelector('.task-title').textContent;
-            taskDescription.value = newTask.querySelector('.task-description').textContent;
-            
+            taskX = parseInt(task.style.left) || 0;
+            taskY = parseInt(task.style.top) || 0;
+            task.style.zIndex = 10; // Bring to front while dragging
             e.stopPropagation();
           }
         });
-      });
+        
+        document.addEventListener('mousemove', (e) => {
+          if (isDragging && task === selectedTask) {
+            const dx = e.clientX - startX;
+            const dy = e.clientY - startY;
+            
+            // Apply zoom scaling to drag
+            const scaleAdjustment = 100 / zoom;
+            const scaledDx = dx * scaleAdjustment;
+            const scaledDy = dy * scaleAdjustment;
+            
+            const newX = taskX + scaledDx;
+            const newY = taskY + scaledDy;
+            
+            task.style.left = `${newX}px`;
+            task.style.top = `${newY}px`;
+            
+            // Update any connections
+            updateConnections();
+            
+            // Update status info
+            document.querySelector('.status-info').textContent = `Position: ${Math.round(newX)}, ${Math.round(newY)}`;
+            
+            diagramChanged = true;
+          }
+        });
+        
+        document.addEventListener('mouseup', () => {
+          if (isDragging) {
+            isDragging = false;
+            task.style.zIndex = 1;
+            document.querySelector('.status-info').textContent = 'Ready';
+            saveState();
+          }
+        });
+      }
       
-      document.getElementById('cmDelete').addEventListener('click', () => {
+      // Add selection behavior to a task
+      function addSelectionBehavior(task) {
+        task.addEventListener('click', (e) => {
+          e.stopPropagation();
+          selectTask(task);
+        });
+      }
+      
+      // Select a task
+      function selectTask(task) {
+        // Deselect any currently selected task
         if (selectedTask) {
-          selectedTask.remove();
-          selectedTask = null;
+          selectedTask.classList.remove('selected');
         }
-      });
+        
+        // Select the new task
+        selectedTask = task;
+        task.classList.add('selected');
+        
+        // Update the properties panel
+        updatePropertyPanel();
+      }
       
-      // File menu functionality - simple alert for now
-      document.getElementById('newDiagram').addEventListener('click', () => {
-        if (confirm('Create a new diagram? Unsaved changes will be lost.')) {
-          document.querySelectorAll('.task-box').forEach(task => {
-            if (!task.classList.contains('sample-task')) {
-              task.remove();
+      // Update the properties panel with selected task info
+      function updatePropertyPanel() {
+        if (selectedTask) {
+          // Update title and description
+          taskTitle.value = selectedTask.querySelector('.task-title').textContent;
+          taskDescription.value = selectedTask.querySelector('.task-description').textContent;
+          
+          // Update color selection
+          const taskColor = selectedTask.style.borderColor;
+          colorOptions.forEach(option => {
+            option.classList.remove('selected');
+            if (option.getAttribute('data-color') === taskColor) {
+              option.classList.add('selected');
+            }
+          });
+          
+          // Update fill color
+          taskFillColor.value = rgbaToHex(selectedTask.style.backgroundColor) || '#282828';
+          
+          // Update style selection
+          const taskBorderStyle = selectedTask.style.borderStyle || 'solid';
+          styleOptions.forEach(option => {
+            option.classList.remove('selected');
+            if (option.getAttribute('data-style') === taskBorderStyle) {
+              option.classList.add('selected');
             }
           });
         }
-      });
+      }
       
-      document.getElementById('saveDiagram').addEventListener('click', () => {
-        alert('Save functionality will be implemented in the full version. Your diagram would be saved now.');
-      });
-      
-      document.getElementById('saveAsDiagram').addEventListener('click', () => {
-        const fileName = prompt('Enter file name:', 'MyTaskDiagram');
-        if (fileName) {
-          alert(`Diagram would be saved as "${fileName}.naj" in the full version.`);
+      // Convert rgba to hex
+      function rgbaToHex(rgba) {
+        if (!rgba || rgba === 'transparent' || rgba === '') return '#282828';
+        
+        // Extract RGB values
+        const match = rgba.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/);
+        if (match) {
+          const r = parseInt(match[1]);
+          const g = parseInt(match[2]);
+          const b = parseInt(match[3]);
+          
+          return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
         }
-      });
+        
+        return rgba; // If already a hex value or unable to parse
+      }
       
-      document.getElementById('exportPNG').addEventListener('click', () => {
-        alert('Export as PNG functionality will be implemented in the full version.');
-      });
-      
-      // Help menu
-      document.getElementById('aboutApp').addEventListener('click', () => {
-        alert('NAJ Task Manager v1.0\nDeveloped by NAJ Developments\n\nA fully customizable diagram and task management tool.');
-      });
-      
-      // Delete tool functionality
-      document.getElementById('deleteTool').addEventListener('click', () => {
-        if (selectedTask) {
-          selectedTask.remove();
+      // Delete a task
+      function deleteTask(task) {
+        if (task) {
+          // Remove any connections to/from this task
+          document.querySelectorAll('.connection-line, .connection-arrow').forEach(conn => {
+            if (conn.dataset.sourceId === task.id || conn.dataset.targetId === task.id) {
+              conn.remove();
+            }
+          });
+          
+          // Remove the task
+          task.remove();
+          
+          // Clear selection
           selectedTask = null;
+          
+          // Save state for undo
+          saveState();
+          
+          // Mark diagram as changed
+          diagramChanged = true;
+          
+          // Show notification
+          showNotification('Task deleted');
         }
-      });
+      }
       
-      // Initialize status info
-      document.querySelector('.status-info').textContent = 'Ready - Click or drag to select items';
+      // Copy a task
+      function copyTask() {
+        if (selectedTask) {
+          // Create a simplified copy of the task data
+          clipboardData = {
+            title: selectedTask.querySelector('.task-title').textContent,
+            description: selectedTask.querySelector('.task-description').textContent,
+            borderColor: selectedTask.style.borderColor,
+            backgroundColor: selectedTask.style.backgroundColor,
+            borderStyle: selectedTask.style.borderStyle,
+            width: selectedTask.style.width,
+            height: selectedTask.style.height
+          };
+          
+          // Show notification
+          showNotification('Task copied to clipboard');
+        }
+      }
+      
+      // Cut a task
+      function cutTask() {
+        if (selectedTask) {
+          copyTask();
+          deleteTask(selectedTask);
+          
+          // Show notification
+          showNotification('Task cut to clipboard');
+        }
+      }
+      
+      // Paste a task
+      function pasteTask(x, y) {
+        if (clipboardData) {
+          // Create a new task from clipboard data
+          const pasteX = x || (parseInt(selectedTask?.style.left || 100) + 50);
+          const pasteY = y || (parseInt(selectedTask?.style.top || 100) + 50);
+          
+          const newTask = document.createElement('div');
+          newTask.className = 'task-box';
+          newTask.style.left = `${pasteX}px`;
+          newTask.style.top = `${pasteY}px`;
+          newTask.style.borderColor = clipboardData.borderColor || '#00e6a8';
+          newTask.style.backgroundColor = clipboardData.backgroundColor || 'rgba(40, 40, 40, 0.9)';
+          newTask.style.borderStyle = clipboardData.borderStyle || 'solid';
+          newTask.style.width = clipboardData.width || 'auto';
+          newTask.style.height = clipboardData.height || 'auto';
+          
+          newTask.innerHTML = `
+            <div class="task-title">${clipboardData.title}</div>
+            <div class="task-description">${clipboardData.description}</div>
+            <div class="task-footer">
+              <span>Priority: Medium</span>
+              <span>Status: New</span>
+            </div>
+          `;
+          
+          // Add resize handles
+          addResizeHandlesToTask(newTask);
+          
+          // Add to canvas
+          canvas.appendChild(newTask);
+          
+          // Select the new task
+          selectTask(newTask);
+          
+          // Set up interactions
+          setupTaskInteractions(newTask);
+          
+          // Save state for undo
+          saveState();
+          
+          // Mark diagram as changed
+          diagramChanged = true;
+          
+          // Show notification
+          showNotification('Task pasted from clipboard');
+        }
+      }
+      
+      // Update connections when tasks move or resize
+      function updateConnections() {
+        // This is a placeholder for connection logic
+        // Will be implemented when connecting tasks functionality is added
+      }
+      
+      // Set up menu interactions
+      function setupMenuInteractions() {
+        // Toggle dropdown menus
+        menuButtons.forEach(button => {
+          button.addEventListener('click', (e) => {
+            e.stopPropagation();
+            
+            // Close all other dropdowns
+            dropdowns.forEach(dropdown => {
+              if (dropdown.contains(button) && !dropdown.classList.contains('active')) {
+                dropdown.classList.add('active');
+              } else {
+                dropdown.classList.remove('active');
+              }
+            });
+          });
+        });
+        
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', () => {
+          dropdowns.forEach(dropdown => {
+            dropdown.classList.remove('active');
+          });
+        });
+        
+        // Prevent closing when clicking inside dropdown content
+        document.querySelectorAll('.dropdown-content').forEach(content => {
+          content.addEventListener('click', (e) => {
+            e.stopPropagation();
+          });
+        });
+        
+        // File menu actions
+        document.getElementById('newDiagram').addEventListener('click', newDiagram);
+        document.getElementById('openDiagram').addEventListener('click', () => openModal(openModal));
+        document.getElementById('saveDiagram').addEventListener('click', () => {
+          if (currentDiagramName === 'Untitled') {
+            openModal(saveAsModal);
+          } else {
+            saveDiagram();
+          }
+        });
+        document.getElementById('saveAsDiagram').addEventListener('click', () => openModal(saveAsModal));
+        document.getElementById('exportPNG').addEventListener('click', exportAsPNG);
+        document.getElementById('exportPDF').addEventListener('click', exportAsPDF);
+        
+        // Edit menu actions
+        document.getElementById('undoAction').addEventListener('click', undo);
+        document.getElementById('redoAction').addEventListener('click', redo);
+        document.getElementById('cutItem').addEventListener('click', cutTask);
+        document.getElementById('copyItem').addEventListener('click', copyTask);
+        document.getElementById('pasteItem').addEventListener('click', pasteTask);
+        document.getElementById('selectAll').addEventListener('click', selectAll);
+        document.getElementById('deleteItem').addEventListener('click', () => {
+          if (selectedTask) {
+            deleteTask(selectedTask);
+          }
+        });
+        
+        // View menu actions
+        document.getElementById('zoomIn').addEventListener('click', zoomIn);
+        document.getElementById('zoomOut').addEventListener('click', zoomOut);
+        document.getElementById('zoomFit').addEventListener('click', zoomFit);
+        document.getElementById('toggleGrid').addEventListener('click', toggleGrid);
+        document.getElementById('changeBackground').addEventListener('click', () => {
+          const color = prompt('Enter background color hexcode:', bgColorInput.value);
+          if (color) {
+            bgColorInput.value = color;
+            canvas.style.backgroundColor = color;
+          }
+        });
+        
+        // Task menu actions
+        document.getElementById('addTask').addEventListener('click', () => {
+          const x = canvas.offsetWidth / 2 - 100;
+          const y = canvas.offsetHeight / 2 - 50;
+          createTask(x, y);
+        });
+        
+        // Help menu actions
+        document.getElementById('viewHelp').addEventListener('click', () => {
+          window.open('https://naj-developments.com/help', '_blank');
+        });
+        document.getElementById('shortcuts').addEventListener('click', () => openModal(shortcutsModal));
+        document.getElementById('aboutApp').addEventListener('click', () => openModal(aboutModal));
+      }
+      
+      // Initialize modals
+      function initializeModals() {
+        // Save As modal
+        cancelSaveAs.addEventListener('click', () => closeModal(saveAsModal));
+        confirmSaveAs.addEventListener('click', () => {
+          const fileName = saveFileName.value.trim();
+          if (fileName) {
+            currentDiagramName = fileName;
+            saveDiagram();
+            closeModal(saveAsModal);
+          } else {
+            alert('Please enter a file name');
+          }
+        });
+        
+        // Open modal
+        cancelOpen.addEventListener('click', () => closeModal(openModal));
+        confirmOpen.addEventListener('click', () => {
+          const selectedFile = document.querySelector('.file-item.selected');
+          if (selectedFile) {
+            openDiagram(selectedFile.textContent);
+            closeModal(openModal);
+          } else {
+            alert('Please select a file to open');
+          }
+        });
+        
+        // File list selection
+        document.querySelectorAll('.file-item').forEach(item => {
+          item.addEventListener('click', () => {
+            document.querySelectorAll('.file-item').forEach(i => i.classList.remove('selected'));
+            item.classList.add('selected');
+          });
+          
+          item.addEventListener('dblclick', () => {
+            openDiagram(item.textContent);
+            closeModal(openModal);
+          });
+        });
+        
+        // Shortcuts modal
+        closeShortcuts.addEventListener('click', () => closeModal(shortcutsModal));
+        
+        // About modal
+        closeAbout.addEventListener('click', () => closeModal(aboutModal));
+      }
+      
+      // Open modal
+      function openModal(modal) {
+        modal.style.display = 'block';
+      }
+      
+      // Close modal
+      function closeModal(modal) {
+        modal.style.display = 'none';
+      }
+      
+      // Set up tool buttons
+      function setupToolButtons() {
+        toolButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            toolButtons.forEach(b => b.classList.remove('active'));
+            button.classList.add('active');
+            
+            // Set current tool
+            if (button.id === 'selectTool') currentTool = 'select';
+            else if (button.id === 'taskTool') currentTool = 'task';
+            else if (button.id === 'connectionTool') currentTool = 'connection';
+            else if (button.id === 'textTool') currentTool = 'text';
+            else if (button.id === 'shapeTool') currentTool = 'shape';
+            else if (button.id === 'deleteTool') {
+              if (selectedTask) deleteTask(selectedTask);
+              // Switch back to select tool after deleting
+              document.getElementById('selectTool').click();
+            }
+          });
+        });
+      }
+      
+      // Set up property panel interactions
+      function setupPropertyPanel() {
+        // Title change
+        taskTitle.addEventListener('input', () => {
+          if (selectedTask) {
+            selectedTask.querySelector('.task-title').textContent = taskTitle.value;
+            diagramChanged = true;
+          }
+        });
+        
+        // Description change
+        taskDescription.addEventListener('input', () => {
+          if (selectedTask) {
+            selectedTask.querySelector('.task-description').textContent = taskDescription.value;
+            diagramChanged = true;
+          }
+        });
+        
+        // Fill color change
+        taskFillColor.addEventListener('input', () => {
+          if (selectedTask) {
+            selectedTask.style.backgroundColor = taskFillColor.value;
+            diagramChanged = true;
+          }
+        });
+        
+        // Border color options
+        colorOptions.forEach(option => {
+          option.addEventListener('click', () => {
+            colorOptions.forEach(o => o.classList.remove('selected'));
+            option.classList.add('selected');
+            
+            if (selectedTask) {
+              const color = option.getAttribute('data-color');
+              selectedTask.style.borderColor = color;
+              diagramChanged = true;
+            }
+          });
+        });
+        
+        // Border style options
+        styleOptions.forEach(option => {
+          option.addEventListener('click', () => {
+            styleOptions.forEach(o => o.classList.remove('selected'));
+            option.classList.add('selected');
+            
+            if (selectedTask) {
+              const style = option.getAttribute('data-style');
+              selectedTask.style.borderStyle = style;
+              diagramChanged = true;
+            }
+          });
+        });
+        
+        // Background color
+        bgColorInput.addEventListener('input', () => {
+          canvas.style.backgroundColor = bgColorInput.value;
+          diagramChanged = true;
+        });
+        
+        // Toggle grid
+        toggleGridBtn.addEventListener('click', toggleGrid);
+        
+        // Grid size
+        gridSizeBtn.addEventListener('click', () => {
+          const sizes = ['10px 10px', '20px 20px', '30px 30px', '50px 50px'];
+          const currentSize = canvas.style.backgroundSize || '20px 20px';
+          const currentIndex = sizes.indexOf(currentSize);
+          const nextIndex = (currentIndex + 1) % sizes.length;
+          canvas.style.backgroundSize = sizes[nextIndex];
+          diagramChanged = true;
+        });
+        
+        // Add checklist item
+        addChecklistItem.addEventListener('click', () => {
+          const newItem = document.createElement('div');
+          newItem.className = 'checklist-item';
+          newItem.innerHTML = `
+            <input type="checkbox" class="checklist-checkbox">
+            <input type="text" class="checklist-input" value="New item">
+          `;
+          checklistContainer.appendChild(newItem);
+        });
+        
+        // Zoom controls
+        zoomInBtn.addEventListener('click', zoomIn);
+        zoomOutBtn.addEventListener('click', zoomOut);
+      }
+      
+      // Set up canvas interactions
+      function setupCanvasInteractions() {
+        // Canvas click to deselect
+        canvas.addEventListener('click', (e) => {
+          if (e.target === canvas) {
+            // Deselect any selected task
+            if (selectedTask) {
+              selectedTask.classList.remove('selected');
+              selectedTask = null;
+            }
+            
+            // Handle tool actions
+            if (currentTool === 'task') {
+              // Get mouse position relative to canvas
+              const rect = canvasContainer.getBoundingClientRect();
+              const scaleX = canvas.offsetWidth / canvas.getBoundingClientRect().width;
+              const scaleY = canvas.offsetHeight / canvas.getBoundingClientRect().height;
+              
+              const x = (e.clientX - rect.left + canvasContainer.scrollLeft) * scaleX;
+              const y = (e.clientY - rect.top + canvasContainer.scrollTop) * scaleY;
+              
+              // Create new task at click position
+              createTask(x, y);
+              
+              // Switch back to select tool
+              document.getElementById('selectTool').click();
+            }
+          }
+        });
+        
+        // Mouse wheel for zooming
+        canvasContainer.addEventListener('wheel', (e) => {
+          if (e.ctrlKey) {
+            e.preventDefault();
+            if (e.deltaY < 0) {
+              zoomIn();
+            } else {
+              zoomOut();
+            }
+          }
+        });
+      }
+      
+      // Toggle grid
+      function toggleGrid() {
+        if (canvas.style.backgroundImage) {
+          canvas.style.backgroundImage = '';
+        } else {
+          canvas.style.backgroundImage = 'radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px)';
+        }
+        diagramChanged = true;
+      }
+      
+      // Select all tasks
+      function selectAll() {
+        // Not implemented yet - future feature for multi-selection
+        showNotification('Multi-select feature coming soon');
+      }
+      
+      // Save diagram
+      function saveDiagram() {
+        // Show loading overlay
+        loadingOverlay.classList.add('show');
+        
+        // Simulate saving process
+        setTimeout(() => {
+          // In a real application, this would be an API call to save the diagram
+          // For this demo, we'll just simulate saving
+          diagramChanged = false;
+          document.title = `NAJ Task Manager - ${currentDiagramName}`;
+          
+          // Hide loading overlay
+          loadingOverlay.classList.remove('show');
+          
+          // Show notification
+          showNotification(`Diagram saved as ${currentDiagramName}`);
+        }, 1000);
+      }
+      
+      // Create new diagram
+      function newDiagram() {
+        if (diagramChanged) {
+          const confirmNew = confirm('You have unsaved changes. Create a new diagram anyway?');
+          if (!confirmNew) return;
+        }
+        
+        // Clear canvas
+        while (canvas.firstChild) {
+          if (!canvas.firstChild.classList || !canvas.firstChild.classList.contains('sample-task')) {
+            canvas.removeChild(canvas.firstChild);
+          }
+        }
+        
+        // Reset state
+        currentDiagramName = 'Untitled';
+        diagramChanged = false;
+        selectedTask = null;
+        document.title = 'NAJ Task Manager - Untitled';
+        
+        // Create default task
+        createTask(100, 100);
+        
+        // Reset zoom
+        zoomFit();
+        
+        // Reset undo/redo stacks
+        undoStack = [];
+        redoStack = [];
+        
+        // Save initial state
+        saveState();
+        
+        // Show notification
+        showNotification('New diagram created');
+      }
+      
+      // Open diagram
+      function openDiagram(fileName) {
+        if (diagramChanged) {
+          const confirmOpen = confirm('You have unsaved changes. Open another diagram anyway?');
+          if (!confirmOpen) return;
+        }
+        
+        // Show loading overlay
+        loadingOverlay.classList.add('show');
+        
+        // Simulate loading process
+        setTimeout(() => {
+          // In a real application, this would be an API call to load the diagram
+          // For this demo, we'll just simulate loading with placeholder data
+          
+          // Clear canvas
+          while (canvas.firstChild) {
+            canvas.removeChild(canvas.firstChild);
+          }
+          
+          // Create some sample tasks based on filename
+          if (fileName === 'MyTaskDiagram.naj') {
+            createTask(100, 100);
+            createTask(300, 200);
+            createTask(150, 350);
+          } else if (fileName === 'ProjectPlanning.naj') {
+            createTask(100, 100);
+            createTask(400, 100);
+            createTask(250, 300);
+            createTask(500, 300);
+          } else if (fileName === 'WorkflowChart.naj') {
+            createTask(50, 100);
+            createTask(250, 100);
+            createTask(450, 100);
+            createTask(150, 250);
+            createTask(350, 250);
+          } else {
+            createTask(100, 100);
+          }
+          
+          // Update state
+          currentDiagramName = fileName.replace('.naj', '');
+          diagramChanged = false;
+          document.title = `NAJ Task Manager - ${currentDiagramName}`;
+          
+          // Reset undo/redo stacks
+          undoStack = [];
+          redoStack = [];
+          
+          // Save initial state
+          saveState();
+          
+          // Hide loading overlay
+          loadingOverlay.classList.remove('show');
+          
+          // Show notification
+          showNotification(`Diagram "${currentDiagramName}" opened`);
+        }, 1500);
+      }
+      
+      // Export as PNG
+      function exportAsPNG() {
+        // Show loading overlay
+        loadingOverlay.classList.add('show');
+        
+        // Simulate export process
+        setTimeout(() => {
+          // In a real application, this would use html2canvas or similar
+          // For this demo, we'll just simulate export
+          
+          // Hide loading overlay
+          loadingOverlay.classList.remove('show');
+          
+          // Show notification
+          showNotification('Diagram exported as PNG');
+        }, 1000);
+      }
+      
+      // Export as PDF
+      function exportAsPDF() {
+        // Show loading overlay
+        loadingOverlay.classList.add('show');
+        
+        // Simulate export process
+        setTimeout(() => {
+          // In a real application, this would use jsPDF or similar
+          // For this demo, we'll just simulate export
+          
+          // Hide loading overlay
+          loadingOverlay.classList.remove('show');
+          
+          // Show notification
+          showNotification('Diagram exported as PDF');
+        }, 1000);
+      }
+      
+      // Undo functionality
+      function undo() {
+        if (undoStack.length > 1) {
+          // Save current state to redo stack
+          redoStack.push(undoStack.pop());
+          
+          // Restore previous state
+          restoreState(undoStack[undoStack.length - 1]);
+          
+          // Show notification
+          showNotification('Undo successful');
+        } else {
+          showNotification('Nothing to undo');
+        }
+      }
+      
+      // Redo functionality
+      function redo() {
+        if (redoStack.length > 0) {
+          // Get state from redo stack
+          const state = redoStack.pop();
+          
+          // Add current state to undo stack
+          undoStack.push(state);
+          
+          // Restore state
+          restoreState(state);
+          
+          // Show notification
+          showNotification('Redo successful');
+        } else {
+          showNotification('Nothing to redo');
+        }
+      }
+      
+      // Save current state for undo
+      function saveState() {
+        // Capture canvas HTML
+        const state = canvas.innerHTML;
+        
+        // Add to undo stack
+        undoStack.push(state);
+        
+        // Clear redo stack when a new action is performed
+        redoStack = [];
+        
+        // Limit undo stack size
+        if (undoStack.length > 20) {
+          undoStack.shift();
+        }
+      }
+      
+      // Restore a saved state
+      function restoreState(state) {
+        // Restore canvas HTML
+        canvas.innerHTML = state;
+        
+        // Reapply task interactions
+        setupTaskInteractions();
+        
+        // Clear selection
+        selectedTask = null;
+      }
+      
+      // Show notification
+      function showNotification(message) {
+        notification.textContent = message;
+        notification.classList.add('show');
+        
+        setTimeout(() => {
+          notification.classList.remove('show');
+        }, 3000);
+      }
+      
+      // Generate a unique ID
+      function generateId() {
+        return 'id_' + Math.random().toString(36).substr(2, 9);
+      }
+      
+      // Initialize the application
+      initApp();
     });
   </script>
 </body>
