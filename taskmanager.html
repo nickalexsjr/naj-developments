@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NAJ Task Manager</title>
+  <link rel="icon" href="https://i.imgur.com/vksyj5W.png" type="image/png">
+  <!-- Add meta tags for iOS/Android home screen -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="NAJ Task Manager">
+  <link rel="apple-touch-icon" href="https://i.imgur.com/vksyj5W.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="manifest" href='data:application/manifest+json,{"name":"NAJ Task Manager","short_name":"NAJ Tasks","icons":[{"src":"https://i.imgur.com/vksyj5W.png","sizes":"192x192","type":"image/png"}],"start_url":"/taskmanager","display":"standalone"}'>
+  <style>
+    /* Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    :root {
+      --primary: #00e6a8;
+      --primary-dark: #00b386;
+      --secondary: #6c63ff;
+      --dark: #111;
+      --darker: #0a0a0a;
+      --light: #f4f4f4;
+      --gray: #333;
+      --transition: all 0.3s ease;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      background-color: var(--dark);
+      color: white;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 15px;
+      background: rgba(17, 17, 17, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(108, 99, 255, 0.2);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      z-index: 10;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .app-logo {
+      height: 40px;
+      margin-right: 15px;
+    }
+
+    .app-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Menu Bar */
+    .menu-bar {
+      display: flex;
+      background: rgba(10, 10, 10, 0.95);
+      padding: 5px 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .menu-button {
+      padding: 8px 15px;
+      margin-right: 5px;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: var(--transition);
+    }
+
+    .menu-button:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background: rgba(17, 17, 17, 0.95);
+      min-width: 160px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      z-index: 10;
+      border-radius: 4px;
+      margin-top: 5px;
+      backdrop-filter: blur(10px);
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    .dropdown-item {
+      padding: 10px 15px;
+      color: white;
+      text-decoration: none;
+      display: block;
+      transition: var(--transition);
+      font-size: 14px;
+    }
+
+    .dropdown-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .separator {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      margin: 5px 0;
+    }
+
+    /* Main Content */
+    .main-content {
+      display: flex;
+      height: calc(100vh - 90px);
+    }
+
+    /* Toolbar */
+    .toolbar {
+      width: 50px;
+      background: rgba(10, 10, 10, 0.95);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0;
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .tool-button {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 10px;
+      background: transparent;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: var(--transition);
+    }
+
+    .tool-button:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .tool-button.active {
+      background: var(--primary);
+      color: var(--dark);
+    }
+
+    /* Canvas Area */
+    .canvas-container {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .canvas {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      background-color: #1a1a1a;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+      background-size: 20px 20px;
+      transition: background-size 0.3s ease;
+    }
+
+    /* Task Box */
+    .task-box {
+      position: absolute;
+      min-width: 180px;
+      min-height: 100px;
+      background: rgba(40, 40, 40, 0.9);
+      border: 2px solid var(--primary);
+      border-radius: 6px;
+      padding: 10px;
+      cursor: move;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      transition: box-shadow 0.3s ease, transform 0.2s ease;
+      user-select: none;
+    }
+
+    .task-box:hover {
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .task-box.selected {
+      box-shadow: 0 0 0 2px var(--secondary);
+    }
+
+    .task-title {
+      font-weight: 600;
+      margin-bottom: 5px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .task-description {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .task-footer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Properties Panel */
+    .properties-panel {
+      width: 280px;
+      background: rgba(20, 20, 20, 0.95);
+      padding: 15px;
+      overflow-y: auto;
+      border-left: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .panel-section {
+      margin-bottom: 20px;
+    }
+
+    .panel-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--primary);
+    }
+
+    .form-group {
+      margin-bottom: 10px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      margin-bottom: 5px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 8px 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      color: white;
+      font-size: 14px;
+      transition: var(--transition);
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .color-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .color-option {
+      width: 30px;
+      height: 30px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .color-option:hover {
+      transform: scale(1.1);
+    }
+
+    .color-option.selected {
+      box-shadow: 0 0 0 2px white;
+    }
+
+    .style-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .style-option {
+      width: 50px;
+      height: 30px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .style-option:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .style-option.selected {
+      background: var(--primary);
+      color: var(--dark);
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+
+    .checklist-checkbox {
+      margin-right: 8px;
+    }
+
+    .checklist-input {
+      flex: 1;
+      padding: 5px 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      color: white;
+      font-size: 12px;
+    }
+
+    .add-item-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      padding: 5px 10px;
+      font-size: 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 5px;
+      transition: var(--transition);
+    }
+
+    .add-item-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Status Bar */
+    .status-bar {
+      padding: 5px 15px;
+      background: rgba(10, 10, 10, 0.95);
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .zoom-controls {
+      display: flex;
+      align-items: center;
+    }
+
+    .zoom-btn {
+      background: transparent;
+      border: none;
+      color: white;
+      cursor: pointer;
+      padding: 0 5px;
+      transition: var(--transition);
+    }
+
+    .zoom-btn:hover {
+      color: var(--primary);
+    }
+
+    .zoom-level {
+      margin: 0 5px;
+    }
+
+    /* Context Menu */
+    .context-menu {
+      position: absolute;
+      background: rgba(30, 30, 30, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      padding: 5px 0;
+      min-width: 150px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      z-index: 100;
+      backdrop-filter: blur(10px);
+      display: none;
+    }
+
+    .context-menu-item {
+      padding: 8px 15px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 14px;
+    }
+
+    .context-menu-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .context-separator {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.1);
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <img src="https://i.imgur.com/vksyj5W.png" alt="NAJ Logo" class="app-logo">
+      <h1 class="app-title">NAJ Task Manager</h1>
+    </div>
+    <div class="header-right">
+      <a href="/" style="color: white; text-decoration: none; font-size: 14px;">Back to NAJ Developments</a>
+    </div>
+  </header>
+
+  <!-- Menu Bar -->
+  <div class="menu-bar">
+    <div class="dropdown">
+      <button class="menu-button">File</button>
+      <div class="dropdown-content">
+        <a href="#" class="dropdown-item" id="newDiagram">New</a>
+        <a href="#" class="dropdown-item" id="openDiagram">Open...</a>
+        <div class="separator"></div>
+        <a href="#" class="dropdown-item" id="saveDiagram">Save</a>
+        <a href="#" class="dropdown-item" id="saveAsDiagram">Save As...</a>
+        <div class="separator"></div>
+        <a href="#" class="dropdown-item" id="exportPNG">Export as PNG</a>
+        <a href="#" class="dropdown-item" id="exportPDF">Export as PDF</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <button class="menu-button">Edit</button>
+      <div class="dropdown-content">
+        <a href="#" class="dropdown-item" id="undoAction">Undo</a>
+        <a href="#" class="dropdown-item" id="redoAction">Redo</a>
+        <div class="separator"></div>
+        <a href="#" class="dropdown-item" id="cutItem">Cut</a>
+        <a href="#" class="dropdown-item" id="copyItem">Copy</a>
+        <a href="#" class="dropdown-item" id="pasteItem">Paste</a>
+        <div class="separator"></div>
+        <a href="#" class="dropdown-item" id="selectAll">Select All</a>
+        <a href="#" class="dropdown-item" id="deleteItem">Delete</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <button class="menu-button">View</button>
+      <div class="dropdown-content">
+        <a href="#" class="dropdown-item" id="zoomIn">Zoom In</a>
+        <a href="#" class="dropdown-item" id="zoomOut">Zoom Out</a>
+        <a href="#" class="dropdown-item" id="zoomFit">Fit to Screen</a>
+        <div class="separator"></div>
+        <a href="#" class="dropdown-item" id="toggleGrid">Toggle Grid</a>
+        <a href="#" class="dropdown-item" id="changeBackground">Change Background Color</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <button class="menu-button">Task</button>
+      <div class="dropdown-content">
+        <a href="#" class="dropdown-item" id="addTask">Add Task</a>
+        <a href="#" class="dropdown-item" id="addConnection">Add Connection</a>
+        <div class="separator"></div>
+        <a href="#" class="dropdown-item" id="groupTasks">Group Selected</a>
+        <a href="#" class="dropdown-item" id="ungroupTasks">Ungroup</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <button class="menu-button">Help</button>
+      <div class="dropdown-content">
+        <a href="#" class="dropdown-item" id="viewHelp">View Help</a>
+        <a href="#" class="dropdown-item" id="shortcuts">Keyboard Shortcuts</a>
+        <div class="separator"></div>
+        <a href="#" class="dropdown-item" id="aboutApp">About NAJ Task Manager</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <button class="tool-button active" title="Select Tool" id="selectTool">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg>
+      </button>
+      <button class="tool-button" title="Task Box Tool" id="taskTool">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+      </button>
+      <button class="tool-button" title="Connection Tool" id="connectionTool">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </button>
+      <button class="tool-button" title="Text Tool" id="textTool">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 10h4V3H3v7h4"></path><path d="M7 3v14c0 1 .6 2 2 2h6c1.35 0 2-1 2-2V3"></path><path d="M7 18h10"></path></svg>
+      </button>
+      <button class="tool-button" title="Shape Tool" id="shapeTool">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+      </button>
+      <div style="height: 1px; width: 30px; background: rgba(255,255,255,0.1); margin: 10px 0;"></div>
+      <button class="tool-button" title="Delete Selected" id="deleteTool">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+      </button>
+    </div>
+
+    <!-- Canvas Area -->
+    <div class="canvas-container">
+      <div class="canvas" id="canvas">
+        <!-- Sample Task Box -->
+        <div class="task-box" style="left: 100px; top: 100px; border-color: #00e6a8;">
+          <div class="task-title">Welcome to NAJ Task Manager</div>
+          <div class="task-description">Right-click to add new tasks, delete items, or customize your workspace. Drag task boxes to move them.</div>
+          <div class="task-footer">
+            <span>Priority: High</span>
+            <span>Status: Active</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Context Menu -->
+      <div class="context-menu" id="contextMenu">
+        <div class="context-menu-item" id="cmAddTask">Add Task</div>
+        <div class="context-menu-item" id="cmAddShape">Add Shape</div>
+        <div class="context-menu-item" id="cmAddText">Add Text</div>
+        <div class="context-separator"></div>
+        <div class="context-menu-item" id="cmCut">Cut</div>
+        <div class="context-menu-item" id="cmCopy">Copy</div>
+        <div class="context-menu-item" id="cmPaste">Paste</div>
+        <div class="context-separator"></div>
+        <div class="context-menu-item" id="cmDelete">Delete</div>
+      </div>
+    </div>
+
+    <!-- Properties Panel -->
+    <div class="properties-panel">
+      <div class="panel-section">
+        <div class="panel-title">Task Properties</div>
+        <div class="form-group">
+          <label class="form-label">Title</label>
+          <input type="text" class="form-input" id="taskTitle" value="Welcome to NAJ Task Manager">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea class="form-input" id="taskDescription" rows="3">Right-click to add new tasks, delete items, or customize your workspace. Drag task boxes to move them.</textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Color</label>
+          <div class="color-options">
+            <div class="color-option selected" style="background-color: #00e6a8;" data-color="#00e6a8"></div>
+            <div class="color-option" style="background-color: #6c63ff;" data-color="#6c63ff"></div>
+            <div class="color-option" style="background-color: #ff6584;" data-color="#ff6584"></div>
+            <div class="color-option" style="background-color: #ffce54;" data-color="#ffce54"></div>
+            <div class="color-option" style="background-color: #4fc1e9;" data-color="#4fc1e9"></div>
+            <div class="color-option" style="background-color: #ac92ec;" data-color="#ac92ec"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Style</label>
+          <div class="style-options">
+            <div class="style-option selected" data-style="solid">Solid</div>
+            <div class="style-option" data-style="dashed">Dashed</div>
+            <div class="style-option" data-style="dotted">Dotted</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <div class="panel-title">Checklist</div>
+        <div id="checklistContainer">
+          <div class="checklist-item">
+            <input type="checkbox" class="checklist-checkbox">
+            <input type="text" class="checklist-input" value="Create your first task">
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox" class="checklist-checkbox">
+            <input type="text" class="checklist-input" value="Customize the appearance">
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox" class="checklist-checkbox">
+            <input type="text" class="checklist-input" value="Connect tasks with lines">
+          </div>
+        </div>
+        <button class="add-item-btn" id="addChecklistItem">+ Add Item</button>
+      </div>
+
+      <div class="panel-section">
+        <div class="panel-title">Canvas Settings</div>
+        <div class="form-group">
+          <label class="form-label">Background Color</label>
+          <input type="color" class="form-input" id="bgColor" value="#1a1a1a">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Grid</label>
+          <div style="display: flex; gap: 10px;">
+            <button class="add-item-btn" id="toggleGridBtn">Toggle Grid</button>
+            <button class="add-item-btn" id="gridSizeBtn">Grid Size</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <div class="status-info">Ready</div>
+    <div class="zoom-controls">
+      <button class="zoom-btn" id="zoomOutBtn">-</button>
+      <span class="zoom-level">100%</span>
+      <button class="zoom-btn" id="zoomInBtn">+</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // DOM Elements
+      const canvas = document.getElementById('canvas');
+      const contextMenu = document.getElementById('contextMenu');
+      const toolButtons = document.querySelectorAll('.tool-button');
+      const taskTitle = document.getElementById('taskTitle');
+      const taskDescription = document.getElementById('taskDescription');
+      const colorOptions = document.querySelectorAll('.color-option');
+      const styleOptions = document.querySelectorAll('.style-option');
+      const bgColorInput = document.getElementById('bgColor');
+      const toggleGridBtn = document.getElementById('toggleGridBtn');
+      const gridSizeBtn = document.getElementById('gridSizeBtn');
+      const zoomInBtn = document.getElementById('zoomInBtn');
+      const zoomOutBtn = document.getElementById('zoomOutBtn');
+      const zoomLevel = document.querySelector('.zoom-level');
+      const addChecklistItem = document.getElementById('addChecklistItem');
+      const checklistContainer = document.getElementById('checklistContainer');
+      
+      // Tool Selection
+      toolButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          toolButtons.forEach(b => b.classList.remove('active'));
+          button.classList.add('active');
+        });
+      });
+      
+      // Task Box Dragging
+      let selectedTask = null;
+      let isDragging = false;
+      let startX, startY;
+      let taskX, taskY;
+      
+      document.querySelectorAll('.task-box').forEach(task => {
+        task.addEventListener('mousedown', (e) => {
+          if (e.button === 0) { // Left click
+            selectedTask = task;
+            document.querySelectorAll('.task-box').forEach(t => t.classList.remove('selected'));
+            task.classList.add('selected');
+            
+            isDragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            taskX = parseInt(task.style.left) || 0;
+            taskY = parseInt(task.style.top) || 0;
+            
+            // Update properties panel
+            taskTitle.value = task.querySelector('.task-title').textContent;
+            taskDescription.value = task.querySelector('.task-description').textContent;
+            
+            // Update color selection
+            const taskColor = task.style.borderColor;
+            colorOptions.forEach(option => {
+              option.classList.remove('selected');
+              if (option.getAttribute('data-color') === taskColor) {
+                option.classList.add('selected');
+              }
+            });
+            
+            // Update style selection
+            const taskBorderStyle = task.style.borderStyle || 'solid';
+            styleOptions.forEach(option => {
+              option.classList.remove('selected');
+              if (option.getAttribute('data-style') === taskBorderStyle) {
+                option.classList.add('selected');
+              }
+            });
+            
+            e.stopPropagation();
+          }
+        });
+      });
+      
+      document.addEventListener('mousemove', (e) => {
+        if (isDragging && selectedTask) {
+          const newX = taskX + (e.clientX - startX);
+          const newY = taskY + (e.clientY - startY);
+          
+          selectedTask.style.left = `${newX}px`;
+          selectedTask.style.top = `${newY}px`;
+        }
+      });
+      
+      document.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+      
+      // Canvas click to deselect
+      canvas.addEventListener('mousedown', (e) => {
+        if (e.target === canvas) {
+          document.querySelectorAll('.task-box').forEach(task => {
+            task.classList.remove('selected');
+          });
+          selectedTask = null;
+        }
+      });
+      
+      // Context Menu
+      canvas.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        contextMenu.style.display = 'block';
+        contextMenu.style.left = `${e.clientX}px`;
+        contextMenu.style.top = `${e.clientY}px`;
+      });
+      
+      // Hide context menu on click outside
+      document.addEventListener('click', () => {
+        contextMenu.style.display = 'none';
+      });
+      
+      // Color Options
+      colorOptions.forEach(option => {
+        option.addEventListener('click', () => {
+          colorOptions.forEach(o => o.classList.remove('selected'));
+          option.classList.add('selected');
+          
+          if (selectedTask) {
+            const color = option.getAttribute('data-color');
+            selectedTask.style.borderColor = color;
+          }
+        });
+      });
+      
+      // Style Options
+      styleOptions.forEach(option => {
+        option.addEventListener('click', () => {
+          styleOptions.forEach(o => o.classList.remove('selected'));
+          option.classList.add('selected');
+          
+          if (selectedTask) {
+            const style = option.getAttribute('data-style');
+            selectedTask.style.borderStyle = style;
+          }
+        });
+      });
+      
+      // Task Title and Description Update
+      taskTitle.addEventListener('input', () => {
+        if (selectedTask) {
+          selectedTask.querySelector('.task-title').textContent = taskTitle.value;
+        }
+      });
+      
+      taskDescription.addEventListener('input', () => {
+        if (selectedTask) {
+          selectedTask.querySelector('.task-description').textContent = taskDescription.value;
+        }
+      });
+      
+      // Background Color
+      bgColorInput.addEventListener('input', () => {
+        canvas.style.backgroundColor = bgColorInput.value;
+      });
+      
+      // Toggle Grid
+      toggleGridBtn.addEventListener('click', () => {
+        if (canvas.style.backgroundImage) {
+          canvas.style.backgroundImage = '';
+        } else {
+          canvas.style.backgroundImage = 'radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px)';
+        }
+      });
+      
+      // Grid Size
+      gridSizeBtn.addEventListener('click', () => {
+        const sizes = ['10px 10px', '20px 20px', '30px 30px', '50px 50px'];
+        const currentSize = canvas.style.backgroundSize || '20px 20px';
+        const currentIndex = sizes.indexOf(currentSize);
+        const nextIndex = (currentIndex + 1) % sizes.length;
+        canvas.style.backgroundSize = sizes[nextIndex];
+      });
+      
+      // Zoom Controls
+      let zoom = 100;
+      
+      zoomInBtn.addEventListener('click', () => {
+        if (zoom < 200) {
+          zoom += 10;
+          updateZoom();
+        }
+      });
+      
+      zoomOutBtn.addEventListener('click', () => {
+        if (zoom > 50) {
+          zoom -= 10;
+          updateZoom();
+        }
+      });
+      
+      function updateZoom() {
+        zoomLevel.textContent = `${zoom}%`;
+        canvas.style.transform = `scale(${zoom / 100})`;
+        canvas.style.transformOrigin = 'center center';
+      }
+      
+      // Add Checklist Item
+      addChecklistItem.addEventListener('click', () => {
+        const newItem = document.createElement('div');
+        newItem.className = 'checklist-item';
+        newItem.innerHTML = `
+          <input type="checkbox" class="checklist-checkbox">
+          <input type="text" class="checklist-input" value="New item">
+        `;
+        checklistContainer.appendChild(newItem);
+      });
+      
+      // Context Menu Actions
+      document.getElementById('cmAddTask').addEventListener('click', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = parseInt(contextMenu.style.left) - rect.left;
+        const mouseY = parseInt(contextMenu.style.top) - rect.top;
+        
+        const newTask = document.createElement('div');
+        newTask.className = 'task-box';
+        newTask.style.left = `${mouseX}px`;
+        newTask.style.top = `${mouseY}px`;
+        newTask.style.borderColor = '#00e6a8';
+        newTask.innerHTML = `
+          <div class="task-title">New Task</div>
+          <div class="task-description">Task description here</div>
+          <div class="task-footer">
+            <span>Priority: Medium</span>
+            <span>Status: New</span>
+          </div>
+        `;
+        
+        canvas.appendChild(newTask);
+        
+        // Add event listeners to the new task
+        newTask.addEventListener('mousedown', (e) => {
+          if (e.button === 0) {
+            selectedTask = newTask;
+            document.querySelectorAll('.task-box').forEach(t => t.classList.remove('selected'));
+            newTask.classList.add('selected');
+            
+            isDragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            taskX = parseInt(newTask.style.left) || 0;
+            taskY = parseInt(newTask.style.top) || 0;
+            
+            taskTitle.value = newTask.querySelector('.task-title').textContent;
+            taskDescription.value = newTask.querySelector('.task-description').textContent;
+            
+            e.stopPropagation();
+          }
+        });
+      });
+      
+      document.getElementById('cmDelete').addEventListener('click', () => {
+        if (selectedTask) {
+          selectedTask.remove();
+          selectedTask = null;
+        }
+      });
+      
+      // File menu functionality - simple alert for now
+      document.getElementById('newDiagram').addEventListener('click', () => {
+        if (confirm('Create a new diagram? Unsaved changes will be lost.')) {
+          document.querySelectorAll('.task-box').forEach(task => {
+            if (!task.classList.contains('sample-task')) {
+              task.remove();
+            }
+          });
+        }
+      });
+      
+      document.getElementById('saveDiagram').addEventListener('click', () => {
+        alert('Save functionality will be implemented in the full version. Your diagram would be saved now.');
+      });
+      
+      document.getElementById('saveAsDiagram').addEventListener('click', () => {
+        const fileName = prompt('Enter file name:', 'MyTaskDiagram');
+        if (fileName) {
+          alert(`Diagram would be saved as "${fileName}.naj" in the full version.`);
+        }
+      });
+      
+      document.getElementById('exportPNG').addEventListener('click', () => {
+        alert('Export as PNG functionality will be implemented in the full version.');
+      });
+      
+      // Help menu
+      document.getElementById('aboutApp').addEventListener('click', () => {
+        alert('NAJ Task Manager v1.0\nDeveloped by NAJ Developments\n\nA fully customizable diagram and task management tool.');
+      });
+      
+      // Delete tool functionality
+      document.getElementById('deleteTool').addEventListener('click', () => {
+        if (selectedTask) {
+          selectedTask.remove();
+          selectedTask = null;
+        }
+      });
+      
+      // Initialize status info
+      document.querySelector('.status-info').textContent = 'Ready - Click or drag to select items';
+    });
+  </script>
+</body>
+</html>
