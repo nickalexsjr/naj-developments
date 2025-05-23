@@ -4,457 +4,368 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NAJ Task Manager</title>
-  <link rel="icon" href="https://i.imgur.com/vksyj5W.png" type="image/png">
-  <!-- Add meta tags for iOS/Android home screen -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="NAJ Task Manager">
-  <link rel="apple-touch-icon" href="https://i.imgur.com/vksyj5W.png">
-  <meta name="mobile-web-app-capable" content="yes">
-  <link rel="manifest" href='data:application/manifest+json,{"name":"NAJ Task Manager","short_name":"NAJ Tasks","icons":[{"src":"https://i.imgur.com/vksyj5W.png","sizes":"192x192","type":"image/png"}],"start_url":"/taskmanager","display":"standalone"}'>
   <style>
-    /* Base Styles */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
     }
 
     :root {
-      --primary: #00e6a8;
-      --primary-dark: #00b386;
-      --secondary: #6c63ff;
-      --dark: #111;
-      --darker: #0a0a0a;
-      --light: #f4f4f4;
-      --gray: #333;
-      --transition: all 0.3s ease;
+      --primary: #4a90e2;
+      --primary-hover: #357abd;
+      --secondary: #5cb85c;
+      --danger: #d9534f;
+      --warning: #f0ad4e;
+      --dark: #2c3e50;
+      --darker: #1a252f;
+      --light: #ecf0f1;
+      --border: #bdc3c7;
+      --shadow: rgba(0, 0, 0, 0.1);
     }
 
     body {
-      font-family: 'Segoe UI', sans-serif;
-      line-height: 1.6;
-      background-color: var(--dark);
-      color: white;
-      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f7fa;
+      color: var(--dark);
       height: 100vh;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
     }
 
     /* Header */
-    .app-header {
+    .header {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 15px;
-      background: rgba(17, 17, 17, 0.95);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(108, 99, 255, 0.2);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-      z-index: 10;
+      box-shadow: 0 2px 4px var(--shadow);
     }
 
-    .header-left {
-      display: flex;
-      align-items: center;
-    }
-
-    .app-logo {
-      height: 40px;
-      margin-right: 15px;
-    }
-
-    .app-title {
+    .header h1 {
       font-size: 1.5rem;
+      color: var(--dark);
       font-weight: 600;
-      background: linear-gradient(to right, var(--primary), var(--secondary));
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
     }
 
-    /* Menu Bar */
-    .menu-bar {
+    .header-actions {
       display: flex;
-      background: rgba(10, 10, 10, 0.95);
-      padding: 5px 15px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      gap: 1rem;
     }
 
-    .menu-button {
-      padding: 8px 15px;
-      margin-right: 5px;
-      background: transparent;
+    .btn {
+      padding: 0.5rem 1rem;
       border: none;
-      color: white;
-      font-size: 14px;
+      border-radius: 4px;
       cursor: pointer;
-      border-radius: 4px;
-      transition: var(--transition);
-    }
-
-    .menu-button:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .dropdown {
-      position: relative;
-      display: inline-block;
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      background: rgba(17, 17, 17, 0.95);
-      min-width: 160px;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-      z-index: 10;
-      border-radius: 4px;
-      margin-top: 5px;
-      backdrop-filter: blur(10px);
-    }
-
-    .dropdown.active .dropdown-content {
-      display: block;
-    }
-
-    .dropdown-item {
-      padding: 10px 15px;
-      color: white;
-      text-decoration: none;
-      display: block;
-      transition: var(--transition);
       font-size: 14px;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    .dropdown-item:hover {
-      background: rgba(255, 255, 255, 0.1);
+    .btn-primary {
+      background: var(--primary);
+      color: white;
     }
 
-    .separator {
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      margin: 5px 0;
+    .btn-primary:hover {
+      background: var(--primary-hover);
     }
 
-    /* Main Content */
-    .main-content {
+    .btn-secondary {
+      background: white;
+      color: var(--dark);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--light);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #c9302c;
+    }
+
+    /* Main Layout */
+    .main-container {
       display: flex;
-      height: calc(100vh - 90px);
+      flex: 1;
+      overflow: hidden;
     }
 
-    /* Toolbar */
-    .toolbar {
-      width: 50px;
-      background: rgba(10, 10, 10, 0.95);
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background: white;
+      border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      align-items: center;
-      padding: 10px 0;
-      border-right: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 2px 0 4px var(--shadow);
     }
 
-    .tool-button {
-      width: 40px;
-      height: 40px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 10px;
-      background: transparent;
-      border: none;
-      color: white;
-      cursor: pointer;
+    .sidebar-header {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .project-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+
+    .project-item {
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
       border-radius: 4px;
-      transition: var(--transition);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .tool-button:hover {
-      background: rgba(255, 255, 255, 0.1);
+    .project-item:hover {
+      background: var(--light);
     }
 
-    .tool-button.active {
+    .project-item.active {
       background: var(--primary);
-      color: var(--dark);
+      color: white;
+    }
+
+    .project-name {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .project-count {
+      font-size: 12px;
+      background: rgba(0, 0, 0, 0.1);
+      padding: 2px 6px;
+      border-radius: 12px;
     }
 
     /* Canvas Area */
-    .canvas-container {
+    .canvas-area {
       flex: 1;
       position: relative;
       overflow: auto;
+      background: #f5f7fa;
     }
 
     .canvas {
+      position: relative;
       width: 2000px;
       height: 2000px;
-      position: relative;
-      background-color: #1a1a1a;
-      background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+      background-image: 
+        linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
       background-size: 20px 20px;
-      transition: transform 0.3s ease;
-      transform-origin: 0 0;
     }
 
-    /* Task Box */
-    .task-box {
+    /* Task Cards */
+    .task-card {
       position: absolute;
-      min-width: 180px;
-      min-height: 100px;
-      background: rgba(40, 40, 40, 0.9);
-      border: 2px solid var(--primary);
-      border-radius: 6px;
-      padding: 10px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px var(--shadow);
+      min-width: 200px;
+      max-width: 300px;
       cursor: move;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-      transition: box-shadow 0.3s ease, transform 0.2s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
       user-select: none;
+      border: 2px solid #4a90e2;
     }
 
-    .task-box:hover {
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    .task-card:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
     }
 
-    .task-box.selected {
-      box-shadow: 0 0 0 2px var(--secondary);
+    .task-card.dragging {
+      opacity: 0.8;
+      cursor: grabbing;
+      z-index: 1000;
     }
+
+    .task-card.selected {
+      box-shadow: 0 0 0 3px var(--primary);
+    }
+
+    .task-header {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--light);
+      border-radius: 6px 6px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .task-status {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 0.5rem;
+    }
+
+    .status-pending { background: var(--warning); }
+    .status-progress { background: var(--primary); }
+    .status-complete { background: var(--secondary); }
 
     .task-title {
       font-weight: 600;
-      margin-bottom: 5px;
-      padding-bottom: 5px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--dark);
+      flex: 1;
+    }
+
+    .task-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .task-action {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--dark);
+      padding: 0.25rem;
+      border-radius: 4px;
+      transition: background 0.2s ease;
+    }
+
+    .task-action:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .task-body {
+      padding: 1rem;
     }
 
     .task-description {
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.7);
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 1rem;
+      line-height: 1.5;
     }
 
-    .task-footer {
+    .task-meta {
       display: flex;
-      justify-content: space-between;
-      margin-top: 10px;
+      gap: 1rem;
       font-size: 12px;
-      color: rgba(255, 255, 255, 0.5);
+      color: #999;
     }
 
-    /* Resize Handles */
-    .resize-handle {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      background-color: var(--primary);
-      border-radius: 50%;
+    .task-subtasks {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
     }
-    
-    .resize-handle.ne { top: -5px; right: -5px; cursor: ne-resize; }
-    .resize-handle.se { bottom: -5px; right: -5px; cursor: se-resize; }
-    .resize-handle.sw { bottom: -5px; left: -5px; cursor: sw-resize; }
-    .resize-handle.nw { top: -5px; left: -5px; cursor: nw-resize; }
-    .resize-handle.n { top: -5px; left: 50%; transform: translateX(-50%); cursor: n-resize; }
-    .resize-handle.e { right: -5px; top: 50%; transform: translateY(-50%); cursor: e-resize; }
-    .resize-handle.s { bottom: -5px; left: 50%; transform: translateX(-50%); cursor: s-resize; }
-    .resize-handle.w { left: -5px; top: 50%; transform: translateY(-50%); cursor: w-resize; }
+
+    .subtask {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.25rem 0;
+      font-size: 14px;
+    }
+
+    .subtask input[type="checkbox"] {
+      cursor: pointer;
+    }
+
+    .subtask.completed label {
+      text-decoration: line-through;
+      color: #999;
+    }
+
+    /* Connection Lines */
+    .connection {
+      position: absolute;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .connection-line {
+      stroke: var(--primary);
+      stroke-width: 2;
+      fill: none;
+      opacity: 0.6;
+    }
+
+    .connection-arrow {
+      fill: var(--primary);
+      opacity: 0.6;
+    }
 
     /* Properties Panel */
     .properties-panel {
-      width: 280px;
-      background: rgba(20, 20, 20, 0.95);
-      padding: 15px;
+      width: 300px;
+      background: white;
+      border-left: 1px solid var(--border);
+      padding: 1.5rem;
       overflow-y: auto;
-      border-left: 1px solid rgba(255, 255, 255, 0.05);
+      display: none;
     }
 
-    .panel-section {
-      margin-bottom: 20px;
-    }
-
-    .panel-title {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 10px;
-      color: var(--primary);
-    }
-
-    .form-group {
-      margin-bottom: 10px;
-    }
-
-    .form-label {
+    .properties-panel.active {
       display: block;
+    }
+
+    .property-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .property-label {
       font-size: 12px;
-      margin-bottom: 5px;
-      color: rgba(255, 255, 255, 0.7);
+      font-weight: 600;
+      color: #666;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
     }
 
-    .form-input {
+    .property-input {
       width: 100%;
-      padding: 8px 10px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.5rem;
+      border: 1px solid var(--border);
       border-radius: 4px;
-      color: white;
       font-size: 14px;
-      transition: var(--transition);
+      transition: border-color 0.3s ease;
     }
 
-    .form-input:focus {
+    .property-input:focus {
       outline: none;
       border-color: var(--primary);
     }
 
-    .color-options {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
+    .property-textarea {
+      min-height: 80px;
+      resize: vertical;
     }
 
-    .color-option {
-      width: 30px;
-      height: 30px;
+    .property-select {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid var(--border);
       border-radius: 4px;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-    }
-
-    .color-option:hover {
-      transform: scale(1.1);
-    }
-
-    .color-option.selected {
-      box-shadow: 0 0 0 2px white;
-    }
-
-    .style-options {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .style-option {
-      width: 50px;
-      height: 30px;
-      border-radius: 4px;
-      background: rgba(255, 255, 255, 0.1);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .style-option:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-
-    .style-option.selected {
-      background: var(--primary);
-      color: var(--dark);
-    }
-
-    .checklist-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 5px;
-    }
-
-    .checklist-checkbox {
-      margin-right: 8px;
-    }
-
-    .checklist-input {
-      flex: 1;
-      padding: 5px 8px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
-      color: white;
-      font-size: 12px;
-    }
-
-    .add-item-btn {
-      background: rgba(255, 255, 255, 0.1);
-      border: none;
-      color: white;
-      padding: 5px 10px;
-      font-size: 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-top: 5px;
-      transition: var(--transition);
-    }
-
-    .add-item-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-
-    /* Status Bar */
-    .status-bar {
-      padding: 5px 15px;
-      background: rgba(10, 10, 10, 0.95);
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.5);
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .zoom-controls {
-      display: flex;
-      align-items: center;
-    }
-
-    .zoom-btn {
-      background: transparent;
-      border: none;
-      color: white;
-      cursor: pointer;
-      padding: 0 5px;
-      transition: var(--transition);
-    }
-
-    .zoom-btn:hover {
-      color: var(--primary);
-    }
-
-    .zoom-level {
-      margin: 0 5px;
-    }
-
-    /* Context Menu */
-    .context-menu {
-      position: absolute;
-      background: rgba(30, 30, 30, 0.95);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
-      padding: 5px 0;
-      min-width: 150px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-      z-index: 100;
-      backdrop-filter: blur(10px);
-      display: none;
-    }
-
-    .context-menu-item {
-      padding: 8px 15px;
-      cursor: pointer;
-      transition: var(--transition);
       font-size: 14px;
+      background: white;
+      cursor: pointer;
     }
 
-    .context-menu-item:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .context-separator {
-      height: 1px;
-      background: rgba(255, 255, 255, 0.1);
-      margin: 5px 0;
-    }
-
-    /* Modal styles */
+    /* Modals */
     .modal {
       display: none;
       position: fixed;
@@ -462,141 +373,141 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0, 0, 0, 0.7);
-      z-index: 1000;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
     }
 
     .modal-content {
-      background-color: rgba(30, 30, 30, 0.95);
-      margin: 10% auto;
-      padding: 20px;
+      background: white;
       border-radius: 8px;
-      width: 50%;
+      padding: 2rem;
       max-width: 500px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     }
 
     .modal-header {
-      font-size: 18px;
-      margin-bottom: 15px;
-      color: var(--primary);
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--dark);
     }
 
     .modal-body {
-      margin-bottom: 20px;
+      margin-bottom: 1.5rem;
     }
 
     .modal-footer {
       display: flex;
       justify-content: flex-end;
-      gap: 10px;
+      gap: 1rem;
     }
 
-    .modal-button {
-      padding: 8px 15px;
-      border: none;
+    /* Context Menu */
+    .context-menu {
+      position: fixed;
+      background: white;
+      border: 1px solid var(--border);
       border-radius: 4px;
+      box-shadow: 0 2px 10px var(--shadow);
+      display: none;
+      z-index: 1500;
+      min-width: 150px;
+    }
+
+    .context-menu.active {
+      display: block;
+    }
+
+    .context-item {
+      padding: 0.5rem 1rem;
       cursor: pointer;
-      transition: var(--transition);
+      transition: background 0.2s ease;
+      font-size: 14px;
     }
 
-    .modal-button.primary {
-      background-color: var(--primary);
-      color: var(--dark);
+    .context-item:hover {
+      background: var(--light);
     }
 
-    .modal-button.secondary {
-      background-color: rgba(255, 255, 255, 0.1);
+    .context-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 0.25rem 0;
+    }
+
+    /* Toolbar */
+    .toolbar {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: 0 2px 4px var(--shadow);
+    }
+
+    .tool-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0 1rem;
+      border-right: 1px solid var(--border);
+    }
+
+    .tool-group:last-child {
+      border-right: none;
+    }
+
+    .tool-btn {
+      background: none;
+      border: 1px solid transparent;
+      padding: 0.5rem;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tool-btn:hover {
+      background: var(--light);
+    }
+
+    .tool-btn.active {
+      background: var(--primary);
       color: white;
     }
 
-    .modal-button:hover {
-      opacity: 0.9;
+    /* Icons */
+    .icon {
+      width: 20px;
+      height: 20px;
     }
 
-    /* Connection line styles */
-    .connection-line {
-      position: absolute;
-      height: 2px;
-      background-color: var(--primary);
-      transform-origin: 0 50%;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .connection-arrow {
-      position: absolute;
-      width: 0;
-      height: 0;
-      border-style: solid;
-      border-width: 6px 0 6px 10px;
-      border-color: transparent transparent transparent var(--primary);
-      transform-origin: 0 50%;
-      pointer-events: none;
-    }
-
-    /* File list style */
-    .file-list {
-      max-height: 300px;
-      overflow-y: auto;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
-      margin-bottom: 15px;
-    }
-
-    .file-item {
-      padding: 8px 12px;
-      cursor: pointer;
-      transition: var(--transition);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .file-item:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .file-item:last-child {
-      border-bottom: none;
-    }
-
-    /* Keyboard shortcuts style */
-    .shortcuts-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .shortcuts-table td {
-      padding: 8px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .shortcuts-table tr:last-child td {
-      border-bottom: none;
-    }
-
-    .key {
-      display: inline-block;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 2px 6px;
-      border-radius: 3px;
-      font-family: monospace;
-      margin-right: 5px;
-    }
-
-    /* Notification */
+    /* Notifications */
     .notification {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
-      padding: 10px 15px;
-      background: rgba(0, 230, 168, 0.9);
-      color: #111;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--dark);
+      color: white;
+      padding: 1rem 1.5rem;
       border-radius: 4px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       transform: translateY(100px);
       opacity: 0;
-      transition: transform 0.3s ease, opacity 0.3s ease;
-      z-index: 1000;
+      transition: all 0.3s ease;
+      z-index: 3000;
     }
 
     .notification.show {
@@ -604,1562 +515,1401 @@
       opacity: 1;
     }
 
-    /* Loading indicator */
-    .loading-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
-
-    .loading-overlay.show {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid rgba(255, 255, 255, 0.1);
-      border-left-color: var(--primary);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 200px;
+      }
+      
+      .properties-panel {
+        width: 250px;
+      }
     }
   </style>
 </head>
 <body>
   <!-- Header -->
-  <header class="app-header">
-    <div class="header-left">
-      <img src="https://i.imgur.com/vksyj5W.png" alt="NAJ Logo" class="app-logo">
-      <h1 class="app-title">NAJ Task Manager</h1>
+  <header class="header">
+    <h1>NAJ Task Manager</h1>
+    <div class="header-actions">
+      <button class="btn btn-secondary" onclick="taskManager.exportDiagram()">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <polyline points="9 9 9 15 12 12 15 15 15 9"></polyline>
+        </svg>
+        Export Diagram
+      </button>
+      <button class="btn btn-secondary" onclick="taskManager.exportList()">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="8" y1="6" x2="21" y2="6"></line>
+          <line x1="8" y1="12" x2="21" y2="12"></line>
+          <line x1="8" y1="18" x2="21" y2="18"></line>
+          <line x1="3" y1="6" x2="3.01" y2="6"></line>
+          <line x1="3" y1="12" x2="3.01" y2="12"></line>
+          <line x1="3" y1="18" x2="3.01" y2="18"></line>
+        </svg>
+        Export List
+      </button>
+      <button class="btn btn-secondary" onclick="taskManager.clearAll()">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 6h18"></path>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        </svg>
+        Clear All
+      </button>
     </div>
-    <div class="header-right">
-      <a href="/" style="color: white; text-decoration: none; font-size: 14px;">Back to NAJ Developments</a>
+    <div class="tool-group">
+      <button class="tool-btn" onclick="taskManager.zoomIn()" title="Zoom In">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+          <line x1="11" y1="8" x2="11" y2="14"></line>
+          <line x1="8" y1="11" x2="14" y2="11"></line>
+        </svg>
+      </button>
+      <span id="zoomLevel" style="min-width: 50px; text-align: center;">100%</span>
+      <button class="tool-btn" onclick="taskManager.zoomOut()" title="Zoom Out">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+          <line x1="8" y1="11" x2="14" y2="11"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="tool-group">
+      <button class="tool-btn" onclick="taskManager.toggleGrid()" title="Toggle Grid">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="6" height="6"></rect>
+          <rect x="9" y="3" width="6" height="6"></rect>
+          <rect x="15" y="3" width="6" height="6"></rect>
+          <rect x="3" y="9" width="6" height="6"></rect>
+          <rect x="9" y="9" width="6" height="6"></rect>
+          <rect x="15" y="9" width="6" height="6"></rect>
+          <rect x="3" y="15" width="6" height="6"></rect>
+          <rect x="9" y="15" width="6" height="6"></rect>
+          <rect x="15" y="15" width="6" height="6"></rect>
+        </svg>
+      </button>
+      <input type="color" id="bgColorPicker" value="#f5f7fa" title="Background Color" style="width: 40px; height: 32px; border: 1px solid var(--border); border-radius: 4px; cursor: pointer;" onchange="taskManager.changeBackgroundColor(this.value)">
     </div>
   </header>
 
-  <!-- Menu Bar -->
-  <div class="menu-bar">
-    <div class="dropdown" id="fileDropdown">
-      <button class="menu-button">File</button>
-      <div class="dropdown-content">
-        <a href="#" class="dropdown-item" id="newDiagram">New</a>
-        <a href="#" class="dropdown-item" id="openDiagram">Open...</a>
-        <div class="separator"></div>
-        <a href="#" class="dropdown-item" id="saveDiagram">Save</a>
-        <a href="#" class="dropdown-item" id="saveAsDiagram">Save As...</a>
-        <div class="separator"></div>
-        <a href="#" class="dropdown-item" id="exportPNG">Export as PNG</a>
-        <a href="#" class="dropdown-item" id="exportPDF">Export as PDF</a>
-      </div>
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="tool-group">
+      <button class="tool-btn active" onclick="taskManager.setTool('select')" title="Select">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path>
+        </svg>
+      </button>
+      <button class="tool-btn" onclick="taskManager.setTool('connect')" title="Connect Tasks">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </button>
     </div>
-    <div class="dropdown" id="editDropdown">
-      <button class="menu-button">Edit</button>
-      <div class="dropdown-content">
-        <a href="#" class="dropdown-item" id="undoAction">Undo</a>
-        <a href="#" class="dropdown-item" id="redoAction">Redo</a>
-        <div class="separator"></div>
-        <a href="#" class="dropdown-item" id="cutItem">Cut</a>
-        <a href="#" class="dropdown-item" id="copyItem">Copy</a>
-        <a href="#" class="dropdown-item" id="pasteItem">Paste</a>
-        <div class="separator"></div>
-        <a href="#" class="dropdown-item" id="selectAll">Select All</a>
-        <a href="#" class="dropdown-item" id="deleteItem">Delete</a>
-      </div>
+    <div class="tool-group">
+      <button class="tool-btn" onclick="taskManager.undo()" title="Undo">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 14 4 9 9 4"></polyline>
+          <path d="M20 20v-7a4 4 0 0 0-4-4H4"></path>
+        </svg>
+      </button>
+      <button class="tool-btn" onclick="taskManager.redo()" title="Redo">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 14 20 9 15 4"></polyline>
+          <path d="M4 20v-7a4 4 0 0 1 4-4h12"></path>
+        </svg>
+      </button>
     </div>
-    <div class="dropdown" id="viewDropdown">
-      <button class="menu-button">View</button>
-      <div class="dropdown-content">
-        <a href="#" class="dropdown-item" id="zoomIn">Zoom In</a>
-        <a href="#" class="dropdown-item" id="zoomOut">Zoom Out</a>
-        <a href="#" class="dropdown-item" id="zoomFit">Fit to Screen</a>
-        <div class="separator"></div>
-        <a href="#" class="dropdown-item" id="toggleGrid">Toggle Grid</a>
-        <a href="#" class="dropdown-item" id="changeBackground">Change Background Color</a>
-      </div>
-    </div>
-    <div class="dropdown" id="taskDropdown">
-      <button class="menu-button">Task</button>
-      <div class="dropdown-content">
-        <a href="#" class="dropdown-item" id="addTask">Add Task</a>
-        <a href="#" class="dropdown-item" id="addConnection">Add Connection</a>
-        <div class="separator"></div>
-        <a href="#" class="dropdown-item" id="groupTasks">Group Selected</a>
-        <a href="#" class="dropdown-item" id="ungroupTasks">Ungroup</a>
-      </div>
-    </div>
-    <div class="dropdown" id="helpDropdown">
-      <button class="menu-button">Help</button>
-      <div class="dropdown-content">
-        <a href="#" class="dropdown-item" id="viewHelp">View Help</a>
-        <a href="#" class="dropdown-item" id="shortcuts">Keyboard Shortcuts</a>
-        <div class="separator"></div>
-        <a href="#" class="dropdown-item" id="aboutApp">About NAJ Task Manager</a>
-      </div>
+    <div class="tool-group">
+      <span>Project:</span>
+      <select id="projectSelector" class="property-select" style="width: 200px;" onchange="taskManager.switchProject(this.value)">
+        <option value="default">Default Project</option>
+      </select>
+      <button class="btn btn-primary" onclick="taskManager.createProject()">New Project</button>
     </div>
   </div>
 
-  <!-- Main Content -->
-  <div class="main-content">
-    <!-- Toolbar -->
-    <div class="toolbar">
-      <button class="tool-button active" title="Select Tool" id="selectTool">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg>
-      </button>
-      <button class="tool-button" title="Task Box Tool" id="taskTool">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
-      </button>
-      <button class="tool-button" title="Connection Tool" id="connectionTool">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-      </button>
-      <button class="tool-button" title="Text Tool" id="textTool">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 10h4V3H3v7h4"></path><path d="M7 3v14c0 1 .6 2 2 2h6c1.35 0 2-1 2-2V3"></path><path d="M7 18h10"></path></svg>
-      </button>
-      <button class="tool-button" title="Shape Tool" id="shapeTool">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-      </button>
-      <div style="height: 1px; width: 30px; background: rgba(255,255,255,0.1); margin: 10px 0;"></div>
-      <button class="tool-button" title="Delete Selected" id="deleteTool">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-      </button>
-    </div>
+  <!-- Main Container -->
+  <div class="main-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <button class="btn btn-primary" style="width: 100%;" onclick="taskManager.createTask()">
+          + Add Task
+        </button>
+      </div>
+      <div class="project-list" id="taskList">
+        <!-- Tasks will be listed here -->
+      </div>
+    </aside>
 
     <!-- Canvas Area -->
-    <div class="canvas-container" id="canvasContainer">
+    <div class="canvas-area" id="canvasArea">
       <div class="canvas" id="canvas">
-        <!-- Sample Task Box -->
-        <div class="task-box" id="welcomeTask" style="left: 100px; top: 100px; border-color: #00e6a8; background-color: rgba(40, 40, 40, 0.9);">
-          <div class="task-title">Welcome to NAJ Task Manager</div>
-          <div class="task-description">Right-click to add new tasks, delete items, or customize your workspace. Drag task boxes to move them.</div>
-          <div class="task-footer">
-            <span>Priority: High</span>
-            <span>Status: Active</span>
-          </div>
-          <!-- Resize handles will be added by JavaScript -->
-        </div>
-      </div>
-
-      <!-- Context Menu -->
-      <div class="context-menu" id="contextMenu">
-        <div class="context-menu-item" id="cmAddTask">Add Task</div>
-        <div class="context-menu-item" id="cmAddShape">Add Shape</div>
-        <div class="context-menu-item" id="cmAddText">Add Text</div>
-        <div class="context-separator"></div>
-        <div class="context-menu-item" id="cmCut">Cut</div>
-        <div class="context-menu-item" id="cmCopy">Copy</div>
-        <div class="context-menu-item" id="cmPaste">Paste</div>
-        <div class="context-separator"></div>
-        <div class="context-menu-item" id="cmDelete">Delete</div>
+        <svg id="connectionSvg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+          <!-- Connections will be drawn here -->
+        </svg>
+        <!-- Task cards will be added here -->
       </div>
     </div>
 
     <!-- Properties Panel -->
-    <div class="properties-panel">
-      <div class="panel-section">
-        <div class="panel-title">Task Properties</div>
-        <div class="form-group">
-          <label class="form-label">Title</label>
-          <input type="text" class="form-input" id="taskTitle" value="Welcome to NAJ Task Manager">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Description</label>
-          <textarea class="form-input" id="taskDescription" rows="3">Right-click to add new tasks, delete items, or customize your workspace. Drag task boxes to move them.</textarea>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Border Color</label>
-          <div class="color-options">
-            <div class="color-option selected" style="background-color: #00e6a8;" data-color="#00e6a8"></div>
-            <div class="color-option" style="background-color: #6c63ff;" data-color="#6c63ff"></div>
-            <div class="color-option" style="background-color: #ff6584;" data-color="#ff6584"></div>
-            <div class="color-option" style="background-color: #ffce54;" data-color="#ffce54"></div>
-            <div class="color-option" style="background-color: #4fc1e9;" data-color="#4fc1e9"></div>
-            <div class="color-option" style="background-color: #ac92ec;" data-color="#ac92ec"></div>
+    <aside class="properties-panel" id="propertiesPanel">
+      <h3>Task Properties</h3>
+      <div class="property-group">
+        <label class="property-label">Title</label>
+        <input type="text" class="property-input" id="taskTitleInput" placeholder="Task title">
+      </div>
+      <div class="property-group">
+        <label class="property-label">Description</label>
+        <textarea class="property-input property-textarea" id="taskDescInput" placeholder="Task description"></textarea>
+      </div>
+      <div class="property-group">
+        <label class="property-label">Status</label>
+        <select class="property-select" id="taskStatusInput">
+          <option value="pending">Pending</option>
+          <option value="progress">In Progress</option>
+          <option value="complete">Complete</option>
+        </select>
+      </div>
+      <div class="property-group">
+        <label class="property-label">Due Date</label>
+        <input type="date" class="property-input" id="taskDueInput">
+      </div>
+      <div class="property-group">
+        <label class="property-label">Subtasks</label>
+        <div id="subtasksList"></div>
+        <button class="btn btn-secondary" style="margin-top: 0.5rem;" onclick="taskManager.addSubtask()">
+          + Add Subtask
+        </button>
+      </div>
+      <div class="property-group">
+        <label class="property-label">Appearance</label>
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+          <div style="flex: 1;">
+            <label style="font-size: 12px; color: #666;">Fill Color</label>
+            <input type="color" class="property-input" id="taskFillColor" value="#ffffff" onchange="taskManager.updateTaskStyle('backgroundColor', this.value)">
+          </div>
+          <div style="flex: 1;">
+            <label style="font-size: 12px; color: #666;">Border Color</label>
+            <input type="color" class="property-input" id="taskBorderColor" value="#4a90e2" onchange="taskManager.updateTaskStyle('borderColor', this.value)">
           </div>
         </div>
-        <div class="form-group">
-          <label class="form-label">Fill Color</label>
-          <input type="color" class="form-input" id="taskFillColor" value="#282828">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Style</label>
-          <div class="style-options">
-            <div class="style-option selected" data-style="solid">Solid</div>
-            <div class="style-option" data-style="dashed">Dashed</div>
-            <div class="style-option" data-style="dotted">Dotted</div>
+        <div style="display: flex; gap: 0.5rem;">
+          <div style="flex: 1;">
+            <label style="font-size: 12px; color: #666;">Width</label>
+            <input type="number" class="property-input" id="taskWidth" value="250" min="150" max="500" onchange="taskManager.updateTaskStyle('width', this.value + 'px')">
+          </div>
+          <div style="flex: 1;">
+            <label style="font-size: 12px; color: #666;">Height</label>
+            <select class="property-select" id="taskHeight" onchange="taskManager.updateTaskStyle('height', this.value)">
+              <option value="auto">Auto</option>
+              <option value="150px">Small</option>
+              <option value="200px">Medium</option>
+              <option value="300px">Large</option>
+            </select>
           </div>
         </div>
       </div>
-
-      <div class="panel-section">
-        <div class="panel-title">Checklist</div>
-        <div id="checklistContainer">
-          <div class="checklist-item">
-            <input type="checkbox" class="checklist-checkbox">
-            <input type="text" class="checklist-input" value="Create your first task">
-          </div>
-          <div class="checklist-item">
-            <input type="checkbox" class="checklist-checkbox">
-            <input type="text" class="checklist-input" value="Customize the appearance">
-          </div>
-          <div class="checklist-item">
-            <input type="checkbox" class="checklist-checkbox">
-            <input type="text" class="checklist-input" value="Connect tasks with lines">
-          </div>
-        </div>
-        <button class="add-item-btn" id="addChecklistItem">+ Add Item</button>
+      <div class="property-group">
+        <button class="btn btn-danger" onclick="taskManager.deleteSelectedTask()">Delete Task</button>
       </div>
-
-      <div class="panel-section">
-        <div class="panel-title">Canvas Settings</div>
-        <div class="form-group">
-          <label class="form-label">Background Color</label>
-          <input type="color" class="form-input" id="bgColor" value="#1a1a1a">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Grid</label>
-          <div style="display: flex; gap: 10px;">
-            <button class="add-item-btn" id="toggleGridBtn">Toggle Grid</button>
-            <button class="add-item-btn" id="gridSizeBtn">Grid Size</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    </aside>
   </div>
 
-  <!-- Status Bar -->
-  <div class="status-bar">
-    <div class="status-info">Ready</div>
-    <div class="zoom-controls">
-      <button class="zoom-btn" id="zoomOutBtn">-</button>
-      <span class="zoom-level">100%</span>
-      <button class="zoom-btn" id="zoomInBtn">+</button>
-    </div>
-  </div>
-
-  <!-- Modals -->
-  <!-- Save As Modal -->
-  <div class="modal" id="saveAsModal">
-    <div class="modal-content">
-      <div class="modal-header">Save As</div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label class="form-label">File Name</label>
-          <input type="text" class="form-input" id="saveFileName" value="MyTaskDiagram">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="modal-button secondary" id="cancelSaveAs">Cancel</button>
-        <button class="modal-button primary" id="confirmSaveAs">Save</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Open Modal -->
-  <div class="modal" id="openModal">
-    <div class="modal-content">
-      <div class="modal-header">Open Diagram</div>
-      <div class="modal-body">
-        <div class="file-list" id="fileList">
-          <!-- File items will be added here -->
-          <div class="file-item">MyTaskDiagram.naj</div>
-          <div class="file-item">ProjectPlanning.naj</div>
-          <div class="file-item">WorkflowChart.naj</div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="modal-button secondary" id="cancelOpen">Cancel</button>
-        <button class="modal-button primary" id="confirmOpen">Open</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Keyboard Shortcuts Modal -->
-  <div class="modal" id="shortcutsModal">
-    <div class="modal-content">
-      <div class="modal-header">Keyboard Shortcuts</div>
-      <div class="modal-body">
-        <table class="shortcuts-table">
-          <tr>
-            <td><span class="key">Ctrl</span>+<span class="key">S</span></td>
-            <td>Save diagram</td>
-          </tr>
-          <tr>
-            <td><span class="key">Ctrl</span>+<span class="key">O</span></td>
-            <td>Open diagram</td>
-          </tr>
-          <tr>
-            <td><span class="key">Ctrl</span>+<span class="key">N</span></td>
-            <td>New diagram</td>
-          </tr>
-          <tr>
-            <td><span class="key">Delete</span></td>
-            <td>Delete selected item</td>
-          </tr>
-          <tr>
-            <td><span class="key">Ctrl</span>+<span class="key">C</span></td>
-            <td>Copy selected item</td>
-          </tr>
-          <tr>
-            <td><span class="key">Ctrl</span>+<span class="key">V</span></td>
-            <td>Paste item</td>
-          </tr>
-          <tr>
-            <td><span class="key">Ctrl</span>+<span class="key">X</span></td>
-            <td>Cut selected item</td>
-          </tr>
-          <tr>
-            <td><span class="key">Ctrl</span>+<span class="key">Z</span></td>
-            <td>Undo action</td>
-          </tr>
-          <tr>
-            <td><span class="key">Ctrl</span>+<span class="key">Y</span></td>
-            <td>Redo action</td>
-          </tr>
-          <tr>
-            <td><span class="key">Ctrl</span>+<span class="key">+</span></td>
-            <td>Zoom in</td>
-          </tr>
-          <tr>
-            <td><span class="key">Ctrl</span>+<span class="key">-</span></td>
-            <td>Zoom out</td>
-          </tr>
-          <tr>
-            <td><span class="key">Ctrl</span>+<span class="key">0</span></td>
-            <td>Reset zoom</td>
-          </tr>
-        </table>
-      </div>
-      <div class="modal-footer">
-        <button class="modal-button primary" id="closeShortcuts">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- About Modal -->
-  <div class="modal" id="aboutModal">
-    <div class="modal-content">
-      <div class="modal-header">About NAJ Task Manager</div>
-      <div class="modal-body">
-        <div style="text-align: center; margin-bottom: 15px;">
-          <img src="https://i.imgur.com/vksyj5W.png" alt="NAJ Logo" style="height: 60px;">
-        </div>
-        <p style="margin-bottom: 10px;">NAJ Task Manager v1.0</p>
-        <p style="margin-bottom: 10px;">Developed by NAJ Developments</p>
-        <p>A fully customizable diagram and task management tool designed to help you organize projects, workflows, and ideas visually.</p>
-      </div>
-      <div class="modal-footer">
-        <button class="modal-button primary" id="closeAbout">Close</button>
-      </div>
-    </div>
+  <!-- Context Menu -->
+  <div class="context-menu" id="contextMenu">
+    <div class="context-item" onclick="taskManager.contextAction('add')">Add Task</div>
+    <div class="context-divider"></div>
+    <div class="context-item" onclick="taskManager.contextAction('edit')">Edit Task</div>
+    <div class="context-item" onclick="taskManager.contextAction('duplicate')">Duplicate</div>
+    <div class="context-divider"></div>
+    <div class="context-item" onclick="taskManager.contextAction('connect')">Connect To...</div>
+    <div class="context-item" onclick="taskManager.contextAction('disconnect')">Remove Connections</div>
+    <div class="context-divider"></div>
+    <div class="context-item" onclick="taskManager.contextAction('delete')">Delete</div>
   </div>
 
   <!-- Notification -->
   <div class="notification" id="notification"></div>
 
-  <!-- Loading Overlay -->
-  <div class="loading-overlay" id="loadingOverlay">
-    <div class="spinner"></div>
-  </div>
-
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // DOM Elements
-      const canvas = document.getElementById('canvas');
-      const canvasContainer = document.getElementById('canvasContainer');
-      const contextMenu = document.getElementById('contextMenu');
-      const toolButtons = document.querySelectorAll('.tool-button');
-      const taskTitle = document.getElementById('taskTitle');
-      const taskDescription = document.getElementById('taskDescription');
-      const taskFillColor = document.getElementById('taskFillColor');
-      const colorOptions = document.querySelectorAll('.color-option');
-      const styleOptions = document.querySelectorAll('.style-option');
-      const bgColorInput = document.getElementById('bgColor');
-      const toggleGridBtn = document.getElementById('toggleGridBtn');
-      const gridSizeBtn = document.getElementById('gridSizeBtn');
-      const zoomInBtn = document.getElementById('zoomInBtn');
-      const zoomOutBtn = document.getElementById('zoomOutBtn');
-      const zoomLevel = document.querySelector('.zoom-level');
-      const addChecklistItem = document.getElementById('addChecklistItem');
-      const checklistContainer = document.getElementById('checklistContainer');
-      const dropdowns = document.querySelectorAll('.dropdown');
-      const menuButtons = document.querySelectorAll('.menu-button');
-      const notification = document.getElementById('notification');
-      const loadingOverlay = document.getElementById('loadingOverlay');
-      
-      // Modals
-      const saveAsModal = document.getElementById('saveAsModal');
-      const openModal = document.getElementById('openModal');
-      const shortcutsModal = document.getElementById('shortcutsModal');
-      const aboutModal = document.getElementById('aboutModal');
-      
-      // Modal buttons
-      const saveFileName = document.getElementById('saveFileName');
-      const cancelSaveAs = document.getElementById('cancelSaveAs');
-      const confirmSaveAs = document.getElementById('confirmSaveAs');
-      const cancelOpen = document.getElementById('cancelOpen');
-      const confirmOpen = document.getElementById('confirmOpen');
-      const closeShortcuts = document.getElementById('closeShortcuts');
-      const closeAbout = document.getElementById('closeAbout');
-      
-      // App state
-      let currentTool = 'select';
-      let currentDiagramName = 'Untitled';
-      let diagramChanged = false;
-      let isConnecting = false;
-      let connectionSource = null;
-      let selectedTask = null;
-      let selectedConnection = null;
-      let clipboardData = null;
-      let undoStack = [];
-      let redoStack = [];
-      
-      // Initialize the application
-      function initApp() {
-        // Add resize handles to all task boxes
-        document.querySelectorAll('.task-box').forEach(task => {
-          addResizeHandlesToTask(task);
+    class TaskManager {
+      constructor() {
+        this.currentProject = 'default';
+        this.projects = {
+          default: {
+            name: 'Default Project',
+            tasks: {},
+            connections: []
+          }
+        };
+        this.selectedTask = null;
+        this.currentTool = 'select';
+        this.draggedTask = null;
+        this.connectionStart = null;
+        this.undoStack = [];
+        this.redoStack = [];
+        this.taskIdCounter = 0;
+        this.zoom = 1;
+        this.gridVisible = true;
+        this.backgroundColor = '#f5f7fa';
+        
+        this.init();
+      }
+
+      init() {
+        // Load saved data
+        this.loadFromLocalStorage();
+        
+        // Set up event listeners
+        this.setupEventListeners();
+        
+        // Render initial state
+        this.renderTasks();
+        this.updateProjectSelector();
+        
+        // Save state for undo
+        this.saveState();
+      }
+
+      setupEventListeners() {
+        const canvas = document.getElementById('canvas');
+        const canvasArea = document.getElementById('canvasArea');
+        
+        // Canvas click events
+        canvas.addEventListener('click', (e) => this.handleCanvasClick(e));
+        canvas.addEventListener('contextmenu', (e) => this.handleContextMenu(e));
+        
+        // Mouse wheel zoom
+        canvasArea.addEventListener('wheel', (e) => {
+          if (e.ctrlKey || e.metaKey) {
+            e.preventDefault();
+            const delta = e.deltaY > 0 ? -0.1 : 0.1;
+            this.setZoom(this.zoom + delta);
+          }
         });
         
-        // Set the current zoom level
-        updateZoom();
+        // Property inputs
+        document.getElementById('taskTitleInput').addEventListener('input', (e) => this.updateTaskProperty('title', e.target.value));
+        document.getElementById('taskDescInput').addEventListener('input', (e) => this.updateTaskProperty('description', e.target.value));
+        document.getElementById('taskStatusInput').addEventListener('change', (e) => this.updateTaskProperty('status', e.target.value));
+        document.getElementById('taskDueInput').addEventListener('change', (e) => this.updateTaskProperty('dueDate', e.target.value));
         
-        // Register keyboard shortcuts
-        registerKeyboardShortcuts();
-        
-        // Initialize the context menu
-        initializeContextMenu();
-        
-        // Set up event listeners for task interactions
-        setupTaskInteractions();
-        
-        // Set up menu interactions
-        setupMenuInteractions();
-        
-        // Initialize modals
-        initializeModals();
-        
-        // Set up tool buttons
-        setupToolButtons();
-        
-        // Set up property panel interactions
-        setupPropertyPanel();
-        
-        // Set up canvas interactions
-        setupCanvasInteractions();
-        
-        // Save initial state for undo
-        saveState();
-      }
-      
-      // Add resize handles to a task
-      function addResizeHandlesToTask(task) {
-        const positions = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'];
-        positions.forEach(pos => {
-          const handle = document.createElement('div');
-          handle.className = `resize-handle ${pos}`;
-          handle.setAttribute('data-position', pos);
-          task.appendChild(handle);
-        });
-        
-        // Set up event listeners for resize handles
-        setupResizeHandles(task);
-      }
-      
-      // Set up resize handles for a task
-      function setupResizeHandles(task) {
-        const handles = task.querySelectorAll('.resize-handle');
-        
-        handles.forEach(handle => {
-          handle.addEventListener('mousedown', (e) => {
-            e.stopPropagation();
-            
-            const position = handle.getAttribute('data-position');
-            const startX = e.clientX;
-            const startY = e.clientY;
-            const taskRect = task.getBoundingClientRect();
-            const taskLeft = parseInt(task.style.left) || 0;
-            const taskTop = parseInt(task.style.top) || 0;
-            const taskWidth = taskRect.width;
-            const taskHeight = taskRect.height;
-            
-            // Function to handle resizing
-            function handleResize(e) {
-              const dx = e.clientX - startX;
-              const dy = e.clientY - startY;
-              
-              // Define minimum size
-              const minWidth = 150;
-              const minHeight = 100;
-              
-              // Resize based on the handle position
-              if (position.includes('e')) {
-                const newWidth = Math.max(taskWidth + dx, minWidth);
-                task.style.width = `${newWidth}px`;
-              }
-              
-              if (position.includes('w')) {
-                const newWidth = Math.max(taskWidth - dx, minWidth);
-                if (newWidth > minWidth) {
-                  task.style.width = `${newWidth}px`;
-                  task.style.left = `${taskLeft + dx}px`;
-                }
-              }
-              
-              if (position.includes('s')) {
-                const newHeight = Math.max(taskHeight + dy, minHeight);
-                task.style.height = `${newHeight}px`;
-              }
-              
-              if (position.includes('n')) {
-                const newHeight = Math.max(taskHeight - dy, minHeight);
-                if (newHeight > minHeight) {
-                  task.style.height = `${newHeight}px`;
-                  task.style.top = `${taskTop + dy}px`;
-                }
-              }
-              
-              // Update any connections
-              updateConnections();
-              diagramChanged = true;
-            }
-            
-            function endResize() {
-              document.removeEventListener('mousemove', handleResize);
-              document.removeEventListener('mouseup', endResize);
-              saveState();
-            }
-            
-            document.addEventListener('mousemove', handleResize);
-            document.addEventListener('mouseup', endResize);
-          });
-        });
-      }
-      
-      // Zoom functionality
-      let zoom = 100;
-      
-      function updateZoom() {
-        zoomLevel.textContent = `${zoom}%`;
-        canvas.style.transform = `scale(${zoom / 100})`;
-        
-        // Adjust the cursor position calculation based on zoom
-        const zoomFactor = zoom / 100;
-      }
-      
-      function zoomIn() {
-        if (zoom < 200) {
-          zoom += 10;
-          updateZoom();
-        }
-      }
-      
-      function zoomOut() {
-        if (zoom > 30) {
-          zoom -= 10;
-          updateZoom();
-        }
-      }
-      
-      function zoomFit() {
-        zoom = 100;
-        updateZoom();
-        // Also center the canvas
-        canvasContainer.scrollLeft = (canvas.offsetWidth - canvasContainer.offsetWidth) / 2;
-        canvasContainer.scrollTop = (canvas.offsetHeight - canvasContainer.offsetHeight) / 2;
-      }
-      
-      // Register keyboard shortcuts
-      function registerKeyboardShortcuts() {
-        document.addEventListener('keydown', (e) => {
-          // Check if an input is focused
-          const isInputFocused = document.activeElement.tagName === 'INPUT' || 
-                                document.activeElement.tagName === 'TEXTAREA';
-          
-          // Don't trigger shortcuts when typing in form fields
-          if (isInputFocused) return;
-          
-          // Ctrl + S: Save
-          if (e.ctrlKey && e.key === 's') {
-            e.preventDefault();
-            if (currentDiagramName === 'Untitled') {
-              openModal(saveAsModal);
-            } else {
-              saveDiagram();
-            }
-          }
-          
-          // Ctrl + O: Open
-          if (e.ctrlKey && e.key === 'o') {
-            e.preventDefault();
-            openModal(openModal);
-          }
-          
-          // Ctrl + N: New
-          if (e.ctrlKey && e.key === 'n') {
-            e.preventDefault();
-            newDiagram();
-          }
-          
-          // Delete: Delete selected
-          if (e.key === 'Delete') {
-            if (selectedTask) {
-              deleteTask(selectedTask);
-            }
-          }
-          
-          // Ctrl + C: Copy
-          if (e.ctrlKey && e.key === 'c') {
-            if (selectedTask) {
-              copyTask();
-            }
-          }
-          
-          // Ctrl + V: Paste
-          if (e.ctrlKey && e.key === 'v') {
-            pasteTask();
-          }
-          
-          // Ctrl + X: Cut
-          if (e.ctrlKey && e.key === 'x') {
-            if (selectedTask) {
-              cutTask();
-            }
-          }
-          
-          // Ctrl + Z: Undo
-          if (e.ctrlKey && e.key === 'z') {
-            e.preventDefault();
-            undo();
-          }
-          
-          // Ctrl + Y: Redo
-          if (e.ctrlKey && e.key === 'y') {
-            e.preventDefault();
-            redo();
-          }
-          
-          // Ctrl + Plus: Zoom in
-          if (e.ctrlKey && (e.key === '+' || e.key === '=')) {
-            e.preventDefault();
-            zoomIn();
-          }
-          
-          // Ctrl + Minus: Zoom out
-          if (e.ctrlKey && e.key === '-') {
-            e.preventDefault();
-            zoomOut();
-          }
-          
-          // Ctrl + 0: Reset zoom
-          if (e.ctrlKey && e.key === '0') {
-            e.preventDefault();
-            zoomFit();
-          }
-        });
-      }
-      
-      // Initialize the context menu
-      function initializeContextMenu() {
-        // Close context menu when clicking elsewhere
+        // Hide context menu on click
         document.addEventListener('click', () => {
-          contextMenu.style.display = 'none';
+          document.getElementById('contextMenu').classList.remove('active');
         });
         
-        // Show context menu on right-click
-        canvas.addEventListener('contextmenu', (e) => {
-          e.preventDefault();
-          
-          // Calculate position considering scroll and zoom
-          const rect = canvasContainer.getBoundingClientRect();
-          const scaleX = canvas.offsetWidth / canvas.getBoundingClientRect().width;
-          const scaleY = canvas.offsetHeight / canvas.getBoundingClientRect().height;
-          
-          const x = e.clientX;
-          const y = e.clientY;
-          
-          contextMenu.style.display = 'block';
-          contextMenu.style.left = `${x}px`;
-          contextMenu.style.top = `${y}px`;
-          
-          // Store the mouse position for adding new items
-          contextMenu.dataset.x = (x - rect.left + canvasContainer.scrollLeft) * scaleX;
-          contextMenu.dataset.y = (y - rect.top + canvasContainer.scrollTop) * scaleY;
-        });
-        
-        // Context menu actions
-        document.getElementById('cmAddTask').addEventListener('click', () => {
-          const x = parseInt(contextMenu.dataset.x);
-          const y = parseInt(contextMenu.dataset.y);
-          createTask(x, y);
-        });
-        
-        document.getElementById('cmDelete').addEventListener('click', () => {
-          if (selectedTask) {
-            deleteTask(selectedTask);
-          }
-        });
-        
-        document.getElementById('cmCopy').addEventListener('click', () => {
-          if (selectedTask) {
-            copyTask();
-          }
-        });
-        
-        document.getElementById('cmPaste').addEventListener('click', () => {
-          const x = parseInt(contextMenu.dataset.x);
-          const y = parseInt(contextMenu.dataset.y);
-          pasteTask(x, y);
-        });
-        
-        document.getElementById('cmCut').addEventListener('click', () => {
-          if (selectedTask) {
-            cutTask();
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+          if (e.ctrlKey || e.metaKey) {
+            switch(e.key) {
+              case 'z':
+                e.preventDefault();
+                this.undo();
+                break;
+              case 'y':
+                e.preventDefault();
+                this.redo();
+                break;
+              case 's':
+                e.preventDefault();
+                this.saveToLocalStorage();
+                this.showNotification('Project saved');
+                break;
+              case '=':
+              case '+':
+                e.preventDefault();
+                this.zoomIn();
+                break;
+              case '-':
+                e.preventDefault();
+                this.zoomOut();
+                break;
+            }
+          } else if (e.key === 'Delete' && this.selectedTask) {
+            this.deleteSelectedTask();
           }
         });
       }
-      
-      // Create a new task
-      function createTask(x, y) {
-        const newTask = document.createElement('div');
-        newTask.className = 'task-box';
-        newTask.style.left = `${x}px`;
-        newTask.style.top = `${y}px`;
-        newTask.style.borderColor = '#00e6a8';
-        newTask.style.backgroundColor = 'rgba(40, 40, 40, 0.9)';
-        newTask.innerHTML = `
-          <div class="task-title">New Task</div>
-          <div class="task-description">Task description here</div>
-          <div class="task-footer">
-            <span>Priority: Medium</span>
-            <span>Status: New</span>
+
+      handleCanvasClick(e) {
+        if (e.target.id === 'canvas') {
+          this.selectTask(null);
+        }
+      }
+
+      handleContextMenu(e) {
+        e.preventDefault();
+        const taskCard = e.target.closest('.task-card');
+        if (taskCard) {
+          this.showContextMenu(e.clientX, e.clientY, taskCard.dataset.taskId);
+        } else if (e.target.id === 'canvas') {
+          // Show context menu for canvas
+          this.showCanvasContextMenu(e.clientX, e.clientY, e);
+        }
+      }
+
+      showCanvasContextMenu(x, y, e) {
+        const menu = document.getElementById('contextMenu');
+        menu.innerHTML = `
+          <div class="context-item" onclick="taskManager.contextAction('add')">Add Task Here</div>
+          <div class="context-divider"></div>
+          <div class="context-item" onclick="taskManager.toggleGrid()">Toggle Grid</div>
+          <div class="context-item" onclick="taskManager.promptBackgroundColor()">Change Background Color</div>
+        `;
+        
+        const rect = e.target.getBoundingClientRect();
+        const canvasX = (e.clientX - rect.left + e.target.parentElement.scrollLeft) / this.zoom;
+        const canvasY = (e.clientY - rect.top + e.target.parentElement.scrollTop) / this.zoom;
+        
+        menu.style.left = `${x}px`;
+        menu.style.top = `${y}px`;
+        menu.classList.add('active');
+        menu.dataset.canvasX = canvasX;
+        menu.dataset.canvasY = canvasY;
+        menu.dataset.isCanvas = 'true';
+      }
+
+      showContextMenu(x, y, taskId) {
+        const menu = document.getElementById('contextMenu');
+        menu.innerHTML = `
+          <div class="context-item" onclick="taskManager.contextAction('edit')">Edit Task</div>
+          <div class="context-item" onclick="taskManager.contextAction('duplicate')">Duplicate</div>
+          <div class="context-divider"></div>
+          <div class="context-item" onclick="taskManager.contextAction('connect')">Connect To...</div>
+          <div class="context-item" onclick="taskManager.contextAction('disconnect')">Remove Connections</div>
+          <div class="context-divider"></div>
+          <div class="context-item" onclick="taskManager.contextAction('delete')">Delete</div>
+        `;
+        
+        menu.style.left = `${x}px`;
+        menu.style.top = `${y}px`;
+        menu.classList.add('active');
+        menu.dataset.taskId = taskId;
+        menu.dataset.isCanvas = 'false';
+      }
+
+      contextAction(action) {
+        const menu = document.getElementById('contextMenu');
+        const isCanvas = menu.dataset.isCanvas === 'true';
+        
+        if (isCanvas && action === 'add') {
+          const x = parseFloat(menu.dataset.canvasX);
+          const y = parseFloat(menu.dataset.canvasY);
+          this.createTask(x, y);
+        } else {
+          const taskId = menu.dataset.taskId;
+          
+          switch(action) {
+            case 'edit':
+              this.selectTask(taskId);
+              break;
+            case 'duplicate':
+              this.duplicateTask(taskId);
+              break;
+            case 'delete':
+              this.deleteTask(taskId);
+              break;
+            case 'connect':
+              this.startConnection(taskId);
+              break;
+            case 'disconnect':
+              this.removeConnections(taskId);
+              break;
+          }
+        }
+        
+        menu.classList.remove('active');
+      }
+
+      createTask(x, y) {
+        const taskId = `task_${++this.taskIdCounter}`;
+        const task = {
+          id: taskId,
+          title: 'New Task',
+          description: 'Click to edit description',
+          status: 'pending',
+          x: x || 100,
+          y: y || 100,
+          subtasks: [],
+          createdAt: new Date().toISOString(),
+          dueDate: null,
+          style: {
+            backgroundColor: '#ffffff',
+            borderColor: '#4a90e2',
+            width: '250px',
+            height: 'auto'
+          }
+        };
+        
+        this.projects[this.currentProject].tasks[taskId] = task;
+        this.renderTask(task);
+        this.selectTask(taskId);
+        this.saveState();
+        this.saveToLocalStorage();
+        this.showNotification('Task created');
+      }
+
+      renderTask(task) {
+        const canvas = document.getElementById('canvas');
+        const taskCard = document.createElement('div');
+        taskCard.className = 'task-card';
+        taskCard.dataset.taskId = task.id;
+        taskCard.style.left = `${task.x}px`;
+        taskCard.style.top = `${task.y}px`;
+        
+        // Apply saved styles
+        if (task.style) {
+          taskCard.style.backgroundColor = task.style.backgroundColor || '#ffffff';
+          taskCard.style.borderColor = task.style.borderColor || '#4a90e2';
+          taskCard.style.width = task.style.width || '250px';
+          if (task.style.height !== 'auto') {
+            taskCard.style.height = task.style.height;
+          }
+        }
+        
+        taskCard.innerHTML = `
+          <div class="task-header">
+            <div style="display: flex; align-items: center;">
+              <span class="task-status status-${task.status}"></span>
+              <span class="task-title">${task.title}</span>
+            </div>
+            <div class="task-actions">
+              <button class="task-action" onclick="taskManager.toggleTaskExpand('${task.id}')">
+                <svg class="icon" style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="task-body">
+            <p class="task-description">${task.description}</p>
+            <div class="task-meta">
+              ${task.dueDate ? `<span>Due: ${new Date(task.dueDate).toLocaleDateString()}</span>` : ''}
+              ${task.subtasks.length > 0 ? `<span>${task.subtasks.filter(s => s.completed).length}/${task.subtasks.length} subtasks</span>` : ''}
+            </div>
+            ${task.subtasks.length > 0 ? `
+              <div class="task-subtasks">
+                ${task.subtasks.map((subtask, index) => `
+                  <div class="subtask ${subtask.completed ? 'completed' : ''}">
+                    <input type="checkbox" ${subtask.completed ? 'checked' : ''} 
+                      onchange="taskManager.toggleSubtask('${task.id}', ${index})">
+                    <label>${subtask.text}</label>
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
           </div>
         `;
         
-        // Add resize handles
-        addResizeHandlesToTask(newTask);
+        canvas.appendChild(taskCard);
+        this.makeDraggable(taskCard);
         
-        // Add to canvas
-        canvas.appendChild(newTask);
-        
-        // Select the new task
-        selectTask(newTask);
-        
-        // Set up interactions
-        setupTaskInteractions(newTask);
-        
-        // Save state for undo
-        saveState();
-        
-        // Mark diagram as changed
-        diagramChanged = true;
-        
-        // Show notification
-        showNotification('New task created');
+        // Update sidebar
+        this.updateTaskList();
       }
-      
-      // Set up task interactions
-      function setupTaskInteractions(task) {
-        if (task) {
-          // Single task setup
-          addDragBehavior(task);
-          addSelectionBehavior(task);
-        } else {
-          // Setup all tasks
-          document.querySelectorAll('.task-box').forEach(t => {
-            addDragBehavior(t);
-            addSelectionBehavior(t);
-          });
-        }
-      }
-      
-      // Add drag behavior to a task
-      function addDragBehavior(task) {
+
+      makeDraggable(element) {
         let isDragging = false;
-        let startX, startY;
-        let taskX, taskY;
+        let startX, startY, initialX, initialY;
         
-        task.addEventListener('mousedown', (e) => {
-          // Check if we clicked on a resize handle
-          if (e.target.classList.contains('resize-handle')) {
-            return; // Let the resize handle events take priority
-          }
+        const taskHeader = element.querySelector('.task-header');
+        
+        taskHeader.addEventListener('mousedown', (e) => {
+          if (e.target.closest('.task-action')) return;
           
-          if (e.button === 0) { // Left click
-            isDragging = true;
-            startX = e.clientX;
-            startY = e.clientY;
-            taskX = parseInt(task.style.left) || 0;
-            taskY = parseInt(task.style.top) || 0;
-            task.style.zIndex = 10; // Bring to front while dragging
-            e.stopPropagation();
-          }
+          isDragging = true;
+          element.classList.add('dragging');
+          
+          startX = e.clientX;
+          startY = e.clientY;
+          initialX = element.offsetLeft;
+          initialY = element.offsetTop;
+          
+          e.preventDefault();
         });
         
         document.addEventListener('mousemove', (e) => {
-          if (isDragging && task === selectedTask) {
-            const dx = e.clientX - startX;
-            const dy = e.clientY - startY;
-            
-            // Apply zoom scaling to drag
-            const scaleAdjustment = 100 / zoom;
-            const scaledDx = dx * scaleAdjustment;
-            const scaledDy = dy * scaleAdjustment;
-            
-            const newX = taskX + scaledDx;
-            const newY = taskY + scaledDy;
-            
-            task.style.left = `${newX}px`;
-            task.style.top = `${newY}px`;
-            
-            // Update any connections
-            updateConnections();
-            
-            // Update status info
-            document.querySelector('.status-info').textContent = `Position: ${Math.round(newX)}, ${Math.round(newY)}`;
-            
-            diagramChanged = true;
-          }
+          if (!isDragging) return;
+          
+          const dx = e.clientX - startX;
+          const dy = e.clientY - startY;
+          
+          element.style.left = `${initialX + dx}px`;
+          element.style.top = `${initialY + dy}px`;
+          
+          // Update connections
+          this.updateConnections();
         });
         
         document.addEventListener('mouseup', () => {
           if (isDragging) {
             isDragging = false;
-            task.style.zIndex = 1;
-            document.querySelector('.status-info').textContent = 'Ready';
-            saveState();
+            element.classList.remove('dragging');
+            
+            // Update task position in data
+            const taskId = element.dataset.taskId;
+            const task = this.projects[this.currentProject].tasks[taskId];
+            if (task) {
+              task.x = element.offsetLeft;
+              task.y = element.offsetTop;
+              this.saveToLocalStorage();
+              this.saveState();
+            }
+          }
+        });
+        
+        // Click to select
+        element.addEventListener('click', (e) => {
+          if (!e.target.closest('.task-action')) {
+            this.selectTask(element.dataset.taskId);
           }
         });
       }
-      
-      // Add selection behavior to a task
-      function addSelectionBehavior(task) {
-        task.addEventListener('click', (e) => {
-          e.stopPropagation();
-          selectTask(task);
+
+      selectTask(taskId) {
+        // Remove previous selection
+        document.querySelectorAll('.task-card').forEach(card => {
+          card.classList.remove('selected');
         });
-      }
-      
-      // Select a task
-      function selectTask(task) {
-        // Deselect any currently selected task
-        if (selectedTask) {
-          selectedTask.classList.remove('selected');
+        
+        if (taskId) {
+          const taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
+          if (taskCard) {
+            taskCard.classList.add('selected');
+            this.selectedTask = taskId;
+            this.showProperties(taskId);
+          }
+        } else {
+          this.selectedTask = null;
+          this.hideProperties();
         }
         
-        // Select the new task
-        selectedTask = task;
-        task.classList.add('selected');
-        
-        // Update the properties panel
-        updatePropertyPanel();
-      }
-      
-      // Update the properties panel with selected task info
-      function updatePropertyPanel() {
-        if (selectedTask) {
-          // Update title and description
-          taskTitle.value = selectedTask.querySelector('.task-title').textContent;
-          taskDescription.value = selectedTask.querySelector('.task-description').textContent;
-          
-          // Update color selection
-          const taskColor = selectedTask.style.borderColor;
-          colorOptions.forEach(option => {
-            option.classList.remove('selected');
-            if (option.getAttribute('data-color') === taskColor) {
-              option.classList.add('selected');
-            }
-          });
-          
-          // Update fill color
-          taskFillColor.value = rgbaToHex(selectedTask.style.backgroundColor) || '#282828';
-          
-          // Update style selection
-          const taskBorderStyle = selectedTask.style.borderStyle || 'solid';
-          styleOptions.forEach(option => {
-            option.classList.remove('selected');
-            if (option.getAttribute('data-style') === taskBorderStyle) {
-              option.classList.add('selected');
-            }
-          });
+        // Handle connection tool
+        if (this.currentTool === 'connect' && taskId && this.connectionStart && this.connectionStart !== taskId) {
+          this.createConnection(this.connectionStart, taskId);
+          this.connectionStart = null;
+          this.setTool('select');
+        } else if (this.currentTool === 'connect' && taskId) {
+          this.connectionStart = taskId;
         }
       }
-      
-      // Convert rgba to hex
-      function rgbaToHex(rgba) {
-        if (!rgba || rgba === 'transparent' || rgba === '') return '#282828';
+
+      showProperties(taskId) {
+        const task = this.projects[this.currentProject].tasks[taskId];
+        if (!task) return;
         
-        // Extract RGB values
-        const match = rgba.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/);
-        if (match) {
-          const r = parseInt(match[1]);
-          const g = parseInt(match[2]);
-          const b = parseInt(match[3]);
-          
-          return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+        const panel = document.getElementById('propertiesPanel');
+        panel.classList.add('active');
+        
+        document.getElementById('taskTitleInput').value = task.title;
+        document.getElementById('taskDescInput').value = task.description;
+        document.getElementById('taskStatusInput').value = task.status;
+        document.getElementById('taskDueInput').value = task.dueDate || '';
+        
+        // Set appearance values
+        if (task.style) {
+          document.getElementById('taskFillColor').value = task.style.backgroundColor || '#ffffff';
+          document.getElementById('taskBorderColor').value = task.style.borderColor || '#4a90e2';
+          document.getElementById('taskWidth').value = parseInt(task.style.width) || 250;
+          document.getElementById('taskHeight').value = task.style.height || 'auto';
         }
         
-        return rgba; // If already a hex value or unable to parse
+        // Render subtasks
+        this.renderSubtasks(task);
       }
-      
-      // Delete a task
-      function deleteTask(task) {
+
+      hideProperties() {
+        document.getElementById('propertiesPanel').classList.remove('active');
+      }
+
+      updateTaskProperty(property, value) {
+        if (!this.selectedTask) return;
+        
+        const task = this.projects[this.currentProject].tasks[this.selectedTask];
         if (task) {
-          // Remove any connections to/from this task
-          document.querySelectorAll('.connection-line, .connection-arrow').forEach(conn => {
-            if (conn.dataset.sourceId === task.id || conn.dataset.targetId === task.id) {
-              conn.remove();
-            }
-          });
-          
-          // Remove the task
-          task.remove();
-          
-          // Clear selection
-          selectedTask = null;
-          
-          // Save state for undo
-          saveState();
-          
-          // Mark diagram as changed
-          diagramChanged = true;
-          
-          // Show notification
-          showNotification('Task deleted');
+          task[property] = value;
+          this.renderTasks();
+          this.saveToLocalStorage();
+          this.saveState();
         }
       }
-      
-      // Copy a task
-      function copyTask() {
-        if (selectedTask) {
-          // Create a simplified copy of the task data
-          clipboardData = {
-            title: selectedTask.querySelector('.task-title').textContent,
-            description: selectedTask.querySelector('.task-description').textContent,
-            borderColor: selectedTask.style.borderColor,
-            backgroundColor: selectedTask.style.backgroundColor,
-            borderStyle: selectedTask.style.borderStyle,
-            width: selectedTask.style.width,
-            height: selectedTask.style.height
+
+      renderSubtasks(task) {
+        const container = document.getElementById('subtasksList');
+        container.innerHTML = task.subtasks.map((subtask, index) => `
+          <div class="subtask ${subtask.completed ? 'completed' : ''}">
+            <input type="checkbox" ${subtask.completed ? 'checked' : ''} 
+              onchange="taskManager.toggleSubtask('${task.id}', ${index})">
+            <input type="text" class="property-input" value="${subtask.text}" 
+              onchange="taskManager.updateSubtask('${task.id}', ${index}, this.value)"
+              style="flex: 1; margin-left: 0.5rem;">
+            <button class="task-action" onclick="taskManager.removeSubtask('${task.id}', ${index})">
+              <svg class="icon" style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+        `).join('');
+      }
+
+      addSubtask() {
+        if (!this.selectedTask) return;
+        
+        const task = this.projects[this.currentProject].tasks[this.selectedTask];
+        if (task) {
+          task.subtasks.push({
+            text: 'New subtask',
+            completed: false
+          });
+          this.renderSubtasks(task);
+          this.renderTasks();
+          this.saveToLocalStorage();
+          this.saveState();
+        }
+      }
+
+      toggleSubtask(taskId, index) {
+        const task = this.projects[this.currentProject].tasks[taskId];
+        if (task && task.subtasks[index]) {
+          task.subtasks[index].completed = !task.subtasks[index].completed;
+          this.renderTasks();
+          this.saveToLocalStorage();
+          this.saveState();
+        }
+      }
+
+      updateSubtask(taskId, index, text) {
+        const task = this.projects[this.currentProject].tasks[taskId];
+        if (task && task.subtasks[index]) {
+          task.subtasks[index].text = text;
+          this.saveToLocalStorage();
+          this.saveState();
+        }
+      }
+
+      removeSubtask(taskId, index) {
+        const task = this.projects[this.currentProject].tasks[taskId];
+        if (task) {
+          task.subtasks.splice(index, 1);
+          this.renderSubtasks(task);
+          this.renderTasks();
+          this.saveToLocalStorage();
+          this.saveState();
+        }
+      }
+
+      deleteSelectedTask() {
+        if (this.selectedTask) {
+          this.deleteTask(this.selectedTask);
+        }
+      }
+
+      deleteTask(taskId) {
+        if (confirm('Are you sure you want to delete this task?')) {
+          // Remove connections
+          this.removeConnections(taskId);
+          
+          // Remove task
+          delete this.projects[this.currentProject].tasks[taskId];
+          
+          // Update UI
+          this.renderTasks();
+          this.hideProperties();
+          this.selectedTask = null;
+          this.saveToLocalStorage();
+          this.saveState();
+          this.showNotification('Task deleted');
+        }
+      }
+
+      duplicateTask(taskId) {
+        const originalTask = this.projects[this.currentProject].tasks[taskId];
+        if (originalTask) {
+          const newTask = {
+            ...originalTask,
+            id: `task_${++this.taskIdCounter}`,
+            title: `${originalTask.title} (Copy)`,
+            x: originalTask.x + 50,
+            y: originalTask.y + 50,
+            subtasks: originalTask.subtasks.map(s => ({...s})),
+            style: originalTask.style ? {...originalTask.style} : {
+              backgroundColor: '#ffffff',
+              borderColor: '#4a90e2',
+              width: '250px',
+              height: 'auto'
+            }
           };
           
-          // Show notification
-          showNotification('Task copied to clipboard');
+          this.projects[this.currentProject].tasks[newTask.id] = newTask;
+          this.renderTask(newTask);
+          this.saveToLocalStorage();
+          this.saveState();
+          this.showNotification('Task duplicated');
         }
       }
-      
-      // Cut a task
-      function cutTask() {
-        if (selectedTask) {
-          copyTask();
-          deleteTask(selectedTask);
-          
-          // Show notification
-          showNotification('Task cut to clipboard');
+
+      createConnection(fromId, toId) {
+        const connections = this.projects[this.currentProject].connections;
+        
+        // Check if connection already exists
+        const exists = connections.some(c => 
+          (c.from === fromId && c.to === toId) || 
+          (c.from === toId && c.to === fromId)
+        );
+        
+        if (!exists) {
+          connections.push({ from: fromId, to: toId });
+          this.renderConnections();
+          this.saveToLocalStorage();
+          this.saveState();
+          this.showNotification('Tasks connected');
         }
       }
-      
-      // Paste a task
-      function pasteTask(x, y) {
-        if (clipboardData) {
-          // Create a new task from clipboard data
-          const pasteX = x || (parseInt(selectedTask?.style.left || 100) + 50);
-          const pasteY = y || (parseInt(selectedTask?.style.top || 100) + 50);
-          
-          const newTask = document.createElement('div');
-          newTask.className = 'task-box';
-          newTask.style.left = `${pasteX}px`;
-          newTask.style.top = `${pasteY}px`;
-          newTask.style.borderColor = clipboardData.borderColor || '#00e6a8';
-          newTask.style.backgroundColor = clipboardData.backgroundColor || 'rgba(40, 40, 40, 0.9)';
-          newTask.style.borderStyle = clipboardData.borderStyle || 'solid';
-          newTask.style.width = clipboardData.width || 'auto';
-          newTask.style.height = clipboardData.height || 'auto';
-          
-          newTask.innerHTML = `
-            <div class="task-title">${clipboardData.title}</div>
-            <div class="task-description">${clipboardData.description}</div>
-            <div class="task-footer">
-              <span>Priority: Medium</span>
-              <span>Status: New</span>
-            </div>
-          `;
-          
-          // Add resize handles
-          addResizeHandlesToTask(newTask);
-          
-          // Add to canvas
-          canvas.appendChild(newTask);
-          
-          // Select the new task
-          selectTask(newTask);
-          
-          // Set up interactions
-          setupTaskInteractions(newTask);
-          
-          // Save state for undo
-          saveState();
-          
-          // Mark diagram as changed
-          diagramChanged = true;
-          
-          // Show notification
-          showNotification('Task pasted from clipboard');
-        }
+
+      removeConnections(taskId) {
+        const connections = this.projects[this.currentProject].connections;
+        this.projects[this.currentProject].connections = connections.filter(c => 
+          c.from !== taskId && c.to !== taskId
+        );
+        this.renderConnections();
+        this.saveToLocalStorage();
+        this.saveState();
       }
-      
-      // Update connections when tasks move or resize
-      function updateConnections() {
-        // This is a placeholder for connection logic
-        // Will be implemented when connecting tasks functionality is added
-      }
-      
-      // Set up menu interactions
-      function setupMenuInteractions() {
-        // Toggle dropdown menus
-        menuButtons.forEach(button => {
-          button.addEventListener('click', (e) => {
-            e.stopPropagation();
+
+      renderConnections() {
+        const svg = document.getElementById('connectionSvg');
+        svg.innerHTML = '';
+        
+        this.projects[this.currentProject].connections.forEach(conn => {
+          const fromCard = document.querySelector(`[data-task-id="${conn.from}"]`);
+          const toCard = document.querySelector(`[data-task-id="${conn.to}"]`);
+          
+          if (fromCard && toCard) {
+            const fromRect = fromCard.getBoundingClientRect();
+            const toRect = toCard.getBoundingClientRect();
+            const canvasRect = svg.getBoundingClientRect();
             
-            // Close all other dropdowns
-            dropdowns.forEach(dropdown => {
-              if (dropdown.contains(button) && !dropdown.classList.contains('active')) {
-                dropdown.classList.add('active');
-              } else {
-                dropdown.classList.remove('active');
+            const x1 = fromRect.left + fromRect.width / 2 - canvasRect.left;
+            const y1 = fromRect.top + fromRect.height / 2 - canvasRect.top;
+            const x2 = toRect.left + toRect.width / 2 - canvasRect.left;
+            const y2 = toRect.top + toRect.height / 2 - canvasRect.top;
+            
+            // Create curved path
+            const dx = x2 - x1;
+            const dy = y2 - y1;
+            const cx = x1 + dx / 2;
+            const cy = y1 + dy / 2 - Math.abs(dx) * 0.2;
+            
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', `M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`);
+            path.setAttribute('class', 'connection-line');
+            
+            // Add arrow
+            const angle = Math.atan2(y2 - cy, x2 - cx);
+            const arrowSize = 10;
+            const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            arrow.setAttribute('points', `
+              ${x2},${y2} 
+              ${x2 - arrowSize * Math.cos(angle - Math.PI / 6)},${y2 - arrowSize * Math.sin(angle - Math.PI / 6)} 
+              ${x2 - arrowSize * Math.cos(angle + Math.PI / 6)},${y2 - arrowSize * Math.sin(angle + Math.PI / 6)}
+            `);
+            arrow.setAttribute('class', 'connection-arrow');
+            
+            svg.appendChild(path);
+            svg.appendChild(arrow);
+          }
+        });
+      }
+
+      updateConnections() {
+        // Re-render connections when tasks move
+        this.renderConnections();
+      }
+
+      renderTasks() {
+        const canvas = document.getElementById('canvas');
+        const taskCards = canvas.querySelectorAll('.task-card');
+        taskCards.forEach(card => card.remove());
+        
+        Object.values(this.projects[this.currentProject].tasks).forEach(task => {
+          this.renderTask(task);
+        });
+        
+        this.renderConnections();
+        this.updateTaskList();
+      }
+
+      updateTaskList() {
+        const taskList = document.getElementById('taskList');
+        const tasks = Object.values(this.projects[this.currentProject].tasks);
+        
+        taskList.innerHTML = tasks.map(task => `
+          <div class="project-item" onclick="taskManager.selectTask('${task.id}')">
+            <span class="task-status status-${task.status}"></span>
+            <span class="project-name">${task.title}</span>
+            <span class="project-count">${task.status}</span>
+          </div>
+        `).join('');
+      }
+
+      setTool(tool) {
+        this.currentTool = tool;
+        this.connectionStart = null;
+        
+        // Update UI
+        document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.closest('.tool-btn').classList.add('active');
+        
+        // Update cursor
+        const canvas = document.getElementById('canvas');
+        if (tool === 'connect') {
+          canvas.style.cursor = 'crosshair';
+        } else {
+          canvas.style.cursor = 'default';
+        }
+      }
+
+      updateTaskStyle(property, value) {
+        if (!this.selectedTask) return;
+        
+        const task = this.projects[this.currentProject].tasks[this.selectedTask];
+        if (task) {
+          if (!task.style) {
+            task.style = {
+              backgroundColor: '#ffffff',
+              borderColor: '#4a90e2',
+              width: '250px',
+              height: 'auto'
+            };
+          }
+          
+          task.style[property] = value;
+          
+          // Apply style to the element
+          const taskCard = document.querySelector(`[data-task-id="${this.selectedTask}"]`);
+          if (taskCard) {
+            taskCard.style[property] = value;
+          }
+          
+          this.saveToLocalStorage();
+          this.saveState();
+        }
+      }
+
+      zoomIn() {
+        this.setZoom(Math.min(this.zoom + 0.1, 2));
+      }
+
+      zoomOut() {
+        this.setZoom(Math.max(this.zoom - 0.1, 0.3));
+      }
+
+      setZoom(newZoom) {
+        this.zoom = newZoom;
+        const canvas = document.getElementById('canvas');
+        canvas.style.transform = `scale(${this.zoom})`;
+        canvas.style.transformOrigin = '0 0';
+        document.getElementById('zoomLevel').textContent = Math.round(this.zoom * 100) + '%';
+        this.updateConnections();
+      }
+
+      toggleGrid() {
+        this.gridVisible = !this.gridVisible;
+        const canvas = document.getElementById('canvas');
+        if (this.gridVisible) {
+          canvas.style.backgroundImage = 
+            'linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px), ' +
+            'linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px)';
+        } else {
+          canvas.style.backgroundImage = 'none';
+        }
+        this.saveToLocalStorage();
+      }
+
+      changeBackgroundColor(color) {
+        this.backgroundColor = color;
+        const canvas = document.getElementById('canvas');
+        const canvasArea = document.getElementById('canvasArea');
+        canvas.style.backgroundColor = color;
+        canvasArea.style.backgroundColor = color;
+        this.saveToLocalStorage();
+      }
+
+      promptBackgroundColor() {
+        const color = prompt('Enter background color (hex code):', this.backgroundColor);
+        if (color) {
+          this.changeBackgroundColor(color);
+          document.getElementById('bgColorPicker').value = color;
+        }
+      }
+
+      createProject() {
+        const name = prompt('Enter project name:');
+        if (name) {
+          const projectId = `project_${Date.now()}`;
+          this.projects[projectId] = {
+            name: name,
+            tasks: {},
+            connections: []
+          };
+          this.switchProject(projectId);
+          this.updateProjectSelector();
+          this.saveToLocalStorage();
+          this.showNotification('Project created');
+        }
+      }
+
+      switchProject(projectId) {
+        this.currentProject = projectId;
+        this.selectedTask = null;
+        this.renderTasks();
+        this.hideProperties();
+        this.saveState();
+      }
+
+      updateProjectSelector() {
+        const selector = document.getElementById('projectSelector');
+        selector.innerHTML = Object.entries(this.projects).map(([id, project]) => `
+          <option value="${id}" ${id === this.currentProject ? 'selected' : ''}>${project.name}</option>
+        `).join('');
+      }
+
+      saveState() {
+        const state = {
+          currentProject: this.currentProject,
+          projects: JSON.parse(JSON.stringify(this.projects))
+        };
+        this.undoStack.push(state);
+        if (this.undoStack.length > 50) this.undoStack.shift();
+        this.redoStack = [];
+      }
+
+      undo() {
+        if (this.undoStack.length > 1) {
+          this.redoStack.push(this.undoStack.pop());
+          const state = this.undoStack[this.undoStack.length - 1];
+          this.restoreState(state);
+          this.showNotification('Undo');
+        }
+      }
+
+      redo() {
+        if (this.redoStack.length > 0) {
+          const state = this.redoStack.pop();
+          this.undoStack.push(state);
+          this.restoreState(state);
+          this.showNotification('Redo');
+        }
+      }
+
+      restoreState(state) {
+        this.projects = JSON.parse(JSON.stringify(state.projects));
+        this.currentProject = state.currentProject;
+        this.renderTasks();
+        this.updateProjectSelector();
+        this.saveToLocalStorage();
+      }
+
+      saveToLocalStorage() {
+        const data = {
+          projects: this.projects,
+          currentProject: this.currentProject,
+          taskIdCounter: this.taskIdCounter,
+          zoom: this.zoom,
+          gridVisible: this.gridVisible,
+          backgroundColor: this.backgroundColor
+        };
+        localStorage.setItem('najTaskManager', JSON.stringify(data));
+      }
+
+      loadFromLocalStorage() {
+        const saved = localStorage.getItem('najTaskManager');
+        if (saved) {
+          try {
+            const data = JSON.parse(saved);
+            this.projects = data.projects || this.projects;
+            this.currentProject = data.currentProject || this.currentProject;
+            this.taskIdCounter = data.taskIdCounter || 0;
+            this.zoom = data.zoom || 1;
+            this.gridVisible = data.gridVisible !== undefined ? data.gridVisible : true;
+            this.backgroundColor = data.backgroundColor || '#f5f7fa';
+            
+            // Apply saved settings
+            this.setZoom(this.zoom);
+            this.changeBackgroundColor(this.backgroundColor);
+            if (!this.gridVisible) {
+              this.toggleGrid();
+            }
+          } catch (e) {
+            console.error('Failed to load saved data:', e);
+          }
+        }
+      }
+
+      clearAll() {
+        if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
+          localStorage.removeItem('najTaskManager');
+          location.reload();
+        }
+      }
+
+      exportList() {
+        // Create a simple HTML representation for printing as list
+        const printWindow = window.open('', '_blank');
+        const project = this.projects[this.currentProject];
+        const tasks = Object.values(project.tasks);
+        
+        // Sort tasks by status
+        const sortedTasks = tasks.sort((a, b) => {
+          const statusOrder = { 'complete': 3, 'progress': 2, 'pending': 1 };
+          return statusOrder[a.status] - statusOrder[b.status];
+        });
+        
+        const html = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>${project.name} - Task List</title>
+            <style>
+              body { 
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; 
+                padding: 20px;
+                line-height: 1.6;
               }
-            });
-          });
-        });
-        
-        // Close dropdowns when clicking outside
-        document.addEventListener('click', () => {
-          dropdowns.forEach(dropdown => {
-            dropdown.classList.remove('active');
-          });
-        });
-        
-        // Prevent closing when clicking inside dropdown content
-        document.querySelectorAll('.dropdown-content').forEach(content => {
-          content.addEventListener('click', (e) => {
-            e.stopPropagation();
-          });
-        });
-        
-        // File menu actions
-        document.getElementById('newDiagram').addEventListener('click', newDiagram);
-        document.getElementById('openDiagram').addEventListener('click', () => openModal(openModal));
-        document.getElementById('saveDiagram').addEventListener('click', () => {
-          if (currentDiagramName === 'Untitled') {
-            openModal(saveAsModal);
-          } else {
-            saveDiagram();
-          }
-        });
-        document.getElementById('saveAsDiagram').addEventListener('click', () => openModal(saveAsModal));
-        document.getElementById('exportPNG').addEventListener('click', exportAsPNG);
-        document.getElementById('exportPDF').addEventListener('click', exportAsPDF);
-        
-        // Edit menu actions
-        document.getElementById('undoAction').addEventListener('click', undo);
-        document.getElementById('redoAction').addEventListener('click', redo);
-        document.getElementById('cutItem').addEventListener('click', cutTask);
-        document.getElementById('copyItem').addEventListener('click', copyTask);
-        document.getElementById('pasteItem').addEventListener('click', pasteTask);
-        document.getElementById('selectAll').addEventListener('click', selectAll);
-        document.getElementById('deleteItem').addEventListener('click', () => {
-          if (selectedTask) {
-            deleteTask(selectedTask);
-          }
-        });
-        
-        // View menu actions
-        document.getElementById('zoomIn').addEventListener('click', zoomIn);
-        document.getElementById('zoomOut').addEventListener('click', zoomOut);
-        document.getElementById('zoomFit').addEventListener('click', zoomFit);
-        document.getElementById('toggleGrid').addEventListener('click', toggleGrid);
-        document.getElementById('changeBackground').addEventListener('click', () => {
-          const color = prompt('Enter background color hexcode:', bgColorInput.value);
-          if (color) {
-            bgColorInput.value = color;
-            canvas.style.backgroundColor = color;
-          }
-        });
-        
-        // Task menu actions
-        document.getElementById('addTask').addEventListener('click', () => {
-          const x = canvas.offsetWidth / 2 - 100;
-          const y = canvas.offsetHeight / 2 - 50;
-          createTask(x, y);
-        });
-        
-        // Help menu actions
-        document.getElementById('viewHelp').addEventListener('click', () => {
-          window.open('https://naj-developments.com/help', '_blank');
-        });
-        document.getElementById('shortcuts').addEventListener('click', () => openModal(shortcutsModal));
-        document.getElementById('aboutApp').addEventListener('click', () => openModal(aboutModal));
-      }
-      
-      // Initialize modals
-      function initializeModals() {
-        // Save As modal
-        cancelSaveAs.addEventListener('click', () => closeModal(saveAsModal));
-        confirmSaveAs.addEventListener('click', () => {
-          const fileName = saveFileName.value.trim();
-          if (fileName) {
-            currentDiagramName = fileName;
-            saveDiagram();
-            closeModal(saveAsModal);
-          } else {
-            alert('Please enter a file name');
-          }
-        });
-        
-        // Open modal
-        cancelOpen.addEventListener('click', () => closeModal(openModal));
-        confirmOpen.addEventListener('click', () => {
-          const selectedFile = document.querySelector('.file-item.selected');
-          if (selectedFile) {
-            openDiagram(selectedFile.textContent);
-            closeModal(openModal);
-          } else {
-            alert('Please select a file to open');
-          }
-        });
-        
-        // File list selection
-        document.querySelectorAll('.file-item').forEach(item => {
-          item.addEventListener('click', () => {
-            document.querySelectorAll('.file-item').forEach(i => i.classList.remove('selected'));
-            item.classList.add('selected');
-          });
-          
-          item.addEventListener('dblclick', () => {
-            openDiagram(item.textContent);
-            closeModal(openModal);
-          });
-        });
-        
-        // Shortcuts modal
-        closeShortcuts.addEventListener('click', () => closeModal(shortcutsModal));
-        
-        // About modal
-        closeAbout.addEventListener('click', () => closeModal(aboutModal));
-      }
-      
-      // Open modal
-      function openModal(modal) {
-        modal.style.display = 'block';
-      }
-      
-      // Close modal
-      function closeModal(modal) {
-        modal.style.display = 'none';
-      }
-      
-      // Set up tool buttons
-      function setupToolButtons() {
-        toolButtons.forEach(button => {
-          button.addEventListener('click', () => {
-            toolButtons.forEach(b => b.classList.remove('active'));
-            button.classList.add('active');
+              h1 { 
+                color: #2c3e50; 
+                border-bottom: 2px solid #3498db;
+                padding-bottom: 10px;
+              }
+              .meta {
+                color: #666;
+                font-size: 14px;
+                margin-bottom: 20px;
+              }
+              .task { 
+                margin-bottom: 25px; 
+                padding: 15px; 
+                border: 1px solid #ddd; 
+                border-radius: 8px;
+                page-break-inside: avoid;
+              }
+              .task-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px;
+              }
+              .task-title { 
+                font-weight: bold; 
+                font-size: 18px; 
+                color: #2c3e50;
+              }
+              .task-meta { 
+                color: #666; 
+                font-size: 12px; 
+                margin-bottom: 10px; 
+              }
+              .task-description {
+                margin-bottom: 10px;
+                color: #444;
+              }
+              .subtask { 
+                margin-left: 20px; 
+                padding: 5px 0; 
+              }
+              .subtask-header {
+                font-weight: 600;
+                margin-top: 10px;
+                margin-bottom: 5px;
+              }
+              .completed { 
+                text-decoration: line-through; 
+                color: #999; 
+              }
+              .status { 
+                display: inline-block; 
+                padding: 4px 12px; 
+                border-radius: 20px; 
+                font-size: 12px; 
+                font-weight: 600;
+                text-transform: uppercase;
+              }
+              .status-pending { 
+                background: #fff3cd; 
+                color: #856404; 
+              }
+              .status-progress { 
+                background: #cce5ff; 
+                color: #004085; 
+              }
+              .status-complete { 
+                background: #d4edda; 
+                color: #155724; 
+              }
+              .connections {
+                margin-top: 10px;
+                font-size: 12px;
+                color: #666;
+              }
+              @media print {
+                body { padding: 10px; }
+                .task { break-inside: avoid; }
+              }
+            </style>
+          </head>
+          <body>
+            <h1>${project.name} - Task List</h1>
+            <div class="meta">
+              <strong>Generated:</strong> ${new Date().toLocaleString()}<br>
+              <strong>Total Tasks:</strong> ${tasks.length} 
+              (${tasks.filter(t => t.status === 'complete').length} completed, 
+              ${tasks.filter(t => t.status === 'progress').length} in progress, 
+              ${tasks.filter(t => t.status === 'pending').length} pending)
+            </div>
             
-            // Set current tool
-            if (button.id === 'selectTool') currentTool = 'select';
-            else if (button.id === 'taskTool') currentTool = 'task';
-            else if (button.id === 'connectionTool') currentTool = 'connection';
-            else if (button.id === 'textTool') currentTool = 'text';
-            else if (button.id === 'shapeTool') currentTool = 'shape';
-            else if (button.id === 'deleteTool') {
-              if (selectedTask) deleteTask(selectedTask);
-              // Switch back to select tool after deleting
-              document.getElementById('selectTool').click();
-            }
-          });
-        });
-      }
-      
-      // Set up property panel interactions
-      function setupPropertyPanel() {
-        // Title change
-        taskTitle.addEventListener('input', () => {
-          if (selectedTask) {
-            selectedTask.querySelector('.task-title').textContent = taskTitle.value;
-            diagramChanged = true;
-          }
-        });
-        
-        // Description change
-        taskDescription.addEventListener('input', () => {
-          if (selectedTask) {
-            selectedTask.querySelector('.task-description').textContent = taskDescription.value;
-            diagramChanged = true;
-          }
-        });
-        
-        // Fill color change
-        taskFillColor.addEventListener('input', () => {
-          if (selectedTask) {
-            selectedTask.style.backgroundColor = taskFillColor.value;
-            diagramChanged = true;
-          }
-        });
-        
-        // Border color options
-        colorOptions.forEach(option => {
-          option.addEventListener('click', () => {
-            colorOptions.forEach(o => o.classList.remove('selected'));
-            option.classList.add('selected');
-            
-            if (selectedTask) {
-              const color = option.getAttribute('data-color');
-              selectedTask.style.borderColor = color;
-              diagramChanged = true;
-            }
-          });
-        });
-        
-        // Border style options
-        styleOptions.forEach(option => {
-          option.addEventListener('click', () => {
-            styleOptions.forEach(o => o.classList.remove('selected'));
-            option.classList.add('selected');
-            
-            if (selectedTask) {
-              const style = option.getAttribute('data-style');
-              selectedTask.style.borderStyle = style;
-              diagramChanged = true;
-            }
-          });
-        });
-        
-        // Background color
-        bgColorInput.addEventListener('input', () => {
-          canvas.style.backgroundColor = bgColorInput.value;
-          diagramChanged = true;
-        });
-        
-        // Toggle grid
-        toggleGridBtn.addEventListener('click', toggleGrid);
-        
-        // Grid size
-        gridSizeBtn.addEventListener('click', () => {
-          const sizes = ['10px 10px', '20px 20px', '30px 30px', '50px 50px'];
-          const currentSize = canvas.style.backgroundSize || '20px 20px';
-          const currentIndex = sizes.indexOf(currentSize);
-          const nextIndex = (currentIndex + 1) % sizes.length;
-          canvas.style.backgroundSize = sizes[nextIndex];
-          diagramChanged = true;
-        });
-        
-        // Add checklist item
-        addChecklistItem.addEventListener('click', () => {
-          const newItem = document.createElement('div');
-          newItem.className = 'checklist-item';
-          newItem.innerHTML = `
-            <input type="checkbox" class="checklist-checkbox">
-            <input type="text" class="checklist-input" value="New item">
-          `;
-          checklistContainer.appendChild(newItem);
-        });
-        
-        // Zoom controls
-        zoomInBtn.addEventListener('click', zoomIn);
-        zoomOutBtn.addEventListener('click', zoomOut);
-      }
-      
-      // Set up canvas interactions
-      function setupCanvasInteractions() {
-        // Canvas click to deselect
-        canvas.addEventListener('click', (e) => {
-          if (e.target === canvas) {
-            // Deselect any selected task
-            if (selectedTask) {
-              selectedTask.classList.remove('selected');
-              selectedTask = null;
-            }
-            
-            // Handle tool actions
-            if (currentTool === 'task') {
-              // Get mouse position relative to canvas
-              const rect = canvasContainer.getBoundingClientRect();
-              const scaleX = canvas.offsetWidth / canvas.getBoundingClientRect().width;
-              const scaleY = canvas.offsetHeight / canvas.getBoundingClientRect().height;
+            ${sortedTasks.map(task => {
+              const connections = project.connections.filter(c => c.from === task.id || c.to === task.id);
+              const connectedTasks = connections.map(c => {
+                const connectedId = c.from === task.id ? c.to : c.from;
+                const connectedTask = project.tasks[connectedId];
+                return connectedTask ? connectedTask.title : 'Unknown';
+              });
               
-              const x = (e.clientX - rect.left + canvasContainer.scrollLeft) * scaleX;
-              const y = (e.clientY - rect.top + canvasContainer.scrollTop) * scaleY;
-              
-              // Create new task at click position
-              createTask(x, y);
-              
-              // Switch back to select tool
-              document.getElementById('selectTool').click();
-            }
-          }
+              return `
+              <div class="task">
+                <div class="task-header">
+                  <div class="task-title">${task.title}</div>
+                  <span class="status status-${task.status}">${task.status}</span>
+                </div>
+                <div class="task-meta">
+                  Created: ${new Date(task.createdAt).toLocaleDateString()}
+                  ${task.dueDate ? ` | Due: ${new Date(task.dueDate).toLocaleDateString()}` : ''}
+                </div>
+                <div class="task-description">${task.description}</div>
+                ${task.subtasks.length > 0 ? `
+                  <div class="subtask-header">Subtasks (${task.subtasks.filter(s => s.completed).length}/${task.subtasks.length} completed):</div>
+                  ${task.subtasks.map(subtask => `
+                    <div class="subtask ${subtask.completed ? 'completed' : ''}">
+                      ${subtask.completed ? '☑' : '☐'} ${subtask.text}
+                    </div>
+                  `).join('')}
+                ` : ''}
+                ${connectedTasks.length > 0 ? `
+                  <div class="connections">
+                    <strong>Connected to:</strong> ${connectedTasks.join(', ')}
+                  </div>
+                ` : ''}
+              </div>
+            `}).join('')}
+          </body>
+          </html>
+        `;
+        
+        printWindow.document.write(html);
+        printWindow.document.close();
+        
+        setTimeout(() => {
+          printWindow.print();
+        }, 250);
+        
+        this.showNotification('List view ready - use print dialog to save as PDF');
+      }
+
+      exportDiagram() {
+        // Create a visual representation of the diagram
+        const printWindow = window.open('', '_blank');
+        const project = this.projects[this.currentProject];
+        const tasks = Object.values(project.tasks);
+        
+        // Find canvas bounds
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        tasks.forEach(task => {
+          minX = Math.min(minX, task.x);
+          minY = Math.min(minY, task.y);
+          maxX = Math.max(maxX, task.x + 300); // Approximate width
+          maxY = Math.max(maxY, task.y + 200); // Approximate height
         });
         
-        // Mouse wheel for zooming
-        canvasContainer.addEventListener('wheel', (e) => {
-          if (e.ctrlKey) {
-            e.preventDefault();
-            if (e.deltaY < 0) {
-              zoomIn();
-            } else {
-              zoomOut();
-            }
-          }
-        });
-      }
-      
-      // Toggle grid
-      function toggleGrid() {
-        if (canvas.style.backgroundImage) {
-          canvas.style.backgroundImage = '';
-        } else {
-          canvas.style.backgroundImage = 'radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px)';
-        }
-        diagramChanged = true;
-      }
-      
-      // Select all tasks
-      function selectAll() {
-        // Not implemented yet - future feature for multi-selection
-        showNotification('Multi-select feature coming soon');
-      }
-      
-      // Save diagram
-      function saveDiagram() {
-        // Show loading overlay
-        loadingOverlay.classList.add('show');
+        const width = Math.max(maxX - minX + 100, 800);
+        const height = Math.max(maxY - minY + 100, 600);
         
-        // Simulate saving process
+        const html = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>${project.name} - Task Diagram</title>
+            <style>
+              @page {
+                size: landscape;
+                margin: 10mm;
+              }
+              body { 
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; 
+                margin: 0;
+                padding: 20px;
+              }
+              h1 { 
+                color: #2c3e50; 
+                font-size: 24px;
+                margin-bottom: 10px;
+              }
+              .meta {
+                color: #666;
+                font-size: 12px;
+                margin-bottom: 20px;
+              }
+              .diagram-container {
+                position: relative;
+                width: ${width}px;
+                height: ${height}px;
+                border: 1px solid #ddd;
+                background: ${this.backgroundColor};
+                ${this.gridVisible ? `
+                  background-image: 
+                    linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+                  background-size: 20px 20px;
+                ` : ''}
+              }
+              .task-box {
+                position: absolute;
+                background: white;
+                border: 2px solid #4a90e2;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                min-width: 200px;
+                max-width: 300px;
+                font-size: 12px;
+              }
+              .task-header {
+                padding: 8px;
+                background: #f8f9fa;
+                border-bottom: 1px solid #dee2e6;
+                border-radius: 6px 6px 0 0;
+                font-weight: bold;
+              }
+              .task-content {
+                padding: 8px;
+              }
+              .task-description {
+                color: #666;
+                margin-bottom: 5px;
+              }
+              .task-meta {
+                font-size: 10px;
+                color: #999;
+              }
+              .status-indicator {
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                margin-right: 5px;
+              }
+              .status-pending { background: #ffc107; }
+              .status-progress { background: #007bff; }
+              .status-complete { background: #28a745; }
+              svg {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+              }
+              .connection-line {
+                stroke: #4a90e2;
+                stroke-width: 2;
+                fill: none;
+                opacity: 0.6;
+              }
+              @media print {
+                body { padding: 0; }
+                h1 { font-size: 18px; }
+                .diagram-container { 
+                  max-width: 100%; 
+                  overflow: visible;
+                  page-break-inside: avoid;
+                }
+              }
+            </style>
+          </head>
+          <body>
+            <h1>${project.name}</h1>
+            <div class="meta">Generated: ${new Date().toLocaleString()}</div>
+            
+            <div class="diagram-container">
+              <svg>
+                ${project.connections.map(conn => {
+                  const fromTask = project.tasks[conn.from];
+                  const toTask = project.tasks[conn.to];
+                  if (!fromTask || !toTask) return '';
+                  
+                  const x1 = fromTask.x - minX + 125;
+                  const y1 = fromTask.y - minY + 50;
+                  const x2 = toTask.x - minX + 125;
+                  const y2 = toTask.y - minY + 50;
+                  
+                  const dx = x2 - x1;
+                  const dy = y2 - y1;
+                  const cx = x1 + dx / 2;
+                  const cy = y1 + dy / 2 - Math.abs(dx) * 0.2;
+                  
+                  return `<path d="M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}" class="connection-line"/>`;
+                }).join('')}
+              </svg>
+              
+              ${tasks.map(task => `
+                <div class="task-box" style="
+                  left: ${task.x - minX}px; 
+                  top: ${task.y - minY}px;
+                  ${task.style ? `
+                    background-color: ${task.style.backgroundColor || '#ffffff'};
+                    border-color: ${task.style.borderColor || '#4a90e2'};
+                    width: ${task.style.width || '250px'};
+                  ` : ''}
+                ">
+                  <div class="task-header">
+                    <span class="status-indicator status-${task.status}"></span>
+                    ${task.title}
+                  </div>
+                  <div class="task-content">
+                    <div class="task-description">${task.description}</div>
+                    <div class="task-meta">
+                      ${task.dueDate ? `Due: ${new Date(task.dueDate).toLocaleDateString()}` : ''}
+                      ${task.subtasks.length > 0 ? ` | ${task.subtasks.filter(s => s.completed).length}/${task.subtasks.length} subtasks` : ''}
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </body>
+          </html>
+        `;
+        
+        printWindow.document.write(html);
+        printWindow.document.close();
+        
         setTimeout(() => {
-          // In a real application, this would be an API call to save the diagram
-          // For this demo, we'll just simulate saving
-          diagramChanged = false;
-          document.title = `NAJ Task Manager - ${currentDiagramName}`;
-          
-          // Hide loading overlay
-          loadingOverlay.classList.remove('show');
-          
-          // Show notification
-          showNotification(`Diagram saved as ${currentDiagramName}`);
-        }, 1000);
+          printWindow.print();
+        }, 250);
+        
+        this.showNotification('Diagram ready - use print dialog to save as PDF');
       }
-      
-      // Create new diagram
-      function newDiagram() {
-        if (diagramChanged) {
-          const confirmNew = confirm('You have unsaved changes. Create a new diagram anyway?');
-          if (!confirmNew) return;
-        }
-        
-        // Clear canvas
-        while (canvas.firstChild) {
-          if (!canvas.firstChild.classList || !canvas.firstChild.classList.contains('sample-task')) {
-            canvas.removeChild(canvas.firstChild);
-          }
-        }
-        
-        // Reset state
-        currentDiagramName = 'Untitled';
-        diagramChanged = false;
-        selectedTask = null;
-        document.title = 'NAJ Task Manager - Untitled';
-        
-        // Create default task
-        createTask(100, 100);
-        
-        // Reset zoom
-        zoomFit();
-        
-        // Reset undo/redo stacks
-        undoStack = [];
-        redoStack = [];
-        
-        // Save initial state
-        saveState();
-        
-        // Show notification
-        showNotification('New diagram created');
+
+      exportPDF() {
+        this.exportList();
       }
-      
-      // Open diagram
-      function openDiagram(fileName) {
-        if (diagramChanged) {
-          const confirmOpen = confirm('You have unsaved changes. Open another diagram anyway?');
-          if (!confirmOpen) return;
-        }
-        
-        // Show loading overlay
-        loadingOverlay.classList.add('show');
-        
-        // Simulate loading process
-        setTimeout(() => {
-          // In a real application, this would be an API call to load the diagram
-          // For this demo, we'll just simulate loading with placeholder data
-          
-          // Clear canvas
-          while (canvas.firstChild) {
-            canvas.removeChild(canvas.firstChild);
-          }
-          
-          // Create some sample tasks based on filename
-          if (fileName === 'MyTaskDiagram.naj') {
-            createTask(100, 100);
-            createTask(300, 200);
-            createTask(150, 350);
-          } else if (fileName === 'ProjectPlanning.naj') {
-            createTask(100, 100);
-            createTask(400, 100);
-            createTask(250, 300);
-            createTask(500, 300);
-          } else if (fileName === 'WorkflowChart.naj') {
-            createTask(50, 100);
-            createTask(250, 100);
-            createTask(450, 100);
-            createTask(150, 250);
-            createTask(350, 250);
-          } else {
-            createTask(100, 100);
-          }
-          
-          // Update state
-          currentDiagramName = fileName.replace('.naj', '');
-          diagramChanged = false;
-          document.title = `NAJ Task Manager - ${currentDiagramName}`;
-          
-          // Reset undo/redo stacks
-          undoStack = [];
-          redoStack = [];
-          
-          // Save initial state
-          saveState();
-          
-          // Hide loading overlay
-          loadingOverlay.classList.remove('show');
-          
-          // Show notification
-          showNotification(`Diagram "${currentDiagramName}" opened`);
-        }, 1500);
-      }
-      
-      // Export as PNG
-      function exportAsPNG() {
-        // Show loading overlay
-        loadingOverlay.classList.add('show');
-        
-        // Simulate export process
-        setTimeout(() => {
-          // In a real application, this would use html2canvas or similar
-          // For this demo, we'll just simulate export
-          
-          // Hide loading overlay
-          loadingOverlay.classList.remove('show');
-          
-          // Show notification
-          showNotification('Diagram exported as PNG');
-        }, 1000);
-      }
-      
-      // Export as PDF
-      function exportAsPDF() {
-        // Show loading overlay
-        loadingOverlay.classList.add('show');
-        
-        // Simulate export process
-        setTimeout(() => {
-          // In a real application, this would use jsPDF or similar
-          // For this demo, we'll just simulate export
-          
-          // Hide loading overlay
-          loadingOverlay.classList.remove('show');
-          
-          // Show notification
-          showNotification('Diagram exported as PDF');
-        }, 1000);
-      }
-      
-      // Undo functionality
-      function undo() {
-        if (undoStack.length > 1) {
-          // Save current state to redo stack
-          redoStack.push(undoStack.pop());
-          
-          // Restore previous state
-          restoreState(undoStack[undoStack.length - 1]);
-          
-          // Show notification
-          showNotification('Undo successful');
-        } else {
-          showNotification('Nothing to undo');
-        }
-      }
-      
-      // Redo functionality
-      function redo() {
-        if (redoStack.length > 0) {
-          // Get state from redo stack
-          const state = redoStack.pop();
-          
-          // Add current state to undo stack
-          undoStack.push(state);
-          
-          // Restore state
-          restoreState(state);
-          
-          // Show notification
-          showNotification('Redo successful');
-        } else {
-          showNotification('Nothing to redo');
-        }
-      }
-      
-      // Save current state for undo
-      function saveState() {
-        // Capture canvas HTML
-        const state = canvas.innerHTML;
-        
-        // Add to undo stack
-        undoStack.push(state);
-        
-        // Clear redo stack when a new action is performed
-        redoStack = [];
-        
-        // Limit undo stack size
-        if (undoStack.length > 20) {
-          undoStack.shift();
-        }
-      }
-      
-      // Restore a saved state
-      function restoreState(state) {
-        // Restore canvas HTML
-        canvas.innerHTML = state;
-        
-        // Reapply task interactions
-        setupTaskInteractions();
-        
-        // Clear selection
-        selectedTask = null;
-      }
-      
-      // Show notification
-      function showNotification(message) {
+
+      showNotification(message) {
+        const notification = document.getElementById('notification');
         notification.textContent = message;
         notification.classList.add('show');
         
@@ -2167,15 +1917,20 @@
           notification.classList.remove('show');
         }, 3000);
       }
-      
-      // Generate a unique ID
-      function generateId() {
-        return 'id_' + Math.random().toString(36).substr(2, 9);
+
+      // Additional utility methods
+      toggleTaskExpand(taskId) {
+        // This could be expanded to show/hide task details
+        const taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
+        if (taskCard) {
+          const body = taskCard.querySelector('.task-body');
+          body.style.display = body.style.display === 'none' ? 'block' : 'none';
+        }
       }
-      
-      // Initialize the application
-      initApp();
-    });
+    }
+
+    // Initialize the task manager
+    const taskManager = new TaskManager();
   </script>
 </body>
 </html>
