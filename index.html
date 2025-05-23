@@ -208,7 +208,7 @@
       }
     }
     
-    /* Top Navigation Bar - Enhanced with animation */
+    /* Enhanced Top Navigation Bar with better zoom/scaling support */
     .top-nav {
       position: fixed;
       top: 0;
@@ -234,18 +234,22 @@
     .nav-container {
       display: flex;
       justify-content: center;
-      max-width: 1200px;
+      align-items: center;
+      max-width: 1400px;
       margin: 0 auto;
       padding: 0 20px;
+      position: relative;
     }
 
     .nav-items {
       display: flex;
-      width: 100%;
       justify-content: center;
       align-items: center;
-      gap: 20px;
-      flex-wrap: nowrap;
+      gap: 8px;
+      flex-wrap: wrap;
+      list-style: none;
+      margin: 0;
+      padding: 0;
     }
     
     .mobile-nav-toggle {
@@ -256,23 +260,47 @@
       font-size: 1.5rem;
       cursor: pointer;
       z-index: 1001;
+      position: absolute;
+      left: 20px;
     }
 
-    /* Enhanced responsive navigation */
-    @media (max-width: 1200px) {
+    /* Enhanced responsive navigation - cleaned up for better zoom support */
+    @media (min-width: 1401px) {
       .nav-items {
-        gap: 15px;
+        gap: 12px;
       }
       
       .nav-link {
-        padding: 10px 12px;
         font-size: 0.95rem;
+        padding: 10px 14px;
+      }
+    }
+
+    @media (max-width: 1400px) {
+      .nav-items {
+        gap: 6px;
+      }
+      
+      .nav-link {
+        padding: 10px 10px;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 1200px) {
+      .nav-items {
+        gap: 4px;
+      }
+      
+      .nav-link {
+        padding: 8px 8px;
+        font-size: 0.85rem;
       }
     }
 
     @media (max-width: 992px) {
       .nav-container {
-        justify-content: space-between;
+        justify-content: flex-start;
         padding: 0 20px;
       }
       
@@ -296,12 +324,12 @@
         justify-content: center;
         align-items: center;
         gap: 30px;
-        background: rgba(17, 17, 17, 0.95);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        background: rgba(17, 17, 17, 0.98);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
         transform: translateX(-100%);
         transition: transform 0.4s ease;
-        padding: 120px 0;
+        padding: 60px 20px;
       }
       
       .nav-items.active {
@@ -311,6 +339,8 @@
       .nav-item {
         opacity: 0;
         transform: translateY(20px);
+        width: 100%;
+        text-align: center;
       }
       
       .nav-items.active .nav-item {
@@ -329,7 +359,10 @@
       .nav-items.active .nav-item:nth-child(10) { animation-delay: 1.0s; }
       
       .nav-link {
-        font-size: 0.95rem;
+        font-size: 1.1rem;
+        padding: 12px 20px;
+        display: block;
+        width: 100%;
       }
       
       @keyframes fadeIn {
@@ -342,21 +375,14 @@
 
     .nav-item {
       list-style: none;
-      text-align: center;
-    }
-
-    .nav-item:first-child {
-      text-align: left;
-    }
-
-    .nav-item:last-child {
-      text-align: right;
+      margin: 0;
+      padding: 0;
     }
 
     .nav-link {
       color: #fff;
       text-decoration: none;
-      padding: 12px 15px;
+      padding: 10px 12px;
       border-radius: 20px;
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       position: relative;
@@ -395,6 +421,20 @@
 
     .nav-link.active::after {
       width: 70%;
+    }
+
+    /* Zoom-friendly nav styles */
+    @media (min-resolution: 120dpi) {
+      .nav-link {
+        font-size: 0.875rem;
+      }
+    }
+
+    @media (min-resolution: 144dpi) {
+      .nav-link {
+        font-size: 0.85rem;
+        padding: 8px 10px;
+      }
     }
 
     /* Background effect - Enhanced with animated gradient */
@@ -1663,1088 +1703,7 @@
       </div>
     </div>
   </section>
-  <!-- Bot Creation Section (continued) -->
-  <section class="content-section" id="bot-creation-section">
-    <div class="container">
-      <h2 class="section-title">Bot Creation</h2>
-      
-      <div class="content-grid">
-        <div class="content-card">
-          <h3>Social Media Automation</h3>
-          <p>Automated solutions for managing and growing your social media presence. Schedule posts, engage with followers, and track performance across platforms.</p>
-        </div>
-        
-        <div class="content-card">
-          <h3>Business Workflow Automation</h3>
-          <p>Automate repetitive tasks and streamline your business operations. Free up your team's time by automating routine processes and data handling.</p>
-        </div>
-        
-        <div class="content-card">
-          <h3>Integration Services</h3>
-          <p>Connect different platforms and synchronize data between your business systems. Create seamless workflows across various applications.</p>
-        </div>
-      </div>
-      
-      <div class="pricing-section">
-        <h3 class="section-title">Our Approach to Bot Development</h3>
-        
-        <div class="content-card" style="max-width: 800px; margin: 0 auto;">
-          <h3>Smart Automation Solutions</h3>
-          <p>Our bot development services follow a collaborative model. We could offer a revenue sharing agreement which could be free of charge, depending on the project. For standard projects, we provide custom quotes within 1-2 business days after a free consultation.</p>
-          <p>We begin with a detailed assessment of your automation needs, identifying processes that can be optimized and determining the most effective solutions for your specific business requirements.</p>
-          <p>Ready to automate your business processes? <a href="#" data-section="contact" class="pricing-btn pulse-effect" style="display: inline-block; margin-top: 10px;">Discuss your automation needs</a></p>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- Business Assistance Section -->
-  <section class="content-section" id="business-assistance-section">
-    <div class="container">
-      <h2 class="section-title">Business Assistance</h2>
-      
-      <div class="content-grid">
-        <div class="content-card">
-          <h3>Business Website Solutions</h3>
-          <p>Professional website development tailored for Australian businesses. Establish your online presence with a website that converts visitors into customers.</p>
-        </div>
-        
-        <div class="content-card">
-          <h3>Email Setup & Management</h3>
-          <p>Professional email solutions for your business. Set up custom email addresses with your domain name and implement efficient email management systems.</p>
-        </div>
-        
-        <div class="content-card">
-          <h3>Tech Support Services</h3>
-          <p>Ongoing technical support for Australian businesses. Get help with website maintenance, email issues, and general tech troubleshooting.</p>
-        </div>
-      </div>
-      
-      <div class="pricing-section">
-        <h3 class="section-title">Our Approach to Business Assistance</h3>
-        
-        <div class="content-card" style="max-width: 800px; margin: 0 auto;">
-          <h3>Comprehensive Business Support</h3>
-          <p>Our business assistance services follow our collaborative approach. We could offer a revenue sharing agreement which could be free of charge, depending on the project. Otherwise, after a free consultation, we'll provide a tailored quote within 1-2 business days.</p>
-          <p>We start by understanding your business needs and challenges, creating a customized plan to help you establish and maintain your online presence and technical infrastructure.</p>
-          <p>Need help with your business technology? <a href="#" data-section="contact" class="pricing-btn pulse-effect" style="display: inline-block; margin-top: 10px;">Contact us</a></p>
-        </div>
-      </div>
-    </div>
-  </section>
-<!-- Applications Section -->
-<section class="content-section" id="applications-section">
-  <div class="container">
-    <h2 class="section-title">Our Applications</h2>
-    
-    <div class="content-grid">
-      <div class="content-card">
-        <h3>NAJ Task Manager</h3>
-        <p>A fully customizable diagram and task management tool that helps you organize your workflow with ease. Create, modify, and track tasks with our intuitive interface.</p>
-        <ul class="content-features">
-          <li>Customizable task boxes with colors, styles, and descriptions</li>
-          <li>Built-in checklist functionality for each task</li>
-          <li>Flexible canvas with adjustable grid and background options</li>
-          <li>Connect tasks with lines and arrows to visualize workflows</li>
-        </ul>
-        <a href="taskmanager.html" target="_blank" class="pricing-btn pulse-effect" style="display: inline-block; margin-top: 20px;" onclick="window.open('taskmanager.html', '_blank'); return false;">Launch NAJ Task Manager</a>
-      </div>
-      
-      <div class="content-card">
-        <h3>Coming Soon</h3>
-        <p>We're constantly developing new tools and applications to help streamline your workflow. Stay tuned for more exciting releases!</p>
-        <ul class="content-features">
-          <li>Project Management Suite</li>
-          <li>Financial Dashboard</li>
-          <li>Customer Relationship Tools</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-  <!-- Resources Section -->
-  <section class="content-section" id="resources-section">
-    <div class="container">
-      <h2 class="section-title">Developer Resources</h2>
-      
-      <div class="search-container">
-        <h3>Find the Perfect Tools</h3>
-        <p>Browse through our curated list of AI tools, frameworks, and platforms to help you bring your ideas to life. Use the search box below to filter by name, description, or any criteria. This list was updated 23/05/2025.</p>
-        
-        <input type="text" id="searchInput" class="search-input" placeholder="Search for tools, features, or categories...">
-        
-        <div class="filter-controls">
-          <button class="filter-button active" data-filter="all">All Tools</button>
-          <button class="filter-button" data-filter="free">Free Tools</button>
-          <button class="filter-button" data-filter="paid">Paid Only</button>
-          <button class="filter-button" data-filter="freemium">Free & Paid</button>
-        </div>
-      </div>
-      
-      <div class="table-container">
-        <table class="tools-table" id="toolsTable">
-          <thead>
-            <tr>
-              <th class="sortable" data-sort="name">Tool Name</th>
-              <th class="sortable" data-sort="website">Website</th>
-              <th class="sortable" data-sort="description">Description</th>
-              <th class="sortable" data-sort="pricing">Pricing</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Table data will be populated by JavaScript -->
-          </tbody>
-        </table>
-        
-        <div class="no-results" id="noResults">No matching tools found. Try a different search term.</div>
-        
-        <div class="results-info" id="resultsInfo">Showing <span id="shownCount">0</span> of <span id="totalCount">0</span> tools</div>
-        
-        <div class="pagination" id="pagination">
-          <!-- Pagination buttons will be added by JavaScript -->
-        </div>
-      </div>
-    </div>
-  </section>
-  <!-- About Section - Updated with new image -->
-  <section class="content-section" id="about-section">
-    <div class="container">
-      <h2 class="section-title">About</h2>
-      
-      <div class="about-container">
-        <div class="about-grid">
-          <div class="about-image">
-            <img src="https://i.imgur.com/G9pMHck.jpeg" alt="Nick Alexs Jr">
-          </div>
-          
-          <div class="about-content">
-            <h3>Nick Alexs Jr</h3>
-            <p class="subtitle">Director & Founder</p>
-            
-            <p>With a passion for building innovative solutions, Nick Alexs Jr is the driving force behind NAJ Developments. Nick's vision for NAJ Developments was born from a simple belief: everyone should have access to quality technology solutions regardless of their technical knowledge. His approach combines technical expertise with clear communication, ensuring clients understand and feel comfortable with the development process every step of the way.</p>
-            
-            <p>Nick helps individuals and businesses achieve their goals and turns ideas into reality. Based in Melbourne, Nick has built a reputation for delivering projects that not only meet technical requirements but exceed client expectations in terms of usability, performance, and design.</p>
-            
-            <div class="about-stats">
-              <div class="stat-box">
-                <div class="stat-number">500+</div>
-                <div class="stat-label">Projects Completed</div>
-              </div>
-              
-              <div class="stat-box">
-                <div class="stat-number">15+</div>
-                <div class="stat-label">Years Experience</div>
-              </div>
-              
-              <div class="stat-box">
-                <div class="stat-number">100%</div>
-                <div class="stat-label">Client Satisfaction</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Contact Section -->
-  <section class="content-section" id="contact-section">
-    <div class="container">
-      <h2 class="section-title">Let's Talk About Your Project</h2>
-      
-      <div class="content-grid">
-        <div class="content-card">
-          <h3>Contact Information</h3>
-          <ul class="content-features">
-            <li>Email: support@najdevelopments.com.au</li>
-            <li>Phone: +61 449 218 224</li>
-            <li>Location: Melbourne, Victoria, Australia</li>
-          </ul>
-        </div>
-        
-        <div class="content-card">
-          <h3>Send Us a Message</h3>
-          <div class="form-container" style="margin-bottom: 40px;">
-            <form action="https://formspree.io/f/mjkyzpvn" method="POST" id="contactForm5">
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                <div>
-                  <label style="display: block; margin-bottom: 5px; color: #aaa; font-size: 0.9rem;">Your Name</label>
-                  <input type="text" name="name" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
-                </div>
-                <div>
-                  <label style="display: block; margin-bottom: 5px; color: #aaa; font-size: 0.9rem;">Your Email</label>
-                  <input type="email" name="email" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
-                </div>
-              </div>
-              
-              <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 5px; color: #aaa; font-size: 0.9rem;">Your Message</label>
-                <textarea name="message" rows="3" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white; resize: vertical;"></textarea>
-              </div>
-              
-              <button type="submit" class="form-btn-5" style="width: 100%; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold;">Send Message</button>
-              <div id="form-message-5" style="text-align: center; margin-top: 15px;"></div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Back to top button -->
-  <div class="back-to-top" id="backToTop">↑</div>
-
-  <!-- Footer with enhanced logo visibility -->
-  <footer>
-    <div class="footer-content">
-      <div class="footer-logo">
-        <img src="https://i.imgur.com/v4svMoG.png" alt="NAJ Developments Logo" style="height: 100px; margin-bottom: 20px;">
-      </div>
-      
-      <p class="footer-text">Bringing your ideas to life with expertise, passion, and innovation.</p>
-      
-      <div class="footer-social">
-        <a href="https://www.linkedin.com/in/nick-alexs-jr/" target="_blank"><i>in</i></a>
-      </div>
-      
-      <div class="footer-bottom">
-        <p>&copy; 2025 NAJ Developments. Built with hustle in Australia.</p>
-      </div>
-    </div>
-  </footer>
-  <!-- JavaScript -->
-  <script>
-    // Tools data
-    const toolsData = [
-      { name: "Adobe Premiere", website: "https://adobe.com/products/premiere", description: "Professional video editing software with integrated AI features for automating edits and enhancing video production", pricing: "Paid only" },
-      { name: "AgentGPT", website: "https://agentgpt.reworkd.ai", description: "Browser-based platform that allows users to deploy autonomous AI agents which iteratively attempt to accomplish goals set by the user", pricing: "Free" },
-      { name: "AI2SQL", website: "https://ai2sql.io/", description: "AI-powered tool that generates error-free SQL queries and supports various databases", pricing: "Free & Paid" },
-      { name: "AirOps AI Data Sidekick", website: "https://airops.com/", description: "Free software that enhances SQL query workflow with powerful formulas and tools for writing optimizing and troubleshooting queries", pricing: "Free" },
-      { name: "AITable", website: "https://aitable.ai/", description: "AI data organization tool that combines database and spreadsheet features for streamlined CRM and project management", pricing: "Free & Paid" },
-      { name: "AIToolHub", website: "https://aitoolhub.co", description: "Platform showcasing various AI agents and tools for different use cases", pricing: "Free" },
-      { name: "AITopTools", website: "https://aitoptools.com", description: "Best AI tools search in any category - comprehensive directory for finding AI solutions", pricing: "Free" },
-      { name: "Akkio", website: "https://akkio.com", description: "No-code AI platform for data analytics and machine learning, enabling users to build predictive models and insights quickly", pricing: "Free & Paid" },
-      { name: "AlphaCode (DeepMind)", website: "https://deepmind.google/discover/blog/competitive-programming-with-alphacode/", description: "AI system by DeepMind designed to solve competitive programming problems by generating code, showcased at human-level problem-solving, not publicly available", pricing: "Free" },
-      { name: "AnswerRocket", website: "https://answerrocket.com", description: "AI-powered analytics tool that answers business questions in plain English by generating insights and visualizations from data", pricing: "Paid only" },
-      { name: "AskCodi", website: "https://www.askcodi.com/", description: "AI development tool that saves time and reduces redundancy by providing coding assistance syntax generation documentation and test creation", pricing: "Free & Paid" },
-      { name: "AskYourDatabase", website: "https://askyourdatabase.com/", description: "AI-powered chatbot that allows you to interact with SQL databases using natural language", pricing: "Free & Paid" },
-      { name: "AudioPen", website: "https://audiopen.ai", description: "AI note-taking tool that converts spoken audio notes into summarized coherent text for easy reference", pricing: "Free & Paid" },
-      { name: "Bardeen", website: "https://bardeen.ai", description: "Automation tool that uses AI to perform repetitive browser tasks, connect apps, and streamline workflows automatically", pricing: "Free & Paid" },
-      { name: "Base 44", website: "https://app.base44.com/", description: "AI-powered coding assistant", pricing: "Free & Paid" },
-      { name: "Bing AI Chat", website: "https://bing.com/chat", description: "Microsoft's AI chatbot integrated into the Bing search engine and Edge browser, using GPT-4 to answer questions and generate content", pricing: "Free" },
-      { name: "Bolt.new", website: "https://bolt.new", description: "Quick document creation", pricing: "Free" },
-      { name: "Botsonic", website: "https://botsonic.com", description: "No-code AI chatbot builder by Writesonic to create custom chatbots for websites using your own data", pricing: "Free & Paid" },
-      { name: "Browse AI", website: "https://browse.ai/", description: "No-code tool for extracting and monitoring data from websites through AI-powered robots", pricing: "Free & Paid" },
-      { name: "Bubble", website: "https://bubble.io/", description: "No-code platform that empowers users to build fully functional web applications with drag-and-drop interfaces", pricing: "Free & Paid" },
-      { name: "Buffer", website: "https://buffer.com", description: "Social media management tool that schedules posts and provides analytics, now adding AI assistance for content ideas and captions", pricing: "Free & Paid" },
-      { name: "BuildThatIdea.com", website: "https://buildthatidea.com", description: "Startup idea validation platform", pricing: "Free & Paid" },
-      { name: "Canva", website: "https://www.canva.com/", description: "User-friendly graphic design platform for creating visually appealing designs without advanced design skills", pricing: "Free & Paid" },
-      { name: "Canva Magic Write", website: "https://canva.com/magic-write", description: "AI text generator integrated in Canva that helps users brainstorm and create written content like copy or outlines within the design tool", pricing: "Free & Paid" },
-      { name: "Cassidy.ai", website: "https://cassidy.ai", description: "AI knowledge base", pricing: "Free & Paid" },
-      { name: "Character.AI", website: "https://beta.character.ai", description: "AI chatbot platform that lets users create and converse with various fictional or celebrity characters with distinct personalities", pricing: "Free" },
-      { name: "Chat2Course", website: "https://chat2course.com", description: "Convert chats into courses using AI", pricing: "Free" },
-      { name: "ChatGPT", website: "https://chat.openai.com/", description: "AI chatbot by OpenAI that uses natural language processing to engage in human-like conversations", pricing: "Free & Paid" },
-      { name: "Chatsonic", website: "https://writesonic.com/chat", description: "Generative AI chatbot by Writesonic that provides real-time answers with integrated web search capabilities", pricing: "Free & Paid" },
-      { name: "CheckIO.org", website: "https://checkio.org", description: "Coding games and challenges", pricing: "Free" },
-      { name: "Chef.Convex.Dex", website: "https://chef.convex.dex", description: "AI recipe generator", pricing: "Free" },
-      { name: "Claude", website: "https://claude.ai", description: "Anthropic's AI assistant known for its large context window and helpful, detailed responses for writing, Q&A, and brainstorming", pricing: "Free & Paid" },
-      { name: "Clipchamp", website: "https://clipchamp.com", description: "Browser-based video creation and editing platform (now Microsoft-owned) with templates and easy sharing tools", pricing: "Free & Paid" },
-      { name: "ClipDrop", website: "https://clipdrop.co", description: "AI tools for image editing", pricing: "Free" },
-      { name: "CodeT5", website: "https://github.com/salesforce/codet5", description: "Open-source code generation and understanding model by Salesforce that assists in completing code and generating functions from comments", pricing: "Free" },
-      { name: "Codedex.io", website: "https://codedex.io", description: "Learn coding with AI assistance", pricing: "Free" },
-      { name: "Coefficient", website: "https://coefficient.io", description: "Automation and data tool that integrates with spreadsheets to provide real-time data access and AI-driven analysis in sheets", pricing: "Free & Paid" },
-      { name: "Conker", website: "https://conker.ai", description: "AI tool for creating quizzes", pricing: "Free" },
-      { name: "Copy.ai", website: "https://copy.ai", description: "AI content generator that produces text for blogs, social media, and advertisements from short prompts", pricing: "Free & Paid" },
-      { name: "CopyOwl", website: "https://copyowl.ai", description: "SEO and marketing content generator", pricing: "Free & Paid" },
-      { name: "Copilot (GitHub)", website: "https://github.com/features/copilot", description: "AI code completion assistant developed by GitHub and OpenAI that suggests code snippets and functions directly in your code editor", pricing: "Paid only" },
-      { name: "Curipod", website: "https://curipod.com", description: "AI-powered platform for teachers to create interactive lessons, quizzes, and presentations to engage students in the classroom", pricing: "Free & Paid" },
-      { name: "Cursor", website: "https://cursor.so", description: "AI code editor", pricing: "Free & Paid" },
-      { name: "DALL-E 2", website: "https://openai.com/dall-e-2/", description: "AI image generator that creates visuals from text descriptions", pricing: "Free & Paid" },
-      { name: "Data Squirrel", website: "https://www.datasquirrel.ai/", description: "Business intelligence platform for making sense of data without technical skills", pricing: "Free & Paid" },
-      { name: "Databutton.com", website: "https://databutton.com", description: "Code interface platform", pricing: "Free & Paid" },
-      { name: "DeepL", website: "https://deepl.com", description: "High-quality AI translation service that translates text between multiple languages and offers a writing assistant for rephrasing and tone adjustments", pricing: "Free & Paid" },
-      { name: "DeepLiveCam", website: "https://deeplivecam.net/", description: "AI-driven live webcam enhancements", pricing: "Free & Paid" },
-      { name: "DevDocs.io", website: "https://devdocs.io", description: "API documentation browser", pricing: "Free" },
-      { name: "DomoAI", website: "https://domoai.app", description: "Generate animated art and avatars for free with AI", pricing: "Free" },
-      { name: "DoNotPay", website: "https://donotpay.com", description: "AI legal assistant", pricing: "Free" },
-      { name: "EasyPrompt", website: "https://easyprompt.ai", description: "AI prompt generator and explorer", pricing: "Free" },
-      { name: "Edraw.ai", website: "https://edraw.ai", description: "Diagramming tool", pricing: "Free & Paid" },
-      { name: "Eduaide.ai", website: "https://eduaide.ai", description: "AI teaching assistant that helps educators generate lesson plans, resources, and feedback, simplifying classroom preparation tasks", pricing: "Free & Paid" },
-      { name: "ElevenLabs", website: "https://elevenlabs.io", description: "Advanced text-to-speech platform that produces very realistic, human-like voice audio from text and offers voice cloning features", pricing: "Free & Paid" },
-      { name: "FaceCheck", website: "https://facecheck.id", description: "AI face recognition tool", pricing: "Free" },
-      { name: "FaceSwap", website: "https://akool.com", description: "AI tool by Akool that swaps faces in images and videos with realistic results, used for creative video editing", pricing: "Free & Paid" },
-      { name: "FakeDetail.com", website: "https://fakedetail.com", description: "Generate fake personal details", pricing: "Free" },
-      { name: "Fal.ai", website: "https://fal.ai", description: "AI model deployment", pricing: "Free & Paid" },
-      { name: "Filmora", website: "https://filmora.wondershare.com", description: "User-friendly video editing software (Wondershare) offering a range of effects and AI features for quick video enhancements", pricing: "Free & Paid" },
-      { name: "Firebase Studio", website: "https://firebase.google.com", description: "App development platform", pricing: "Free & Paid" },
-      { name: "Fliki AI", website: "https://fliki.ai", description: "AI content creation tool that turns text into videos and voiceovers with lifelike AI voices in numerous languages", pricing: "Free & Paid" },
-      { name: "Fluig", website: "https://fluig.cc/home", description: "Convert prompts to diagrams easily with AI", pricing: "Free" },
-      { name: "FlowCV.com", website: "https://flowcv.com", description: "Resume builder", pricing: "Free & Paid" },
-      { name: "Fonts Ninja", website: "https://fontsninja.com", description: "Font identification tool", pricing: "Free & Paid" },
-      { name: "FormulaBot.com", website: "https://formulabot.com", description: "Excel formula generator", pricing: "Free & Paid" },
-      { name: "Framer AI", website: "https://framer.com", description: "AI-powered website builder that can generate and design websites quickly based on user prompts", pricing: "Free & Paid" },
-      { name: "Freepik.com", website: "https://freepik.com", description: "Free graphic resources", pricing: "Free & Paid" },
-      { name: "G-Prompter", website: "https://g-prompter.com", description: "AI prompt generator for various models", pricing: "Free" },
-      { name: "Gamma", website: "https://gamma.app", description: "AI tool for creating presentations", pricing: "Free & Paid" },
-      { name: "Gemini", website: "https://gemini.google.com/", description: "Advanced AI assistant by Google that enhances productivity across Google Workspace applications", pricing: "Free & Paid" },
-      { name: "Gentube.app", website: "https://gentube.app", description: "Free image generator", pricing: "Free" },
-      { name: "GingerSoftware", website: "https://gingersoftware.com", description: "AI writing and grammar correction tool that provides rephrasing suggestions and translations for text", pricing: "Free & Paid" },
-      { name: "Glasp YouTube Summary", website: "https://glasp.co", description: "Summarize YouTube videos", pricing: "Free" },
-      { name: "Google AI Studio", website: "https://ai.google/", description: "Access to AI models and APIs", pricing: "Free" },
-      { name: "GPT-4 Vision", website: "https://openai.com", description: "AI image understanding", pricing: "Paid" },
-      { name: "GPTExcel", website: "https://gptexcel.com", description: "AI tool for generating Excel formulas", pricing: "Free" },
-      { name: "Grammarly", website: "https://www.grammarly.com/", description: "AI-powered writing assistant providing real-time grammar spelling and style checking across platforms", pricing: "Free & Paid" },
-      { name: "Harpa", website: "https://harpa.ai", description: "AI assistant for web automation tasks", pricing: "Free" },
-      { name: "HayoAI", website: "https://hayo.ai", description: "AI-driven interactive storytelling game", pricing: "Free" },
-      { name: "Hemingway", website: "https://hemingwayapp.com", description: "Writing editor that uses AI to highlight complex sentences and common errors to improve readability and clarity", pricing: "Free & Paid" },
-      { name: "HeyGen", website: "https://heygen.com", description: "AI video generation platform for creating spokesperson videos with AI avatars", pricing: "Free & Paid" },
-      { name: "HeyJen", website: "https://heyjen.ai", description: "Conversational AI platform (powered by GPT-4) offering a free alternative to ChatGPT for content creation and brainstorming", pricing: "Free" },
-      { name: "HeyLibby", website: "https://heylibby.ai", description: "AI chatbot for lead capture", pricing: "Free & Paid" },
-      { name: "Home.by.Me", website: "https://home.by.me", description: "3D home design", pricing: "Free & Paid" },
-      { name: "Hootsuite", website: "https://hootsuite.com", description: "Popular social media management platform for scheduling posts and monitoring engagement across networks in one dashboard", pricing: "Paid only" },
-      { name: "HowN9", website: "https://hown9.com/", description: "AI tool that allows you to have interactive conversations with your data and get instant insights", pricing: "Free & Paid" },
-      { name: "HubSpot", website: "https://hubspot.com", description: "Customer relationship management and marketing automation platform with AI tools for sales and marketing workflows", pricing: "Free & Paid" },
-      { name: "HubSpot AI Email Writer", website: "https://www.hubspot.com/", description: "AI email writing assistant that links with CRM database to help scale marketing efforts", pricing: "Paid only" },
-      { name: "HubSpot Campaign Assistant", website: "https://www.hubspot.com/campaign-assistant", description: "Free AI marketing copy generator by HubSpot for creating content like landing pages, emails, and ads", pricing: "Free" },
-      { name: "Hugging Face", website: "https://huggingface.co", description: "AI models and applications", pricing: "Free" },
-      { name: "Idiogram", website: "https://idiogram.ai", description: "AI-driven content creation tool aimed at helping marketers streamline content generation and marketing workflows", pricing: "Free & Paid" },
-      { name: "Ideogram", website: "https://ideogram.ai", description: "AI tool for generating images from text", pricing: "Free" },
-      { name: "Infograpia", website: "https://infograpia.com", description: "AI tool for creating infographics", pricing: "Free" },
-      { name: "Instant Data Scraper", website: "https://chromewebstore.google.com/detail/instant-data-scraper/ofaokhiedipichpaobibbnahnkdoiiah", description: "Web scraping tool", pricing: "Free" },
-      { name: "InterviewPrep", website: "https://interviewprep.ai", description: "AI interview preparation tool", pricing: "Free" },
-      { name: "InVideo", website: "https://invideo.io", description: "Online video editor with templates and an AI assistant to simplify creating marketing videos and social content", pricing: "Free & Paid" },
-      { name: "Jasper.ai", website: "https://jasper.ai", description: "AI writing tool designed to generate marketing copy, blog articles, and other content with customizable tone", pricing: "Paid only" },
-      { name: "JobHunnt", website: "https://jobhunnt.ai", description: "AI job application assistant", pricing: "Free" },
-      { name: "JTTR", website: "https://jttr.ai", description: "AI-driven text transformation", pricing: "Unknown" },
-      { name: "JWT.io", website: "https://jwt.io", description: "Decode and verify JSON Web Tokens", pricing: "Free" },
-      { name: "Kapwing", website: "https://kapwing.com", description: "Online image and video editor with AI tools to quickly create, edit, and caption memes, videos, and GIFs", pricing: "Free & Paid" },
-      { name: "Kimi", website: "https://kimi.moonshot.cn", description: "AI personal assistant", pricing: "Free" },
-      { name: "Klap", website: "https://klap.app", description: "AI tool for creating short videos", pricing: "Free" },
-      { name: "LanguageTool", website: "https://languagetool.org", description: "Multilingual writing tool that checks grammar and style and offers AI-based suggestions for improvement", pricing: "Free & Paid" },
-      { name: "LazyApply", website: "https://lazyapply.com", description: "AI job application automation", pricing: "Free" },
-      { name: "Leonardo AI", website: "https://leonardo.ai/", description: "AI-powered platform for generating and editing high-quality images with style consistency", pricing: "Free & Paid" },
-      { name: "Logomark.ai", website: "https://logomark.ai", description: "Logo generation", pricing: "Free & Paid" },
-      { name: "Lovable", website: "https://www.lovable.ai/", description: "AI-powered software development platform for building complex digital products through natural language descriptions", pricing: "Free & Paid" },
-      { name: "LumaLabs", website: "https://lumalabs.ai", description: "AI tool for 3D content creation", pricing: "Free" },
-      { name: "Lumen5", website: "https://lumen5.com", description: "Video creation platform that uses AI to transform blog posts or text content into engaging videos with stock media", pricing: "Free & Paid" },
-      { name: "MagicHour.ai", website: "https://magichour.ai", description: "AI photo enhancement", pricing: "Free & Paid" },
-      { name: "MagicLoops", website: "https://magicloops.dev", description: "AI music loop generator", pricing: "Free & Paid" },
-      { name: "Mailchimp", website: "https://mailchimp.com", description: "Email marketing platform that uses AI for audience insights, content optimization, and automated campaign recommendations", pricing: "Free & Paid" },
-      { name: "Manatal", website: "https://manatal.com", description: "AI-enhanced applicant tracking system (ATS) that streamlines hiring with resume parsing, candidate scoring, and recruitment CRM features", pricing: "Paid only" },
-      { name: "ManyChat", website: "https://manychat.com", description: "Chat marketing platform for building Facebook Messenger and Instagram bots to engage customers and drive sales", pricing: "Free & Paid" },
-      { name: "Mem AI", website: "https://mem.ai", description: "AI-powered note-taking and organization tool", pricing: "Free" },
-      { name: "Mendeley", website: "https://mendeley.com", description: "Reference management tool for researchers that helps organize papers and citations, offering recommendations and collaborative features", pricing: "Free" },
-      { name: "Meshy.ai", website: "https://meshy.ai", description: "3D model creator", pricing: "Free & Paid" },
-      { name: "Microsoft Copilot", website: "https://copilot.microsoft.com", description: "Microsoft's AI assistant integrated into Bing and Windows, providing conversational search and help across Microsoft 365 apps", pricing: "Free & Paid" },
-      { name: "MidJourney", website: "https://midjourney.com", description: "AI image generation", pricing: "Paid" },
-      { name: "MiniMax", website: "https://minimax.chat", description: "AI model deployment platform", pricing: "Free & Paid" },
-      { name: "Mockup Photos", website: "https://mockupphotos.com", description: "Free mockup images", pricing: "Free" },
-      { name: "MojoApp.com", website: "https://mojoapp.com", description: "Animate logos quickly", pricing: "Free & Paid" },
-      { name: "Molku AI", website: "https://molku.ai/", description: "Tool that automates PDF form filling by transferring data from other documents", pricing: "Free & Paid" },
-      { name: "Murf", website: "https://murf.ai/", description: "AI-powered text-to-speech platform with realistic voices for voiceovers and audio content", pricing: "Free & Paid" },
-      { name: "n8n", website: "https://n8n.io", description: "Workflow automation tool", pricing: "Free & Paid" },
-      { name: "Napkin AI Flowchart", website: "https://napkin.ai", description: "AI-generated flowcharts", pricing: "Free & Paid" },
-      { name: "Nim.video", website: "https://nim.video", description: "Video editing platform", pricing: "Free & Paid" },
-      { name: "Nimstrata Search & Discovery", website: "https://nimstrata.com/", description: "AI tool for enhancing online retail with personalized search results", pricing: "Paid only" },
-      { name: "Nir Diamant GenAI Agents", website: "https://github.com/diamond/genai-agents", description: "Repository of GenAI agents", pricing: "Free" },
-      { name: "Notion AI", website: "https://www.notion.so", description: "AI-powered writing and productivity assistant integrated into Notion, helping users draft content, brainstorm ideas, and summarize notes", pricing: "Paid only" },
-      { name: "Notebook LM Podcast", website: "https://notebooklm.google.com", description: "AI-generated podcast summaries", pricing: "Free" },
-      { name: "Notta.ai", website: "https://notta.ai", description: "Transcription service showcasing AI dubbing for translating videos", pricing: "Free & Paid" },
-      { name: "Ocoya", website: "https://ocoya.com", description: "All-in-one marketing content creation and scheduling platform with AI copywriting and social media automation features", pricing: "Free & Paid" },
-      { name: "OctiAI", website: "https://octi.ai", description: "AI prompt optimization tool", pricing: "Free" },
-      { name: "Open Assistant", website: "https://open-assistant.io", description: "Open-source conversational AI model and chat interface created by a global community, aiming to provide a free ChatGPT-like experience", pricing: "Free" },
-      { name: "OpenAI Codex", website: "https://openai.com/blog/openai-codex", description: "AI coding model (by OpenAI) that translates natural language into code and powers tools like GitHub Copilot (available via OpenAI API)", pricing: "Paid only" },
-      { name: "Opus Pro", website: "https://opus.pro", description: "AI video editing platform", pricing: "Free" },
-      { name: "Otio", website: "https://otio.io", description: "Time tracking tool", pricing: "Free & Paid" },
-      { name: "Otter.ai", website: "https://otter.ai", description: "AI transcription service that records and transcribes meetings or lectures in real time and generates summary notes", pricing: "Free & Paid" },
-      { name: "Parlay Genie", website: "https://parlaygenie.com", description: "AI sports betting assistant", pricing: "Free" },
-      { name: "Pencil", website: "https://www.pencil.ai", description: "Online design and prototyping tool that allows users to sketch wireframes and mockups easily with a user-friendly interface", pricing: "Free" },
-      { name: "Perchance AI", website: "https://perchance.org/ai-character-generator", description: "Generates AI-based character profiles and custom images", pricing: "Free" },
-      { name: "Perplexity AI", website: "https://www.perplexity.ai", description: "AI-powered answer engine that uses large language models to answer questions directly with cited sources", pricing: "Free & Paid" },
-      { name: "Photosonic", website: "https://photosonic.writesonic.com", description: "AI art generator by Writesonic that creates original images and artwork from text prompts in various styles", pricing: "Free & Paid" },
-      { name: "Phind", website: "https://phind.com", description: "AI search engine oriented towards developers and technical questions, providing direct answers with code examples and explanations", pricing: "Free" },
-      { name: "Pi (Inflection AI)", website: "https://heypi.com", description: "Personal AI chatbot by Inflection AI that engages in supportive, casual conversations and offers friendly advice or information", pricing: "Free" },
-      { name: "PicsArt AI Writer", website: "https://picsart.com", description: "AI tool for text editing and paraphrasing", pricing: "Free" },
-      { name: "Pika 1.0", website: "https://pika.art", description: "Text-to-video generative AI by Pika Labs that creates short videos from prompts in various styles (animation, live-action, etc.)", pricing: "Free & Paid" },
-      { name: "PlayPhrase.me", website: "https://playphrase.me", description: "Search movie phrases", pricing: "Free" },
-      { name: "Point-E", website: "https://github.com/openai/point-e/", description: "AI tool that uses prompts to create 3D models by combining text-to-image and image-to-3D algorithms", pricing: "Free" },
-      { name: "Poised", website: "https://poised.com", description: "AI communication coach for meetings", pricing: "Free" },
-      { name: "Polycoder", website: "https://github.com/VHellendoorn/Code-LMs", description: "Open-source AI code generator developed by researchers (CMU) that can auto-complete and write code, particularly effective in C language tasks", pricing: "Free" },
-      { name: "Polymer", website: "https://polymersearch.com", description: "AI-powered data analysis and visualization tool that automatically generates charts and dashboards from datasets", pricing: "Free & Paid" },
-      { name: "Poe (Quora)", website: "https://poe.com", description: "Multi-chatbot app by Quora that provides access to several AI chatbots (like ChatGPT, Claude) through a single interface", pricing: "Free & Paid" },
-      { name: "PopAI", website: "https://popai.co", description: "AI presentation tool", pricing: "Free & Paid" },
-      { name: "Pro Rank Tracker", website: "https://proranktracker.com", description: "SEO tool for tracking keyword rankings and SERP positions with detailed reports on search performance", pricing: "Free & Paid" },
-      { name: "ProductionCrate", website: "https://productioncrate.com", description: "Library of production assets including VFX, music, and graphics for creators", pricing: "Free & Paid" },
-      { name: "ProPhotos", website: "https://prophotos.ai", description: "AI professional photo editing", pricing: "Free" },
-      { name: "PromptPal", website: "https://promptpal.me", description: "AI prompt sharing platform", pricing: "Free" },
-      { name: "ProWritingAid", website: "https://prowritingaid.com", description: "Comprehensive editing software with AI that offers grammar checks, style improvements, and in-depth writing analysis", pricing: "Free & Paid" },
-      { name: "Qwen", website: "https://qwen.ai", description: "AI language model", pricing: "Free" },
-      { name: "QuickBooks", website: "https://quickbooks.intuit.com/", description: "Comprehensive financial management software for businesses with invoicing expense tracking and tax preparation", pricing: "Paid only" },
-      { name: "QuillBot", website: "https://quillbot.com/", description: "AI-powered writing tool for paraphrasing grammar checking and summarization", pricing: "Free & Paid" },
-      { name: "Rank Math Pro", website: "https://rankmath.com", description: "Advanced SEO plugin for WordPress that offers SEO analysis, optimization tips, and AI suggestions for content", pricing: "Free & Paid" },
-      { name: "Raw Query", website: "https://rawquery.com/", description: "User-friendly AI chat tool for easily connecting to databases and performing queries", pricing: "Free & Paid" },
-      { name: "Recall", website: "https://recall.ai", description: "AI tool for summarizing and researching content", pricing: "Free" },
-      { name: "Recraft.ai", website: "https://recraft.ai", description: "AI-powered design tool for creating vector graphics and illustrations", pricing: "Free & Paid" },
-      { name: "ReimagineHome", website: "https://reimaginehome.ai", description: "AI interior design assistant", pricing: "Free" },
-      { name: "Replicate", website: "https://replicate.com", description: "Run machine learning models in the cloud", pricing: "Free" },
-      { name: "Replit.com", website: "https://replit.com", description: "Online coding platform", pricing: "Free & Paid" },
-      { name: "Resumaker", website: "https://resumaker.ai", description: "AI resume builder", pricing: "Free" },
-      { name: "Revit", website: "https://autodesk.com/revit", description: "Building Information Modeling", pricing: "Paid" },
-      { name: "RoboWealthChat", website: "https://robowealthchat.com/", description: "AI-powered platform providing real-time market insights predictive forecasts and financial analysis", pricing: "Paid only" },
-      { name: "Rork.ai", website: "https://rork.ai", description: "AI content generation", pricing: "Free & Paid" },
-      { name: "Rosebud.ai", website: "https://rosebud.ai", description: "AI-generated vibe coding", pricing: "Free & Paid" },
-      { name: "RustDesk", website: "https://rustdesk.com", description: "Remote desktop software", pricing: "Free" },
-      { name: "Runway", website: "https://runwayml.com/", description: "AI tools for creators that transform creativity in art entertainment and human expression", pricing: "Free & Paid" },
-      { name: "Runway Gen-2", website: "https://runwayml.com", description: "Generative AI model by Runway ML that converts text descriptions into short video clips, pioneering text-to-video creation", pricing: "Free & Paid" },
-      { name: "Runway ML", website: "https://runwayml.com", description: "AI video editing and generation tool", pricing: "Free" },
-      { name: "Salesforce", website: "https://salesforce.com", description: "Leading CRM platform with integrated AI (Einstein AI) to help businesses manage sales, support, and marketing operations", pricing: "Paid only" },
-      { name: "SalesAPE", website: "https://salesape.ai/", description: "AI inbound sales representative that qualifies leads books meetings and grows revenue 24/7", pricing: "Paid only" },
-      { name: "Same.new", website: "https://same.new", description: "Collaborative document editing", pricing: "Free" },
-      { name: "SaneBox", website: "https://www.sanebox.com/", description: "AI-driven email management tool to declutter inboxes by intelligently sorting incoming emails", pricing: "Paid only" },
-      { name: "Scalenut", website: "https://scalenut.com", description: "Content marketing platform", pricing: "Free & Paid" },
-      { name: "SciSpace Copilot", website: "https://scispace.com", description: "AI research assistant", pricing: "Free & Paid" },
-      { name: "Scribe", website: "https://scribehow.com", description: "Process documentation tool", pricing: "Free & Paid" },
-      { name: "SeaArt", website: "https://seaart.ai", description: "AI-powered art generation platform", pricing: "Free" },
-      { name: "Seek AI", website: "https://www.seek.ai/", description: "AI tool enabling business end-users to query data with instant and accurate results", pricing: "Free & Paid" },
-      { name: "SeekOut", website: "https://seekout.com", description: "Talent acquisition and recruiting tool using AI to search for diverse candidates across various sources and social networks", pricing: "Paid only" },
-      { name: "SelectText", website: "https://selecttext.app", description: "Text selection tool", pricing: "Free" },
-      { name: "Semrush", website: "https://semrush.com", description: "Comprehensive digital marketing and SEO suite with tools for keyword research, competitor analysis, and content optimization", pricing: "Free & Paid" },
-      { name: "SEO Checker", website: "https://writesonic.com/seo-checker-and-optimizer", description: "SEO analysis and optimization tool by Writesonic that helps improve content's search engine ranking and keyword usage", pricing: "Free & Paid" },
-      { name: "Serif", website: "https://www.serif.ai/", description: "AI tool that organizes your inbox and drafts ready-to-send email replies in Gmail", pricing: "Free & Paid" },
-      { name: "Serverless", website: "https://serverless.com", description: "Free hosting for serverless applications and websites", pricing: "Free & Paid" },
-      { name: "Shopify", website: "https://www.shopify.com/", description: "Comprehensive e-commerce platform for creating managing and growing online stores", pricing: "Paid only" },
-      { name: "Skillate", website: "https://skillate.com", description: "AI recruitment platform that automates resume screening, shortlisting candidates, and reducing time-to-hire for HR teams", pricing: "Paid only" },
-      { name: "SlidesAI", website: "https://slidesai.io", description: "AI tool to create slides from text", pricing: "Free" },
-      { name: "Smithery MCP Servers", website: "https://smithery.com", description: "Minecraft server management tools", pricing: "Free" },
-      { name: "Snack Prompt", website: "https://snackprompt.com", description: "Curated list of AI prompts", pricing: "Free" },
-      { name: "SoftGen.ai", website: "https://softgen.ai", description: "AI code generation", pricing: "Free & Paid" },
-      { name: "Source Boosters", website: "https://zoho.com/recruit", description: "Feature within Zoho Recruit that uses AI to source candidates from multiple job boards and sources in a single search to expand the talent pool", pricing: "Paid only" },
-      { name: "SpaceLogo", website: "https://spacelogo.ai", description: "AI logo generation platform", pricing: "Free" },
-      { name: "Stable Diffusion", website: "https://stability.ai/stable-diffusion/", description: "Open-source AI image generator that creates detailed images from text descriptions", pricing: "Free" },
-      { name: "Supa", website: "https://supa.inc", description: "Create presentations in minutes with AI assistance", pricing: "Free & Paid" },
-      { name: "Supermeme.ai", website: "https://supermeme.ai", description: "AI meme generator that creates humorous memes from text inputs, allowing customization of templates and captions", pricing: "Free & Paid" },
-      { name: "Supertranslate", website: "https://supertranslate.ai", description: "AI tool for translating videos", pricing: "Free" },
-      { name: "SurferSEO", website: "https://surferseo.com", description: "SEO optimization platform with AI insights to help create and optimize content for better search rankings", pricing: "Paid only" },
-      { name: "Syntea", website: "https://syntea.net", description: "AI education platform designed to assist with personalized learning or training content generation (no widely available public details)", pricing: "Free & Paid" },
-      { name: "Synthesia", website: "https://www.synthesia.io", description: "AI video generation platform that creates videos with realistic avatars speaking from your text scripts", pricing: "Paid only" },
-      { name: "SynthflowAI", website: "https://synthflow.ai", description: "AI voice agents for automated calls", pricing: "Paid only" },
-      { name: "Tabnine", website: "https://tabnine.com", description: "AI-powered code completion tool that predicts and suggests code in multiple programming languages using trained models", pricing: "Free & Paid" },
-      { name: "Tagbox", website: "https://tagbox.ai/", description: "AI tool that helps businesses and teams organize media files efficiently using smart tags and filters", pricing: "Free & Paid" },
-      { name: "Take It Down", website: "https://takeitdown.ncmec.org", description: "Service that helps remove non-consensual intimate or explicit images of minors from the internet using secure digital fingerprints", pricing: "Free" },
-      { name: "Tableau", website: "https://tableau.com", description: "Business intelligence and data visualization platform that allows users to create interactive dashboards and gain insights (now with some AI features)", pricing: "Free & Paid" },
-      { name: "Tango", website: "https://tango.us", description: "Document processes with AI assistance", pricing: "Free" },
-      { name: "Taskade", website: "https://taskade.com", description: "AI-powered task management tool", pricing: "Free" },
-      { name: "Tencent Hunyuan", website: "https://hunyuan.tencent.com", description: "Video model generation", pricing: "Free" },
-      { name: "Tencent Hunyuan3D", website: "https://hunyuan3d.tencent.com", description: "3D model generation", pricing: "Free" },
-      { name: "TensorFlow", website: "https://tensorflow.org", description: "Open-source machine learning framework by Google for building and deploying AI models in various environments", pricing: "Free" },
-      { name: "Text Blaze", website: "https://textblaze.me", description: "Text expansion tool with AI capabilities", pricing: "Free" },
-      { name: "TextFX", website: "https://textfx.withgoogle.com/", description: "AI tool by Google for generating creative text and language possibilities", pricing: "Free" },
-      { name: "The Cool Coders", website: "https://thecoolcoders.com", description: "Project ideas and resources", pricing: "Free" },
-      { name: "The Librarian", website: "https://thelibrarian.ai/", description: "WhatsApp AI Personal Assistant for inbox management schedule control and information retrieval", pricing: "Free & Paid" },
-      { name: "Theresanai GitHub", website: "https://github.com/theresanai", description: "List of AI tools and resources", pricing: "Free" },
-      { name: "TheToolBus.ai", website: "https://thetoolbus.ai/", description: "Multi-AI tool website offering various tools to enhance work processes", pricing: "Free & Paid" },
-      { name: "TimeMap.org", website: "https://timemap.org", description: "Interactive historical maps", pricing: "Free" },
-      { name: "TinyWow.com", website: "https://tinywow.com", description: "Free online tools", pricing: "Free" },
-      { name: "Tome", website: "https://tome.app", description: "AI storytelling and presentation platform", pricing: "Free" },
-      { name: "Tongyi Wanxiang", website: "https://wanxiang.aliyun.com", description: "AI-powered image generation", pricing: "Free" },
-      { name: "Toolify.ai", website: "https://toolify.ai", description: "AI tools directory organized by categories", pricing: "Free" },
-      { name: "Toolsaday", website: "https://toolsaday.com", description: "Suite of AI writing tools including email generator", pricing: "Free" },
-      { name: "Trade Vector AI", website: "https://tradevector.ai/", description: "Automated trading platform using AI for investment strategies", pricing: "Paid only" },
-      { name: "Trae.ai", website: "https://trae.ai", description: "AI assistant coding environment", pricing: "Free" },
-      { name: "TripNotes", website: "https://tripnotes.ai", description: "AI travel planner", pricing: "Free & Paid" },
-      { name: "TypeFrames", website: "https://www.typeframes.ai", description: "AI video maker that automatically generates short promotional or informational videos from user-provided text or URLs", pricing: "Free & Paid" },
-      { name: "UIBall.com", website: "https://uiball.com", description: "UI components and animations", pricing: "Free" },
-      { name: "Uiverse.io", website: "https://uiverse.io", description: "UI component library", pricing: "Free" },
-      { name: "UiPath", website: "https://uipath.com", description: "Robotic Process Automation platform that uses AI to automate repetitive business processes and tasks across enterprise applications", pricing: "Free & Paid" },
-      { name: "Veo 2", website: "https://deepmind.google/veo", description: "Google's advanced AI video generation model (not yet available in Australia)", pricing: "Free" },
-      { name: "VidClue", website: "https://vidclue.com", description: "Library of images and videos", pricing: "Free & Paid" },
-      { name: "Vidu.studio", website: "https://vidu.studio", description: "Video creation platform", pricing: "Free & Paid" },
-      { name: "Vinteo AI", website: "https://vinteo.ai/", description: "Tool for retailers manufacturers and online stores to create high-quality product visuals using AI", pricing: "Free & Paid" },
-      { name: "Visual Studio Code", website: "https://code.visualstudio.com/", description: "Code editor with AI extensions", pricing: "Free" },
-      { name: "VIZ", website: "https://viz.ai/", description: "Data visualization tool for exploring datasets through conversational interfaces", pricing: "Free & Paid" },
-      { name: "Von.dev", website: "https://von.dev", description: "Vibe coding tool for web development", pricing: "Free" },
-      { name: "Watermark Remover", website: "https://watermarkremover.io", description: "Remove watermarks from images using AI", pricing: "Free" },
-      { name: "WaveApp", website: "https://wave.app", description: "AI-powered audio editing tool", pricing: "Free" },
-      { name: "Webhook.site", website: "https://webhook.site", description: "Test and debug webhooks", pricing: "Free" },
-      { name: "Wellness AI", website: "https://wellness.ai/", description: "Mental health support app combining adaptive AI therapy and personalized guided meditations", pricing: "Free & Paid" },
-      { name: "Wonsulting", website: "https://wonsulting.com", description: "Career coaching with AI tools", pricing: "Free" },
-      { name: "Workday", website: "https://www.workday.com/", description: "Cloud-based software for Human Capital Management Enterprise Resource Planning and Financial Management", pricing: "Paid only" },
-      { name: "Writesonic", website: "https://writesonic.com", description: "AI content creation platform for generating blog posts, marketing copy, and other written content", pricing: "Free & Paid" },
-      { name: "Xembly", website: "https://xembly.com", description: "AI executive assistant for meetings", pricing: "Free" },
-      { name: "You.com", website: "https://you.com", description: "AI-powered search engine that includes a chat-based assistant and content generation tools to directly answer queries and create text or images", pricing: "Free" },
-      { name: "YourWare.so", website: "https://yourware.so", description: "Build 3D websites", pricing: "Free & Paid" },
-      { name: "Zapier", website: "https://zapier.com", description: "Workflow automation", pricing: "Free & Paid" }    
-    ];
-
-    // Create floating dots animation - Enhanced for smoother performance
-    function createFloatingDots() {
-      const dotsContainer = document.getElementById('dotsContainer');
-      // Clear existing dots if any
-      dotsContainer.innerHTML = '';
-      
-      // Adjust number of dots based on screen size
-      const isMobile = window.innerWidth <= 768;
-      const numberOfDots = isMobile ? 20 : 80;
-      
-      for (let i = 0; i < numberOfDots; i++) {
-        const dot = document.createElement('div');
-        dot.classList.add('dot');
-        
-        // Random size (smaller on mobile)
-        const size = Math.random() * (isMobile ? 3 : 5) + 2;
-        
-        // Random position
-        const posX = Math.random() * 100;
-        const posY = Math.random() * 100;
-        
-        // Random movement direction and distance
-        const moveX = (Math.random() - 0.5) * 20;
-        const moveY = (Math.random() - 0.5) * 20;
-        
-        // Random animation duration (slower for better performance)
-        const duration = Math.random() * 50 + 20;
-        
-        // Random delay for more natural movement
-        const delay = Math.random() * 10;
-        
-        // Random opacity (lower on mobile)
-        const opacity = Math.random() * (isMobile ? 0.2 : 0.3) + (isMobile ? 0.05 : 0.1);
-        
-        // Different hues between primary and secondary colors
-        const hue = Math.random() > 0.5 ? 
-                    Math.floor(Math.random() * 40) + 160 : // blue-green for primary
-                    Math.floor(Math.random() * 40) + 240;  // purple for secondary
-        
-        // Set styles
-        dot.style.left = `${posX}%`;
-        dot.style.top = `${posY}%`;
-        dot.style.width = `${size}px`;
-        dot.style.height = `${size}px`;
-        dot.style.setProperty('--move-x', `${moveX}vw`);
-        dot.style.setProperty('--move-y', `${moveY}vh`);
-        dot.style.animationDuration = `${duration}s`;
-        dot.style.animationDelay = `-${delay}s`; // Negative delay for immediate start
-        dot.style.opacity = opacity;
-        dot.style.background = `radial-gradient(circle, hsl(${hue}, 70%, 60%), hsl(${hue}, 90%, 40%))`;
-        dot.style.boxShadow = `0 0 ${size*2}px hsl(${hue}, 70%, 60%, 0.3)`;
-        
-        dotsContainer.appendChild(dot);
-      }
-    }
-
-    // Scroll-triggered animations for sections
-    function handleScrollAnimations() {
-      const sections = document.querySelectorAll('.content-section');
-      const footer = document.querySelector('footer');
-      const footerElements = {
-        logo: document.querySelector('.footer-logo'),
-        text: document.querySelector('.footer-text'),
-        social: document.querySelector('.footer-social'),
-        bottom: document.querySelector('.footer-bottom')
-      };
-      
-      // Add animation to section titles when they come into view
-      const titles = document.querySelectorAll('.section-title');
-      titles.forEach(title => {
-        if (isElementInViewport(title) && !title.classList.contains('animated')) {
-          title.style.animation = 'fadeUp 0.8s ease forwards';
-          title.classList.add('animated');
-        }
-      });
-      
-      // Animate footer elements when footer comes into view
-      if (footer && isElementInViewport(footer)) {
-        Object.values(footerElements).forEach(el => {
-          if (el && !el.classList.contains('visible')) {
-            el.classList.add('visible');
-          }
-        });
-      }
-    }
-    
-    // Helper to check if element is in viewport
-    function isElementInViewport(el) {
-      const rect = el.getBoundingClientRect();
-      return (
-        rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.85 && 
-        rect.bottom >= 0
-      );
-    }
-    // Initialize everything when DOM is loaded
-    document.addEventListener('DOMContentLoaded', function() {
-      // Create floating dots animation
-      createFloatingDots();
-      
-      // Recreate dots when window is resized
-      window.addEventListener('resize', function() {
-        createFloatingDots();
-      });
-      
-      // Navigation links functionality
-      const navLinks = document.querySelectorAll('.nav-link');
-      const contentSections = document.querySelectorAll('.content-section');
-      const backToTop = document.getElementById('backToTop');
-      const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
-      const navItems = document.querySelector('.nav-items');
-      
-      // Mobile navigation toggle - Enhanced with "What we do" text
-      if (mobileNavToggle) {
-        let isMenuOpen = false;
-        
-        mobileNavToggle.addEventListener('click', function() {
-          isMenuOpen = !isMenuOpen;
-          navItems.classList.toggle('active');
-          
-          // Update button content
-          if (isMenuOpen) {
-            mobileNavToggle.innerHTML = '✕ <span>What we do</span>';
-          } else {
-            mobileNavToggle.innerHTML = '☰ <span>What we do</span>';
-          }
-        });
-        
-        // Keep "What we do" text always visible
-        mobileNavToggle.innerHTML = '☰ <span>What we do</span>';
-      }
-      
-      // Function to show a specific section
-      function showSection(sectionId) {
-        if (!sectionId || sectionId === 'home') {
-          sectionId = 'home';
-        }
-        
-        const targetSection = document.getElementById(`${sectionId}-section`);
-        if (!targetSection) {
-          return;
-        }
-        
-        // Update active nav link
-        navLinks.forEach(link => {
-          link.classList.remove('active');
-          if (link.getAttribute('data-section') === sectionId) {
-            link.classList.add('active');
-          }
-        });
-        
-        // Hide all sections
-        contentSections.forEach(section => {
-          section.classList.remove('active');
-        });
-        
-        // Show target section
-        targetSection.classList.add('active');
-        
-        // Close mobile menu if open
-        if (window.innerWidth <= 992 && navItems.classList.contains('active')) {
-          navItems.classList.remove('active');
-          mobileNavToggle.innerHTML = '☰ <span>What we do</span>';
-        }
-        
-        // Scroll to top
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
-        
-        // Apply scroll animations after section change
-        setTimeout(handleScrollAnimations, 200);
-      }
-      
-      // Navigation links handler
-      navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-          e.preventDefault();
-          const sectionId = this.getAttribute('data-section');
-          showSection(sectionId);
-        });
-      });
-      
-      // Service buttons click handler - for pricing buttons
-      document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('pricing-btn')) {
-          e.preventDefault();
-          const sectionId = e.target.getAttribute('data-section');
-          if (sectionId) {
-            showSection(sectionId);
-          }
-        }
-      });
-      
-      // Back to top button
-      if (backToTop) {
-        window.addEventListener('scroll', function() {
-          if (window.scrollY > 300) {
-            backToTop.classList.add('active');
-          } else {
-            backToTop.classList.remove('active');
-          }
-        });
-        
-        backToTop.addEventListener('click', function() {
-          window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-          });
-        });
-      }
-      
-      // Form submission handling for form
-      const form = document.getElementById('contactForm5');
-      const formMessage = document.getElementById('form-message-5');
-      
-      if (form && formMessage) {
-        form.addEventListener('submit', async function(e) {
-          e.preventDefault();
-          
-          // Animate the button
-          const submitButton = form.querySelector('button[type="submit"]');
-          submitButton.textContent = 'Sending...';
-          submitButton.style.background = 'rgba(255, 255, 255, 0.2)';
-          submitButton.disabled = true;
-          
-          const data = new FormData(form);
-          
-          try {
-            const response = await fetch(form.action, {
-              method: 'POST',
-              body: data,
-              headers: { 'Accept': 'application/json' }
-            });
-            
-            if (response.ok) {
-              formMessage.innerHTML = "<span style='color: var(--primary);'>✅ Thank you! Your message has been sent.</span>";
-              form.reset();
-              
-              // Success animation
-              submitButton.textContent = 'Message Sent!';
-              submitButton.style.background = 'var(--primary)';
-              submitButton.style.color = 'var(--dark)';
-              submitButton.style.transform = 'translateY(-5px)';
-              
-              // Reset button after delay
-              setTimeout(() => {
-                submitButton.textContent = 'Send Message';
-                submitButton.style.background = '';
-                submitButton.style.color = '';
-                submitButton.style.transform = '';
-                submitButton.disabled = false;
-              }, 3000);
-            } else {
-              formMessage.innerHTML = "<span style='color: #ff4d4d;'>❌ Oops! Something went wrong.</span>";
-              submitButton.textContent = 'Try Again';
-              submitButton.style.background = '';
-              submitButton.disabled = false;
-            }
-          } catch (error) {
-            formMessage.innerHTML = "<span style='color: #ff4d4d;'>❌ Network error. Please try again.</span>";
-            submitButton.textContent = 'Try Again';
-            submitButton.style.background = '';
-            submitButton.disabled = false;
-          }
-        });
-      }
-      // Initialize tools table functionality
-      initToolsTable();
-      
-      // Mouse follow effect for glow with performance optimization
-      const glowEffect = document.querySelector('.glow-effect');
-      let mouseTimer;
-      
-      if (glowEffect) {
-        document.addEventListener('mousemove', function(e) {
-          // Clear any existing timer
-          clearTimeout(mouseTimer);
-          
-          // Set a timer to update the position to avoid performance issues
-          mouseTimer = setTimeout(() => {
-            const x = e.clientX;
-            const y = e.clientY;
-            glowEffect.style.left = x + 'px';
-            glowEffect.style.top = y + 'px';
-            glowEffect.style.transform = 'translate(-50%, -50%)';
-          }, 10);
-        });
-      }
-      
-      // Initialize scroll animations
-      handleScrollAnimations();
-      window.addEventListener('scroll', handleScrollAnimations);
-      
-      // Fix for iOS 100vh issue
-      function fixMobileViewportHeight() {
-        const vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-        
-        document.querySelectorAll('.dashboard-hero').forEach(hero => {
-          hero.style.height = `calc(var(--vh, 1vh) * 100)`;
-        });
-      }
-      
-      // Run on page load and resize
-      fixMobileViewportHeight();
-      window.addEventListener('resize', fixMobileViewportHeight);
-    });
-    
-    // Tools table functionality (New)
-    function initToolsTable() {
-      const searchInput = document.getElementById('searchInput');
-      const toolsTable = document.getElementById('toolsTable');
-      
-      if (!searchInput || !toolsTable) {
-        return; // Exit if elements don't exist
-      }
-      
-      const tbody = toolsTable.querySelector('tbody');
-      const noResults = document.getElementById('noResults');
-      const resultsInfo = document.getElementById('resultsInfo');
-      const shownCount = document.getElementById('shownCount');
-      const totalCount = document.getElementById('totalCount');
-      const pagination = document.getElementById('pagination');
-      const filterButtons = document.querySelectorAll('.filter-button');
-      
-      // Variables to track current state
-      let currentPage = 1;
-      const itemsPerPage = 20;
-      let currentFilter = 'all';
-      let currentSort = { column: 'name', direction: 'asc' };
-      let filteredTools = [...toolsData];
-      
-      // Populate table with data
-      function renderTable() {
-        // Clear existing rows
-        tbody.innerHTML = '';
-        
-        // Apply filtering
-        let filtered = [...toolsData];
-        
-        // Apply search filter
-        if (searchInput.value.trim() !== '') {
-          const searchTerm = searchInput.value.trim().toLowerCase();
-          filtered = filtered.filter(tool => {
-            return (
-              tool.name.toLowerCase().includes(searchTerm) ||
-              tool.description.toLowerCase().includes(searchTerm) ||
-              tool.website.toLowerCase().includes(searchTerm) ||
-              tool.pricing.toLowerCase().includes(searchTerm)
-            );
-          });
-        }
-        
-        // Apply category filter
-        if (currentFilter !== 'all') {
-          if (currentFilter === 'free') {
-            filtered = filtered.filter(tool => tool.pricing === 'Free');
-          } else if (currentFilter === 'paid') {
-            filtered = filtered.filter(tool => tool.pricing === 'Paid only');
-          } else if (currentFilter === 'freemium') {
-            filtered = filtered.filter(tool => tool.pricing === 'Free & Paid');
-          }
-        }
-        
-        // Sort filtered data
-        filtered.sort((a, b) => {
-          const valA = a[currentSort.column].toLowerCase();
-          const valB = b[currentSort.column].toLowerCase();
-          
-          if (currentSort.direction === 'asc') {
-            return valA > valB ? 1 : -1;
-          } else {
-            return valA < valB ? 1 : -1;
-          }
-        });
-        
-        // Store the filtered tools for pagination
-        filteredTools = filtered;
-        
-        // Calculate pagination
-        const totalPages = Math.ceil(filteredTools.length / itemsPerPage);
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = Math.min(startIndex + itemsPerPage, filteredTools.length);
-        const paginatedTools = filteredTools.slice(startIndex, endIndex);
-        
-        // Update results info
-        shownCount.textContent = filteredTools.length;
-        totalCount.textContent = toolsData.length;
-        
-        // Check if no results
-        if (filteredTools.length === 0) {
-          noResults.style.display = 'block';
-          resultsInfo.style.display = 'none';
-          pagination.style.display = 'none';
-        } else {
-          noResults.style.display = 'none';
-          resultsInfo.style.display = 'block';
-          pagination.style.display = 'flex';
-        }
-        
-        // Render table rows
-        paginatedTools.forEach(tool => {
-          const row = document.createElement('tr');
-          
-          const nameCell = document.createElement('td');
-          nameCell.textContent = tool.name;
-          row.appendChild(nameCell);
-          
-          const websiteCell = document.createElement('td');
-          const websiteLink = document.createElement('a');
-          websiteLink.href = tool.website;
-          websiteLink.textContent = new URL(tool.website).hostname.replace('www.', '');
-          websiteLink.target = '_blank';
-          websiteCell.appendChild(websiteLink);
-          row.appendChild(websiteCell);
-          
-          const descriptionCell = document.createElement('td');
-          descriptionCell.textContent = tool.description;
-          row.appendChild(descriptionCell);
-          
-          const pricingCell = document.createElement('td');
-          const pricingIndicator = document.createElement('span');
-          pricingIndicator.classList.add('status-indicator');
-          
-          if (tool.pricing === 'Free') {
-            pricingIndicator.classList.add('free');
-          } else if (tool.pricing === 'Paid only') {
-            pricingIndicator.classList.add('paid');
-          } else {
-            pricingIndicator.classList.add('free');
-            pricingIndicator.style.background = 'linear-gradient(to right, var(--primary) 50%, var(--secondary) 50%)';
-          }
-          
-          pricingCell.appendChild(pricingIndicator);
-          pricingCell.appendChild(document.createTextNode(tool.pricing));
-          row.appendChild(pricingCell);
-          
-          tbody.appendChild(row);
-        });
-        
-        // Update pagination
-        renderPagination(totalPages);
-      }
-      // Create pagination buttons
-      function renderPagination(totalPages) {
-        pagination.innerHTML = '';
-        
-        // Previous button
-        if (totalPages > 1) {
-          const prevButton = document.createElement('button');
-          prevButton.classList.add('page-button');
-          prevButton.innerHTML = '&laquo;';
-          if (currentPage === 1) {
-            prevButton.disabled = true;
-            prevButton.style.opacity = '0.5';
-            prevButton.style.cursor = 'not-allowed';
-          }
-          prevButton.addEventListener('click', () => {
-            if (currentPage > 1) {
-              currentPage--;
-              renderTable();
-              window.scrollTo({
-                top: toolsTable.offsetTop - 120,
-                behavior: 'smooth'
-              });
-            }
-          });
-          pagination.appendChild(prevButton);
-        }
-        
-        // Page buttons
-        let startPage = Math.max(1, currentPage - 2);
-        let endPage = Math.min(totalPages, startPage + 4);
-        
-        if (endPage - startPage < 4 && startPage > 1) {
-          startPage = Math.max(1, endPage - 4);
-        }
-        
-        for (let i = startPage; i <= endPage; i++) {
-          const pageButton = document.createElement('button');
-          pageButton.classList.add('page-button');
-          pageButton.textContent = i;
-          
-          if (i === currentPage) {
-            pageButton.classList.add('active');
-          }
-          
-          pageButton.addEventListener('click', () => {
-            currentPage = i;
-            renderTable();
-            window.scrollTo({
-              top: toolsTable.offsetTop - 120,
-              behavior: 'smooth'
-            });
-          });
-          
-          pagination.appendChild(pageButton);
-        }
-        
-        // Next button
-        if (totalPages > 1) {
-          const nextButton = document.createElement('button');
-          nextButton.classList.add('page-button');
-          nextButton.innerHTML = '&raquo;';
-          if (currentPage === totalPages) {
-            nextButton.disabled = true;
-            nextButton.style.opacity = '0.5';
-            nextButton.style.cursor = 'not-allowed';
-          }
-          nextButton.addEventListener('click', () => {
-            if (currentPage < totalPages) {
-              currentPage++;
-              renderTable();
-              window.scrollTo({
-                top: toolsTable.offsetTop - 120,
-                behavior: 'smooth'
-              });
-            }
-          });
-          pagination.appendChild(nextButton);
-        }
-      }
-      
-      // Event listeners
-      searchInput.addEventListener('input', () => {
-        currentPage = 1;
-        renderTable();
-      });
-      
-      // Sort table columns
-      const ths = toolsTable.querySelectorAll('th.sortable');
-      ths.forEach(th => {
-        th.addEventListener('click', () => {
-          const column = th.getAttribute('data-sort');
-          
-          // Update sort direction
-          if (currentSort.column === column) {
-            currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
-          } else {
-            currentSort.column = column;
-            currentSort.direction = 'asc';
-          }
-          
-          // Update sort indicators
-          ths.forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
-          th.classList.add(`sort-${currentSort.direction}`);
-          
-          renderTable();
-        });
-      });
-      
-      // Filter buttons
-      filterButtons.forEach(button => {
-        button.addEventListener('click', () => {
-          filterButtons.forEach(btn => btn.classList.remove('active'));
-          button.classList.add('active');
-          currentFilter = button.getAttribute('data-filter');
-          currentPage = 1;
-          renderTable();
-        });
-      });
-      
-      // Initial render
-      renderTable();
-    }
-  </script>
-</body>
-</html>
   <!-- Web Development Section -->
   <section class="content-section" id="web-development-section">
     <div class="container">
@@ -2841,10 +1800,1103 @@
         <h3 class="section-title">Our Approach to Program Development</h3>
         
         <div class="content-card" style="max-width: 800px; margin: 0 auto;">
-          <h3>Tailored Software Solutions</h3>
-          <p>We take a flexible approach to program development. We could offer a revenue sharing agreement which could be free of charge, depending on the project. For traditional projects, we provide custom quotes within 1-2 business days after a free consultation.</p>
-          <p>Our development process begins with a comprehensive needs assessment to ensure we create software that perfectly addresses your business requirements and operational challenges.</p>
-          <p>Need custom software for your business? <a href="#" data-section="contact" class="pricing-btn pulse-effect" style="display: inline-block; margin-top: 10px;">Share your requirements</a></p>
-        </div>
-      </div>
-    </div
+         <h3>Tailored Software Solutions</h3>
+         <p>We take a flexible approach to program development. We could offer a revenue sharing agreement which could be free of charge, depending on the project. For traditional projects, we provide custom quotes within 1-2 business days after a free consultation.</p>
+         <p>Our development process begins with a comprehensive needs assessment to ensure we create software that perfectly addresses your business requirements and operational challenges.</p>
+         <p>Need custom software for your business? <a href="#" data-section="contact" class="pricing-btn pulse-effect" style="display: inline-block; margin-top: 10px;">Share your requirements</a></p>
+       </div>
+     </div>
+   </div>
+ </section>
+
+ <!-- Bot Creation Section -->
+ <section class="content-section" id="bot-creation-section">
+   <div class="container">
+     <h2 class="section-title">Bot Creation</h2>
+     
+     <div class="content-grid">
+       <div class="content-card">
+         <h3>Social Media Automation</h3>
+         <p>Automated solutions for managing and growing your social media presence. Schedule posts, engage with followers, and track performance across platforms.</p>
+       </div>
+       
+       <div class="content-card">
+         <h3>Business Workflow Automation</h3>
+         <p>Automate repetitive tasks and streamline your business operations. Free up your team's time by automating routine processes and data handling.</p>
+       </div>
+       
+       <div class="content-card">
+         <h3>Integration Services</h3>
+         <p>Connect different platforms and synchronize data between your business systems. Create seamless workflows across various applications.</p>
+       </div>
+     </div>
+     
+     <div class="pricing-section">
+       <h3 class="section-title">Our Approach to Bot Development</h3>
+       
+       <div class="content-card" style="max-width: 800px; margin: 0 auto;">
+         <h3>Smart Automation Solutions</h3>
+         <p>Our bot development services follow a collaborative model. We could offer a revenue sharing agreement which could be free of charge, depending on the project. For standard projects, we provide custom quotes within 1-2 business days after a free consultation.</p>
+         <p>We begin with a detailed assessment of your automation needs, identifying processes that can be optimized and determining the most effective solutions for your specific business requirements.</p>
+         <p>Ready to automate your business processes? <a href="#" data-section="contact" class="pricing-btn pulse-effect" style="display: inline-block; margin-top: 10px;">Discuss your automation needs</a></p>
+       </div>
+     </div>
+   </div>
+ </section>
+
+ <!-- Business Assistance Section -->
+ <section class="content-section" id="business-assistance-section">
+   <div class="container">
+     <h2 class="section-title">Business Assistance</h2>
+     
+     <div class="content-grid">
+       <div class="content-card">
+         <h3>Business Website Solutions</h3>
+         <p>Professional website development tailored for Australian businesses. Establish your online presence with a website that converts visitors into customers.</p>
+       </div>
+       
+       <div class="content-card">
+         <h3>Email Setup & Management</h3>
+         <p>Professional email solutions for your business. Set up custom email addresses with your domain name and implement efficient email management systems.</p>
+       </div>
+       
+       <div class="content-card">
+         <h3>Tech Support Services</h3>
+         <p>Ongoing technical support for Australian businesses. Get help with website maintenance, email issues, and general tech troubleshooting.</p>
+       </div>
+     </div>
+     
+     <div class="pricing-section">
+       <h3 class="section-title">Our Approach to Business Assistance</h3>
+       
+       <div class="content-card" style="max-width: 800px; margin: 0 auto;">
+         <h3>Comprehensive Business Support</h3>
+         <p>Our business assistance services follow our collaborative approach. We could offer a revenue sharing agreement which could be free of charge, depending on the project. Otherwise, after a free consultation, we'll provide a tailored quote within 1-2 business days.</p>
+         <p>We start by understanding your business needs and challenges, creating a customized plan to help you establish and maintain your online presence and technical infrastructure.</p>
+         <p>Need help with your business technology? <a href="#" data-section="contact" class="pricing-btn pulse-effect" style="display: inline-block; margin-top: 10px;">Contact us</a></p>
+       </div>
+     </div>
+   </div>
+ </section>
+
+ <!-- Applications Section -->
+ <section class="content-section" id="applications-section">
+   <div class="container">
+     <h2 class="section-title">Our Applications</h2>
+     
+     <div class="content-grid">
+       <div class="content-card">
+         <h3>NAJ Task Manager</h3>
+         <p>A fully customizable diagram and task management tool that helps you organize your workflow with ease. Create, modify, and track tasks with our intuitive interface.</p>
+         <ul class="content-features">
+           <li>Customizable task boxes with colors, styles, and descriptions</li>
+           <li>Built-in checklist functionality for each task</li>
+           <li>Flexible canvas with adjustable grid and background options</li>
+           <li>Connect tasks with lines and arrows to visualize workflows</li>
+         </ul>
+         <a href="taskmanager.html" target="_blank" class="pricing-btn pulse-effect" style="display: inline-block; margin-top: 20px;" onclick="window.open('taskmanager.html', '_blank'); return false;">Launch NAJ Task Manager</a>
+       </div>
+       
+       <div class="content-card">
+         <h3>Coming Soon</h3>
+         <p>We're constantly developing new tools and applications to help streamline your workflow. Stay tuned for more exciting releases!</p>
+         <ul class="content-features">
+           <li>Project Management Suite</li>
+           <li>Financial Dashboard</li>
+           <li>Customer Relationship Tools</li>
+         </ul>
+       </div>
+     </div>
+   </div>
+ </section>
+
+ <!-- Resources Section -->
+ <section class="content-section" id="resources-section">
+   <div class="container">
+     <h2 class="section-title">Developer Resources</h2>
+     
+     <div class="search-container">
+       <h3>Find the Perfect Tools</h3>
+       <p>Browse through our curated list of AI tools, frameworks, and platforms to help you bring your ideas to life. Use the search box below to filter by name, description, or any criteria. This list was updated 23/05/2025.</p>
+       
+       <input type="text" id="searchInput" class="search-input" placeholder="Search for tools, features, or categories...">
+       
+       <div class="filter-controls">
+         <button class="filter-button active" data-filter="all">All Tools</button>
+         <button class="filter-button" data-filter="free">Free Tools</button>
+         <button class="filter-button" data-filter="paid">Paid Only</button>
+         <button class="filter-button" data-filter="freemium">Free & Paid</button>
+       </div>
+     </div>
+     
+     <div class="table-container">
+       <table class="tools-table" id="toolsTable">
+         <thead>
+           <tr>
+             <th class="sortable" data-sort="name">Tool Name</th>
+             <th class="sortable" data-sort="website">Website</th>
+             <th class="sortable" data-sort="description">Description</th>
+             <th class="sortable" data-sort="pricing">Pricing</th>
+           </tr>
+         </thead>
+         <tbody>
+           <!-- Table data will be populated by JavaScript -->
+         </tbody>
+       </table>
+       
+       <div class="no-results" id="noResults">No matching tools found. Try a different search term.</div>
+       
+       <div class="results-info" id="resultsInfo">Showing <span id="shownCount">0</span> of <span id="totalCount">0</span> tools</div>
+       
+       <div class="pagination" id="pagination">
+         <!-- Pagination buttons will be added by JavaScript -->
+       </div>
+     </div>
+   </div>
+ </section>
+
+ <!-- About Section - Updated with new image -->
+ <section class="content-section" id="about-section">
+   <div class="container">
+     <h2 class="section-title">About</h2>
+     
+     <div class="about-container">
+       <div class="about-grid">
+         <div class="about-image">
+           <img src="https://i.imgur.com/G9pMHck.jpeg" alt="Nick Alexs Jr">
+         </div>
+         
+         <div class="about-content">
+           <h3>Nick Alexs Jr</h3>
+           <p class="subtitle">Director & Founder</p>
+           
+           <p>With a passion for building innovative solutions, Nick Alexs Jr is the driving force behind NAJ Developments. Nick's vision for NAJ Developments was born from a simple belief: everyone should have access to quality technology solutions regardless of their technical knowledge. His approach combines technical expertise with clear communication, ensuring clients understand and feel comfortable with the development process every step of the way.</p>
+           
+           <p>Nick helps individuals and businesses achieve their goals and turns ideas into reality. Based in Melbourne, Nick has built a reputation for delivering projects that not only meet technical requirements but exceed client expectations in terms of usability, performance, and design.</p>
+           
+           <div class="about-stats">
+             <div class="stat-box">
+               <div class="stat-number">500+</div>
+               <div class="stat-label">Projects Completed</div>
+             </div>
+             
+             <div class="stat-box">
+               <div class="stat-number">15+</div>
+               <div class="stat-label">Years Experience</div>
+             </div>
+             
+             <div class="stat-box">
+               <div class="stat-number">100%</div>
+               <div class="stat-label">Client Satisfaction</div>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+ </section>
+
+ <!-- Contact Section -->
+ <section class="content-section" id="contact-section">
+   <div class="container">
+     <h2 class="section-title">Let's Talk About Your Project</h2>
+     
+     <div class="content-grid">
+       <div class="content-card">
+         <h3>Contact Information</h3>
+         <ul class="content-features">
+           <li>Email: support@najdevelopments.com.au</li>
+           <li>Phone: +61 449 218 224</li>
+           <li>Location: Melbourne, Victoria, Australia</li>
+         </ul>
+       </div>
+       
+       <div class="content-card">
+         <h3>Send Us a Message</h3>
+         <div class="form-container" style="margin-bottom: 40px;">
+           <form action="https://formspree.io/f/mjkyzpvn" method="POST" id="contactForm5">
+             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+               <div>
+                 <label style="display: block; margin-bottom: 5px; color: #aaa; font-size: 0.9rem;">Your Name</label>
+                 <input type="text" name="name" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
+               </div>
+               <div>
+                 <label style="display: block; margin-bottom: 5px; color: #aaa; font-size: 0.9rem;">Your Email</label>
+                 <input type="email" name="email" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
+               </div>
+             </div>
+             
+             <div style="margin-bottom: 15px;">
+               <label style="display: block; margin-bottom: 5px; color: #aaa; font-size: 0.9rem;">Your Message</label>
+               <textarea name="message" rows="3" required style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white; resize: vertical;"></textarea>
+             </div>
+             
+             <button type="submit" class="form-btn-5" style="width: 100%; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold;">Send Message</button>
+             <div id="form-message-5" style="text-align: center; margin-top: 15px;"></div>
+           </form>
+         </div>
+       </div>
+     </div>
+   </div>
+ </section>
+
+ <!-- Back to top button -->
+ <div class="back-to-top" id="backToTop">↑</div>
+
+ <!-- Footer with enhanced logo visibility -->
+ <footer>
+   <div class="footer-content">
+     <div class="footer-logo">
+       <img src="https://i.imgur.com/v4svMoG.png" alt="NAJ Developments Logo" style="height: 100px; margin-bottom: 20px;">
+     </div>
+     
+     <p class="footer-text">Bringing your ideas to life with expertise, passion, and innovation.</p>
+     
+     <div class="footer-social">
+       <a href="https://www.linkedin.com/in/nick-alexs-jr/" target="_blank"><i>in</i></a>
+     </div>
+     
+     <div class="footer-bottom">
+       <p>&copy; 2025 NAJ Developments. Built with hustle in Australia.</p>
+     </div>
+   </div>
+ </footer>
+
+ <!-- JavaScript -->
+ <script>
+   // Tools data
+   const toolsData = [
+     { name: "Adobe Premiere", website: "https://adobe.com/products/premiere", description: "Professional video editing software with integrated AI features for automating edits and enhancing video production", pricing: "Paid only" },
+     { name: "AgentGPT", website: "https://agentgpt.reworkd.ai", description: "Browser-based platform that allows users to deploy autonomous AI agents which iteratively attempt to accomplish goals set by the user", pricing: "Free" },
+     { name: "AI2SQL", website: "https://ai2sql.io/", description: "AI-powered tool that generates error-free SQL queries and supports various databases", pricing: "Free & Paid" },
+     { name: "AirOps AI Data Sidekick", website: "https://airops.com/", description: "Free software that enhances SQL query workflow with powerful formulas and tools for writing optimizing and troubleshooting queries", pricing: "Free" },
+     { name: "AITable", website: "https://aitable.ai/", description: "AI data organization tool that combines database and spreadsheet features for streamlined CRM and project management", pricing: "Free & Paid" },
+     { name: "AIToolHub", website: "https://aitoolhub.co", description: "Platform showcasing various AI agents and tools for different use cases", pricing: "Free" },
+     { name: "AITopTools", website: "https://aitoptools.com", description: "Best AI tools search in any category - comprehensive directory for finding AI solutions", pricing: "Free" },
+     { name: "Akkio", website: "https://akkio.com", description: "No-code AI platform for data analytics and machine learning, enabling users to build predictive models and insights quickly", pricing: "Free & Paid" },
+     { name: "AlphaCode (DeepMind)", website: "https://deepmind.google/discover/blog/competitive-programming-with-alphacode/", description: "AI system by DeepMind designed to solve competitive programming problems by generating code, showcased at human-level problem-solving, not publicly available", pricing: "Free" },
+     { name: "AnswerRocket", website: "https://answerrocket.com", description: "AI-powered analytics tool that answers business questions in plain English by generating insights and visualizations from data", pricing: "Paid only" },
+     { name: "AskCodi", website: "https://www.askcodi.com/", description: "AI development tool that saves time and reduces redundancy by providing coding assistance syntax generation documentation and test creation", pricing: "Free & Paid" },
+     { name: "AskYourDatabase", website: "https://askyourdatabase.com/", description: "AI-powered chatbot that allows you to interact with SQL databases using natural language", pricing: "Free & Paid" },
+     { name: "AudioPen", website: "https://audiopen.ai", description: "AI note-taking tool that converts spoken audio notes into summarized coherent text for easy reference", pricing: "Free & Paid" },
+     { name: "Bardeen", website: "https://bardeen.ai", description: "Automation tool that uses AI to perform repetitive browser tasks, connect apps, and streamline workflows automatically", pricing: "Free & Paid" },
+     { name: "Base 44", website: "https://app.base44.com/", description: "AI-powered coding assistant", pricing: "Free & Paid" },
+     { name: "Bing AI Chat", website: "https://bing.com/chat", description: "Microsoft's AI chatbot integrated into the Bing search engine and Edge browser, using GPT-4 to answer questions and generate content", pricing: "Free" },
+     { name: "Bolt.new", website: "https://bolt.new", description: "Quick document creation", pricing: "Free" },
+     { name: "Botsonic", website: "https://botsonic.com", description: "No-code AI chatbot builder by Writesonic to create custom chatbots for websites using your own data", pricing: "Free & Paid" },
+     { name: "Browse AI", website: "https://browse.ai/", description: "No-code tool for extracting and monitoring data from websites through AI-powered robots", pricing: "Free & Paid" },
+     { name: "Bubble", website: "https://bubble.io/", description: "No-code platform that empowers users to build fully functional web applications with drag-and-drop interfaces", pricing: "Free & Paid" },
+     { name: "Buffer", website: "https://buffer.com", description: "Social media management tool that schedules posts and provides analytics, now adding AI assistance for content ideas and captions", pricing: "Free & Paid" },
+     { name: "BuildThatIdea.com", website: "https://buildthatidea.com", description: "Startup idea validation platform", pricing: "Free & Paid" },
+     { name: "Canva", website: "https://www.canva.com/", description: "User-friendly graphic design platform for creating visually appealing designs without advanced design skills", pricing: "Free & Paid" },
+     { name: "Canva Magic Write", website: "https://canva.com/magic-write", description: "AI text generator integrated in Canva that helps users brainstorm and create written content like copy or outlines within the design tool", pricing: "Free & Paid" },
+     { name: "Cassidy.ai", website: "https://cassidy.ai", description: "AI knowledge base", pricing: "Free & Paid" },
+     { name: "Character.AI", website: "https://beta.character.ai", description: "AI chatbot platform that lets users create and converse with various fictional or celebrity characters with distinct personalities", pricing: "Free" },
+     { name: "Chat2Course", website: "https://chat2course.com", description: "Convert chats into courses using AI", pricing: "Free" },
+     { name: "ChatGPT", website: "https://chat.openai.com/", description: "AI chatbot by OpenAI that uses natural language processing to engage in human-like conversations", pricing: "Free & Paid" },
+     { name: "Chatsonic", website: "https://writesonic.com/chat", description: "Generative AI chatbot by Writesonic that provides real-time answers with integrated web search capabilities", pricing: "Free & Paid" },
+     { name: "CheckIO.org", website: "https://checkio.org", description: "Coding games and challenges", pricing: "Free" },
+     { name: "Chef.Convex.Dex", website: "https://chef.convex.dex", description: "AI recipe generator", pricing: "Free" },
+     { name: "Claude", website: "https://claude.ai", description: "Anthropic's AI assistant known for its large context window and helpful, detailed responses for writing, Q&A, and brainstorming", pricing: "Free & Paid" },
+     { name: "Clipchamp", website: "https://clipchamp.com", description: "Browser-based video creation and editing platform (now Microsoft-owned) with templates and easy sharing tools", pricing: "Free & Paid" },
+     { name: "ClipDrop", website: "https://clipdrop.co", description: "AI tools for image editing", pricing: "Free" },
+     { name: "CodeT5", website: "https://github.com/salesforce/codet5", description: "Open-source code generation and understanding model by Salesforce that assists in completing code and generating functions from comments", pricing: "Free" },
+     { name: "Codedex.io", website: "https://codedex.io", description: "Learn coding with AI assistance", pricing: "Free" },
+     { name: "Coefficient", website: "https://coefficient.io", description: "Automation and data tool that integrates with spreadsheets to provide real-time data access and AI-driven analysis in sheets", pricing: "Free & Paid" },
+     { name: "Conker", website: "https://conker.ai", description: "AI tool for creating quizzes", pricing: "Free" },
+     { name: "Copy.ai", website: "https://copy.ai", description: "AI content generator that produces text for blogs, social media, and advertisements from short prompts", pricing: "Free & Paid" },
+     { name: "CopyOwl", website: "https://copyowl.ai", description: "SEO and marketing content generator", pricing: "Free & Paid" },
+     { name: "Copilot (GitHub)", website: "https://github.com/features/copilot", description: "AI code completion assistant developed by GitHub and OpenAI that suggests code snippets and functions directly in your code editor", pricing: "Paid only" },
+     { name: "Curipod", website: "https://curipod.com", description: "AI-powered platform for teachers to create interactive lessons, quizzes, and presentations to engage students in the classroom", pricing: "Free & Paid" },
+     { name: "Cursor", website: "https://cursor.so", description: "AI code editor", pricing: "Free & Paid" },
+     { name: "DALL-E 2", website: "https://openai.com/dall-e-2/", description: "AI image generator that creates visuals from text descriptions", pricing: "Free & Paid" },
+     { name: "Data Squirrel", website: "https://www.datasquirrel.ai/", description: "Business intelligence platform for making sense of data without technical skills", pricing: "Free & Paid" },
+     { name: "Databutton.com", website: "https://databutton.com", description: "Code interface platform", pricing: "Free & Paid" },
+     { name: "DeepL", website: "https://deepl.com", description: "High-quality AI translation service that translates text between multiple languages and offers a writing assistant for rephrasing and tone adjustments", pricing: "Free & Paid" },
+     { name: "DeepLiveCam", website: "https://deeplivecam.net/", description: "AI-driven live webcam enhancements", pricing: "Free & Paid" },
+     { name: "DevDocs.io", website: "https://devdocs.io", description: "API documentation browser", pricing: "Free" },
+     { name: "DomoAI", website: "https://domoai.app", description: "Generate animated art and avatars for free with AI", pricing: "Free" },
+     { name: "DoNotPay", website: "https://donotpay.com", description: "AI legal assistant", pricing: "Free" },
+     { name: "EasyPrompt", website: "https://easyprompt.ai", description: "AI prompt generator and explorer", pricing: "Free" },
+     { name: "Edraw.ai", website: "https://edraw.ai", description: "Diagramming tool", pricing: "Free & Paid" },
+     { name: "Eduaide.ai", website: "https://eduaide.ai", description: "AI teaching assistant that helps educators generate lesson plans, resources, and feedback, simplifying classroom preparation tasks", pricing: "Free & Paid" },
+     { name: "ElevenLabs", website: "https://elevenlabs.io", description: "Advanced text-to-speech platform that produces very realistic, human-like voice audio from text and offers voice cloning features", pricing: "Free & Paid" },
+     { name: "FaceCheck", website: "https://facecheck.id", description: "AI face recognition tool", pricing: "Free" },
+     { name: "FaceSwap", website: "https://akool.com", description: "AI tool by Akool that swaps faces in images and videos with realistic results, used for creative video editing", pricing: "Free & Paid" },
+     { name: "FakeDetail.com", website: "https://fakedetail.com", description: "Generate fake personal details", pricing: "Free" },
+     { name: "Fal.ai", website: "https://fal.ai", description: "AI model deployment", pricing: "Free & Paid" },
+     { name: "Filmora", website: "https://filmora.wondershare.com", description: "User-friendly video editing software (Wondershare) offering a range of effects and AI features for quick video enhancements", pricing: "Free & Paid" },
+     { name: "Firebase Studio", website: "https://firebase.google.com", description: "App development platform", pricing: "Free & Paid" },
+     { name: "Fliki AI", website: "https://fliki.ai", description: "AI content creation tool that turns text into videos and voiceovers with lifelike AI voices in numerous languages", pricing: "Free & Paid" },
+     { name: "Fluig", website: "https://fluig.cc/home", description: "Convert prompts to diagrams easily with AI", pricing: "Free" },
+     { name: "FlowCV.com", website: "https://flowcv.com", description: "Resume builder", pricing: "Free & Paid" },
+     { name: "Fonts Ninja", website: "https://fontsninja.com", description: "Font identification tool", pricing: "Free & Paid" },
+     { name: "FormulaBot.com", website: "https://formulabot.com", description: "Excel formula generator", pricing: "Free & Paid" },
+     { name: "Framer AI", website: "https://framer.com", description: "AI-powered website builder that can generate and design websites quickly based on user prompts", pricing: "Free & Paid" },
+     { name: "Freepik.com", website: "https://freepik.com", description: "Free graphic resources", pricing: "Free & Paid" },
+     { name: "G-Prompter", website: "https://g-prompter.com", description: "AI prompt generator for various models", pricing: "Free" },
+     { name: "Gamma", website: "https://gamma.app", description: "AI tool for creating presentations", pricing: "Free & Paid" },
+     { name: "Gemini", website: "https://gemini.google.com/", description: "Advanced AI assistant by Google that enhances productivity across Google Workspace applications", pricing: "Free & Paid" },
+     { name: "Gentube.app", website: "https://gentube.app", description: "Free image generator", pricing: "Free" },
+     { name: "GingerSoftware", website: "https://gingersoftware.com", description: "AI writing and grammar correction tool that provides rephrasing suggestions and translations for text", pricing: "Free & Paid" },
+     { name: "Glasp YouTube Summary", website: "https://glasp.co", description: "Summarize YouTube videos", pricing: "Free" },
+     { name: "Google AI Studio", website: "https://ai.google/", description: "Access to AI models and APIs", pricing: "Free" },
+     { name: "GPT-4 Vision", website: "https://openai.com", description: "AI image understanding", pricing: "Paid" },
+     { name: "GPTExcel", website: "https://gptexcel.com", description: "AI tool for generating Excel formulas", pricing: "Free" },
+     { name: "Grammarly", website: "https://www.grammarly.com/", description: "AI-powered writing assistant providing real-time grammar spelling and style checking across platforms", pricing: "Free & Paid" },
+     { name: "Harpa", website: "https://harpa.ai", description: "AI assistant for web automation tasks", pricing: "Free" },
+     { name: "HayoAI", website: "https://hayo.ai", description: "AI-driven interactive storytelling game", pricing: "Free" },
+     { name: "Hemingway", website: "https://hemingwayapp.com", description: "Writing editor that uses AI to highlight complex sentences and common errors to improve readability and clarity", pricing: "Free & Paid" },
+     { name: "HeyGen", website: "https://heygen.com", description: "AI video generation platform for creating spokesperson videos with AI avatars", pricing: "Free & Paid" },
+     { name: "HeyJen", website: "https://heyjen.ai", description: "Conversational AI platform (powered by GPT-4) offering a free alternative to ChatGPT for content creation and brainstorming", pricing: "Free" },
+     { name: "HeyLibby", website: "https://heylibby.ai", description: "AI chatbot for lead capture", pricing: "Free & Paid" },
+     { name: "Home.by.Me", website: "https://home.by.me", description: "3D home design", pricing: "Free & Paid" },
+     { name: "Hootsuite", website: "https://hootsuite.com", description: "Popular social media management platform for scheduling posts and monitoring engagement across networks in one dashboard", pricing: "Paid only" },
+     { name: "HowN9", website: "https://hown9.com/", description: "AI tool that allows you to have interactive conversations with your data and get instant insights", pricing: "Free & Paid" },
+     { name: "HubSpot", website: "https://hubspot.com", description: "Customer relationship management and marketing automation platform with AI tools for sales and marketing workflows", pricing: "Free & Paid" },
+     { name: "HubSpot AI Email Writer", website: "https://www.hubspot.com/", description: "AI email writing assistant that links with CRM database to help scale marketing efforts", pricing: "Paid only" },
+     { name: "HubSpot Campaign Assistant", website: "https://www.hubspot.com/campaign-assistant", description: "Free AI marketing copy generator by HubSpot for creating content like landing pages, emails, and ads", pricing: "Free" },
+     { name: "Hugging Face", website: "https://huggingface.co", description: "AI models and applications", pricing: "Free" },
+     { name: "Idiogram", website: "https://idiogram.ai", description: "AI-driven content creation tool aimed at helping marketers streamline content generation and marketing workflows", pricing: "Free & Paid" },
+     { name: "Ideogram", website: "https://ideogram.ai", description: "AI tool for generating images from text", pricing: "Free" },
+     { name: "Infograpia", website: "https://infograpia.com", description: "AI tool for creating infographics", pricing: "Free" },
+     { name: "Instant Data Scraper", website: "https://chromewebstore.google.com/detail/instant-data-scraper/ofaokhiedipichpaobibbnahnkdoiiah", description: "Web scraping tool", pricing: "Free" },
+     { name: "InterviewPrep", website: "https://interviewprep.ai", description: "AI interview preparation tool", pricing: "Free" },
+     { name: "InVideo", website: "https://invideo.io", description: "Online video editor with templates and an AI assistant to simplify creating marketing videos and social content", pricing: "Free & Paid" },
+     { name: "Jasper.ai", website: "https://jasper.ai", description: "AI writing tool designed to generate marketing copy, blog articles, and other content with customizable tone", pricing: "Paid only" },
+     { name: "JobHunnt", website: "https://jobhunnt.ai", description: "AI job application assistant", pricing: "Free" },
+     { name: "JTTR", website: "https://jttr.ai", description: "AI-driven text transformation", pricing: "Unknown" },
+     { name: "JWT.io", website: "https://jwt.io", description: "Decode and verify JSON Web Tokens", pricing: "Free" },
+     { name: "Kapwing", website: "https://kapwing.com", description: "Online image and video editor with AI tools to quickly create, edit, and caption memes, videos, and GIFs", pricing: "Free & Paid" },
+     { name: "Kimi", website: "https://kimi.moonshot.cn", description: "AI personal assistant", pricing: "Free" },
+     { name: "Klap", website: "https://klap.app", description: "AI tool for creating short videos", pricing: "Free" },
+     { name: "LanguageTool", website: "https://languagetool.org", description: "Multilingual writing tool that checks grammar and style and offers AI-based suggestions for improvement", pricing: "Free & Paid" },
+     { name: "LazyApply", website: "https://lazyapply.com", description: "AI job application automation", pricing: "Free" },
+     { name: "Leonardo AI", website: "https://leonardo.ai/", description: "AI-powered platform for generating and editing high-quality images with style consistency", pricing: "Free & Paid" },
+     { name: "Logomark.ai", website: "https://logomark.ai", description: "Logo generation", pricing: "Free & Paid" },
+     { name: "Lovable", website: "https://www.lovable.ai/", description: "AI-powered software development platform for building complex digital products through natural language descriptions", pricing: "Free & Paid" },
+     { name: "LumaLabs", website: "https://lumalabs.ai", description: "AI tool for 3D content creation", pricing: "Free" },
+     { name: "Lumen5", website: "https://lumen5.com", description: "Video creation platform that uses AI to transform blog posts or text content into engaging videos with stock media", pricing: "Free & Paid" },
+     { name: "MagicHour.ai", website: "https://magichour.ai", description: "AI photo enhancement", pricing: "Free & Paid" },
+     { name: "MagicLoops", website: "https://magicloops.dev", description: "AI music loop generator", pricing: "Free & Paid" },
+     { name: "Mailchimp", website: "https://mailchimp.com", description: "Email marketing platform that uses AI for audience insights, content optimization, and automated campaign recommendations", pricing: "Free & Paid" },
+     { name: "Manatal", website: "https://manatal.com", description: "AI-enhanced applicant tracking system (ATS) that streamlines hiring with resume parsing, candidate scoring, and recruitment CRM features", pricing: "Paid only" },
+     { name: "ManyChat", website: "https://manychat.com", description: "Chat marketing platform for building Facebook Messenger and Instagram bots to engage customers and drive sales", pricing: "Free & Paid" },
+     { name: "Mem AI", website: "https://mem.ai", description: "AI-powered note-taking and organization tool", pricing: "Free" },
+     { name: "Mendeley", website: "https://mendeley.com", description: "Reference management tool for researchers that helps organize papers and citations, offering recommendations and collaborative features", pricing: "Free" },
+     { name: "Meshy.ai", website: "https://meshy.ai", description: "3D model creator", pricing: "Free & Paid" },
+     { name: "Microsoft Copilot", website: "https://copilot.microsoft.com", description: "Microsoft's AI assistant integrated into Bing and Windows, providing conversational search and help across Microsoft 365 apps", pricing: "Free & Paid" },
+     { name: "MidJourney", website: "https://midjourney.com", description: "AI image generation", pricing: "Paid" },
+     { name: "MiniMax", website: "https://minimax.chat", description: "AI model deployment platform", pricing: "Free & Paid" },
+     { name: "Mockup Photos", website: "https://mockupphotos.com", description: "Free mockup images", pricing: "Free" },
+     { name: "MojoApp.com", website: "https://mojoapp.com", description: "Animate logos quickly", pricing: "Free & Paid" },
+     { name: "Molku AI", website: "https://molku.ai/", description: "Tool that automates PDF form filling by transferring data from other documents", pricing: "Free & Paid" },
+     { name: "Murf", website: "https://murf.ai/", description: "AI-powered text-to-speech platform with realistic voices for voiceovers and audio content", pricing: "Free & Paid" },
+     { name: "n8n", website: "https://n8n.io", description: "Workflow automation tool", pricing: "Free & Paid" },
+     { name: "Napkin AI Flowchart", website: "https://napkin.ai", description: "AI-generated flowcharts", pricing: "Free & Paid" },
+     { name: "Nim.video", website: "https://nim.video", description: "Video editing platform", pricing: "Free & Paid" },
+     { name: "Nimstrata Search & Discovery", website: "https://nimstrata.com/", description: "AI tool for enhancing online retail with personalized search results", pricing: "Paid only" },
+     { name: "Nir Diamant GenAI Agents", website: "https://github.com/diamond/genai-agents", description: "Repository of GenAI agents", pricing: "Free" },
+     { name: "Notion AI", website: "https://www.notion.so", description: "AI-powered writing and productivity assistant integrated into Notion, helping users draft content, brainstorm ideas, and summarize notes", pricing: "Paid only" },
+     { name: "Notebook LM Podcast", website: "https://notebooklm.google.com", description: "AI-generated podcast summaries", pricing: "Free" },
+     { name: "Notta.ai", website: "https://notta.ai", description: "Transcription service showcasing AI dubbing for translating videos", pricing: "Free & Paid" },
+     { name: "Ocoya", website: "https://ocoya.com", description: "All-in-one marketing content creation and scheduling platform with AI copywriting and social media automation features", pricing: "Free & Paid" },
+     { name: "OctiAI", website: "https://octi.ai", description: "AI prompt optimization tool", pricing: "Free" },
+     { name: "Open Assistant", website: "https://open-assistant.io", description: "Open-source conversational AI model and chat interface created by a global community, aiming to provide a free ChatGPT-like experience", pricing: "Free" },
+     { name: "OpenAI Codex", website: "https://openai.com/blog/openai-codex", description: "AI coding model (by OpenAI) that translates natural language into code and powers tools like GitHub Copilot (available via OpenAI API)", pricing: "Paid only" },
+     { name: "Opus Pro", website: "https://opus.pro", description: "AI video editing platform", pricing: "Free" },
+     { name: "Otio", website: "https://otio.io", description: "Time tracking tool", pricing: "Free & Paid" },
+     { name: "Otter.ai", website: "https://otter.ai", description: "AI transcription service that records and transcribes meetings or lectures in real time and generates summary notes", pricing: "Free & Paid" },
+     { name: "Parlay Genie", website: "https://parlaygenie.com", description: "AI sports betting assistant", pricing: "Free" },
+     { name: "Pencil", website: "https://www.pencil.ai", description: "Online design and prototyping tool that allows users to sketch wireframes and mockups easily with a user-friendly interface", pricing: "Free" },
+     { name: "Perchance AI", website: "https://perchance.org/ai-character-generator", description: "Generates AI-based character profiles and custom images", pricing: "Free" },
+     { name: "Perplexity AI", website: "https://www.perplexity.ai", description: "AI-powered answer engine that uses large language models to answer questions directly with cited sources", pricing: "Free & Paid" },
+     { name: "Photosonic", website: "https://photosonic.writesonic.com", description: "AI art generator by Writesonic that creates original images and artwork from text prompts in various styles", pricing: "Free & Paid" },
+     { name: "Phind", website: "https://phind.com", description: "AI search engine oriented towards developers and technical questions, providing direct answers with code examples and explanations", pricing: "Free" },
+     { name: "Pi (Inflection AI)", website: "https://heypi.com", description: "Personal AI chatbot by Inflection AI that engages in supportive, casual conversations and offers friendly advice or information", pricing: "Free" },
+     { name: "PicsArt AI Writer", website: "https://picsart.com", description: "AI tool for text editing and paraphrasing", pricing: "Free" },
+     { name: "Pika 1.0", website: "https://pika.art", description: "Text-to-video generative AI by Pika Labs that creates short videos from prompts in various styles (animation, live-action, etc.)", pricing: "Free & Paid" },
+     { name: "PlayPhrase.me", website: "https://playphrase.me", description: "Search movie phrases", pricing: "Free" },
+     { name: "Point-E", website: "https://github.com/openai/point-e/", description: "AI tool that uses prompts to create 3D models by combining text-to-image and image-to-3D algorithms", pricing: "Free" },
+     { name: "Poised", website: "https://poised.com", description: "AI communication coach for meetings", pricing: "Free" },
+     { name: "Polycoder", website: "https://github.com/VHellendoorn/Code-LMs", description: "Open-source AI code generator developed by researchers (CMU) that can auto-complete and write code, particularly effective in C language tasks", pricing: "Free" },
+     { name: "Polymer", website: "https://polymersearch.com", description: "AI-powered data analysis and visualization tool that automatically generates charts and dashboards from datasets", pricing: "Free & Paid" },
+     { name: "Poe (Quora)", website: "https://poe.com", description: "Multi-chatbot app by Quora that provides access to several AI chatbots (like ChatGPT, Claude) through a single interface", pricing: "Free & Paid" },
+     { name: "PopAI", website: "https://popai.co", description: "AI presentation tool", pricing: "Free & Paid" },
+     { name: "Pro Rank Tracker", website: "https://proranktracker.com", description: "SEO tool for tracking keyword rankings and SERP positions with detailed reports on search performance", pricing: "Free & Paid" },
+     { name: "ProductionCrate", website: "https://productioncrate.com", description: "Library of production assets including VFX, music, and graphics for creators", pricing: "Free & Paid" },
+     { name: "ProPhotos", website: "https://prophotos.ai", description: "AI professional photo editing", pricing: "Free" },
+     { name: "PromptPal", website: "https://promptpal.me", description: "AI prompt sharing platform", pricing: "Free" },
+     { name: "ProWritingAid", website: "https://prowritingaid.com", description: "Comprehensive editing software with AI that offers grammar checks, style improvements, and in-depth writing analysis", pricing: "Free & Paid" },
+     { name: "Qwen", website: "https://qwen.ai", description: "AI language model", pricing: "Free" },
+     { name: "QuickBooks", website: "https://quickbooks.intuit.com/", description: "Comprehensive financial management software for businesses with invoicing expense tracking and tax preparation", pricing: "Paid only" },
+     { name: "QuillBot", website: "https://quillbot.com/", description: "AI-powered writing tool for paraphrasing grammar checking and summarization", pricing: "Free & Paid" },
+     { name: "Rank Math Pro", website: "https://rankmath.com", description: "Advanced SEO plugin for WordPress that offers SEO analysis, optimization tips, and AI suggestions for content", pricing: "Free & Paid" },
+     { name: "Raw Query", website: "https://rawquery.com/", description: "User-friendly AI chat tool for easily connecting to databases and performing queries", pricing: "Free & Paid" },
+     { name: "Recall", website: "https://recall.ai", description: "AI tool for summarizing and researching content", pricing: "Free" },
+     { name: "Recraft.ai", website: "https://recraft.ai", description: "AI-powered design tool for creating vector graphics and illustrations", pricing: "Free & Paid" },
+     { name: "ReimagineHome", website: "https://reimaginehome.ai", description: "AI interior design assistant", pricing: "Free" },
+     { name: "Replicate", website: "https://replicate.com", description: "Run machine learning models in the cloud", pricing: "Free" },
+     { name: "Replit.com", website: "https://replit.com", description: "Online coding platform", pricing: "Free & Paid" },
+     { name: "Resumaker", website: "https://resumaker.ai", description: "AI resume builder", pricing: "Free" },
+     { name: "Revit", website: "https://autodesk.com/revit", description: "Building Information Modeling", pricing: "Paid" },
+     { name: "RoboWealthChat", website: "https://robowealthchat.com/", description: "AI-powered platform providing real-time market insights predictive forecasts and financial analysis", pricing: "Paid only" },
+     { name: "Rork.ai", website: "https://rork.ai", description: "AI content generation", pricing: "Free & Paid" },
+     { name: "Rosebud.ai", website: "https://rosebud.ai", description: "AI-generated vibe coding", pricing: "Free & Paid" },
+     { name: "RustDesk", website: "https://rustdesk.com", description: "Remote desktop software", pricing: "Free" },
+     { name: "Runway", website: "https://runwayml.com/", description: "AI tools for creators that transform creativity in art entertainment and human expression", pricing: "Free & Paid" },
+     { name: "Runway Gen-2", website: "https://runwayml.com", description: "Generative AI model by Runway ML that converts text descriptions into short video clips, pioneering text-to-video creation", pricing: "Free & Paid" },
+     { name: "Runway ML", website: "https://runwayml.com", description: "AI video editing and generation tool", pricing: "Free" },
+     { name: "Salesforce", website: "https://salesforce.com", description: "Leading CRM platform with integrated AI (Einstein AI) to help businesses manage sales, support, and marketing operations", pricing: "Paid only" },
+     { name: "SalesAPE", website: "https://salesape.ai/", description: "AI inbound sales representative that qualifies leads books meetings and grows revenue 24/7", pricing: "Paid only" },
+     { name: "Same.new", website: "https://same.new", description: "Collaborative document editing", pricing: "Free" },
+     { name: "SaneBox", website: "https://www.sanebox.com/", description: "AI-driven email management tool to declutter inboxes by intelligently sorting incoming emails", pricing: "Paid only" },
+     { name: "Scalenut", website: "https://scalenut.com", description: "Content marketing platform", pricing: "Free & Paid" },
+     { name: "SciSpace Copilot", website: "https://scispace.com", description: "AI research assistant", pricing: "Free & Paid" },
+     { name: "Scribe", website: "https://scribehow.com", description: "Process documentation tool", pricing: "Free & Paid" },
+     { name: "SeaArt", website: "https://seaart.ai", description: "AI-powered art generation platform", pricing: "Free" },
+     { name: "Seek AI", website: "https://www.seek.ai/", description: "AI tool enabling business end-users to query data with instant and accurate results", pricing: "Free & Paid" },
+     { name: "SeekOut", website: "https://seekout.com", description: "Talent acquisition and recruiting tool using AI to search for diverse candidates across various sources and social networks", pricing: "Paid only" },
+     { name: "SelectText", website: "https://selecttext.app", description: "Text selection tool", pricing: "Free" },
+     { name: "Semrush", website: "https://semrush.com", description: "Comprehensive digital marketing and SEO suite with tools for keyword research, competitor analysis, and content optimization", pricing: "Free & Paid" },
+     { name: "SEO Checker", website: "https://writesonic.com/seo-checker-and-optimizer", description: "SEO analysis and optimization tool by Writesonic that helps improve content's search engine ranking and keyword usage", pricing: "Free & Paid" },
+     { name: "Serif", website: "https://www.serif.ai/", description: "AI tool that organizes your inbox and drafts ready-to-send email replies in Gmail", pricing: "Free & Paid" },
+     { name: "Serverless", website: "https://serverless.com", description: "Free hosting for serverless applications and websites", pricing: "Free & Paid" },
+     { name: "Shopify", website: "https://www.shopify.com/", description: "Comprehensive e-commerce platform for creating managing and growing online stores", pricing: "Paid only" },
+     { name: "Skillate", website: "https://skillate.com", description: "AI recruitment platform that automates resume screening, shortlisting candidates, and reducing time-to-hire for HR teams", pricing: "Paid only" },
+     { name: "SlidesAI", website: "https://slidesai.io", description: "AI tool to create slides from text", pricing: "Free" },
+     { name: "Smithery MCP Servers", website: "https://smithery.com", description: "Minecraft server management tools", pricing: "Free" },
+     { name: "Snack Prompt", website: "https://snackprompt.com", description: "Curated list of AI prompts", pricing: "Free" },
+     { name: "SoftGen.ai", website: "https://softgen.ai", description: "AI code generation", pricing: "Free & Paid" },
+     { name: "Source Boosters", website: "https://zoho.com/recruit", description: "Feature within Zoho Recruit that uses AI to source candidates from multiple job boards and sources in a single search to expand the talent pool", pricing: "Paid only" },
+     { name: "SpaceLogo", website: "https://spacelogo.ai", description: "AI logo generation platform", pricing: "Free" },
+     { name: "Stable Diffusion", website: "https://stability.ai/stable-diffusion/", description: "Open-source AI image generator that creates detailed images from text descriptions", pricing: "Free" },
+     { name: "Supa", website: "https://supa.inc", description: "Create presentations in minutes with AI assistance", pricing: "Free & Paid" },
+     { name: "Supermeme.ai", website: "https://supermeme.ai", description: "AI meme generator that creates humorous memes from text inputs, allowing customization of templates and captions", pricing: "Free & Paid" },
+     { name: "Supertranslate", website: "https://supertranslate.ai", description: "AI tool for translating videos", pricing: "Free" },
+     { name: "SurferSEO", website: "https://surferseo.com", description: "SEO optimization platform with AI insights to help create and optimize content for better search rankings", pricing: "Paid only" },
+     { name: "Syntea", website: "https://syntea.net", description: "AI education platform designed to assist with personalized learning or training content generation (no widely available public details)", pricing: "Free & Paid" },
+     { name: "Synthesia", website: "https://www.synthesia.io", description: "AI video generation platform that creates videos with realistic avatars speaking from your text scripts", pricing: "Paid only" },
+     { name: "SynthflowAI", website: "https://synthflow.ai", description: "AI voice agents for automated calls", pricing: "Paid only" },
+     { name: "Tabnine", website: "https://tabnine.com", description: "AI-powered code completion tool that predicts and suggests code in multiple programming languages using trained models", pricing: "Free & Paid" },
+     { name: "Tagbox", website: "https://tagbox.ai/", description: "AI tool that helps businesses and teams organize media files efficiently using smart tags and filters", pricing: "Free & Paid" },
+     { name: "Take It Down", website: "https://takeitdown.ncmec.org", description: "Service that helps remove non-consensual intimate or explicit images of minors from the internet using secure digital fingerprints", pricing: "Free" },
+     { name: "Tableau", website: "https://tableau.com", description: "Business intelligence and data visualization platform that allows users to create interactive dashboards and gain insights (now with some AI features)", pricing: "Free & Paid" },
+     { name: "Tango", website: "https://tango.us", description: "Document processes with AI assistance", pricing: "Free" },
+     { name: "Taskade", website: "https://taskade.com", description: "AI-powered task management tool", pricing: "Free" },
+     { name: "Tencent Hunyuan", website: "https://hunyuan.tencent.com", description: "Video model generation", pricing: "Free" },
+     { name: "Tencent Hunyuan3D", website: "https://hunyuan3d.tencent.com", description: "3D model generation", pricing: "Free" },
+     { name: "TensorFlow", website: "https://tensorflow.org", description: "Open-source machine learning framework by Google for building and deploying AI models in various environments", pricing: "Free" },
+     { name: "Text Blaze", website: "https://textblaze.me", description: "Text expansion tool with AI capabilities", pricing: "Free" },
+     { name: "TextFX", website: "https://textfx.withgoogle.com/", description: "AI tool by Google for generating creative text and language possibilities", pricing: "Free" },
+     { name: "The Cool Coders", website: "https://thecoolcoders.com", description: "Project ideas and resources", pricing: "Free" },
+     { name: "The Librarian", website: "https://thelibrarian.ai/", description: "WhatsApp AI Personal Assistant for inbox management schedule control and information retrieval", pricing: "Free & Paid" },
+     { name: "Theresanai GitHub", website: "https://github.com/theresanai", description: "List of AI tools and resources", pricing: "Free" },
+     { name: "TheToolBus.ai", website: "https://thetoolbus.ai/", description: "Multi-AI tool website offering various tools to enhance work processes", pricing: "Free & Paid" },
+     { name: "TimeMap.org", website: "https://timemap.org", description: "Interactive historical maps", pricing: "Free" },
+     { name: "TinyWow.com", website: "https://tinywow.com", description: "Free online tools", pricing: "Free" },
+     { name: "Tome", website: "https://tome.app", description: "AI storytelling and presentation platform", pricing: "Free" },
+     { name: "Tongyi Wanxiang", website: "https://wanxiang.aliyun.com", description: "AI-powered image generation", pricing: "Free" },
+     { name: "Toolify.ai", website: "https://toolify.ai", description: "AI tools directory organized by categories", pricing: "Free" },
+     { name: "Toolsaday", website: "https://toolsaday.com", description: "Suite of AI writing tools including email generator", pricing: "Free" },
+     { name: "Trade Vector AI", website: "https://tradevector.ai/", description: "Automated trading platform using AI for investment strategies", pricing: "Paid only" },
+     { name: "Trae.ai", website: "https://trae.ai", description: "AI assistant coding environment", pricing: "Free" },
+     { name: "TripNotes", website: "https://tripnotes.ai", description: "AI travel planner", pricing: "Free & Paid" },
+     { name: "TypeFrames", website: "https://www.typeframes.ai", description: "AI video maker that automatically generates short promotional or informational videos from user-provided text or URLs", pricing: "Free & Paid" },
+     { name: "UIBall.com", website: "https://uiball.com", description: "UI components and animations", pricing: "Free" },
+     { name: "Uiverse.io", website: "https://uiverse.io", description: "UI component library", pricing: "Free" },
+     { name: "UiPath", website: "https://uipath.com", description: "Robotic Process Automation platform that uses AI to automate repetitive business processes and tasks across enterprise applications", pricing: "Free & Paid" },
+     { name: "Veo 2", website: "https://deepmind.google/veo", description: "Google's advanced AI video generation model (not yet available in Australia)", pricing: "Free" },
+     { name: "VidClue", website: "https://vidclue.com", description: "Library of images and videos", pricing: "Free & Paid" },
+     { name: "Vidu.studio", website: "https://vidu.studio", description: "Video creation platform", pricing: "Free & Paid" },
+     { name: "Vinteo AI", website: "https://vinteo.ai/", description: "Tool for retailers manufacturers and online stores to create high-quality product visuals using AI", pricing: "Free & Paid" },
+     { name: "Visual Studio Code", website: "https://code.visualstudio.com/", description: "Code editor with AI extensions", pricing: "Free" },
+     { name: "VIZ", website: "https://viz.ai/", description: "Data visualization tool for exploring datasets through conversational interfaces", pricing: "Free & Paid" },
+     { name: "Von.dev", website: "https://von.dev", description: "Vibe coding tool for web development", pricing: "Free" },
+     { name: "Watermark Remover", website: "https://watermarkremover.io", description: "Remove watermarks from images using AI", pricing: "Free" },
+     { name: "WaveApp", website: "https://wave.app", description: "AI-powered audio editing tool", pricing: "Free" },
+     { name: "Webhook.site", website: "https://webhook.site", description: "Test and debug webhooks", pricing: "Free" },
+     { name: "Wellness AI", website: "https://wellness.ai/", description: "Mental health support app combining adaptive AI therapy and personalized guided meditations", pricing: "Free & Paid" },
+     { name: "Wonsulting", website: "https://wonsulting.com", description: "Career coaching with AI tools", pricing: "Free" },
+     { name: "Workday", website: "https://www.workday.com/", description: "Cloud-based software for Human Capital Management Enterprise Resource Planning and Financial Management", pricing: "Paid only" },
+     { name: "Writesonic", website: "https://writesonic.com", description: "AI content creation platform for generating blog posts, marketing copy, and other written content", pricing: "Free & Paid" },
+     { name: "Xembly", website: "https://xembly.com", description: "AI executive assistant for meetings", pricing: "Free" },
+     { name: "You.com", website: "https://you.com", description: "AI-powered search engine that includes a chat-based assistant and content generation tools to directly answer queries and create text or images", pricing: "Free" },
+     { name: "YourWare.so", website: "https://yourware.so", description: "Build 3D websites", pricing: "Free & Paid" },
+     { name: "Zapier", website: "https://zapier.com", description: "Workflow automation", pricing: "Free & Paid" }    
+   ];
+
+   // Create floating dots animation - Enhanced for smoother performance
+   function createFloatingDots() {
+     const dotsContainer = document.getElementById('dotsContainer');
+     // Clear existing dots if any
+     dotsContainer.innerHTML = '';
+     
+     // Adjust number of dots based on screen size
+     const isMobile = window.innerWidth <= 768;
+     const numberOfDots = isMobile ? 20 : 80;
+     
+     for (let i = 0; i < numberOfDots; i++) {
+       const dot = document.createElement('div');
+       dot.classList.add('dot');
+       
+       // Random size (smaller on mobile)
+       const size = Math.random() * (isMobile ? 3 : 5) + 2;
+       
+       // Random position
+       const posX = Math.random() * 100;
+       const posY = Math.random() * 100;
+       
+       // Random movement direction and distance
+       const moveX = (Math.random() - 0.5) * 20;
+       const moveY = (Math.random() - 0.5) * 20;
+       
+       // Random animation duration (slower for better performance)
+       const duration = Math.random() * 50 + 20;
+       
+       // Random delay for more natural movement
+       const delay = Math.random() * 10;
+       
+       // Random opacity (lower on mobile)
+       const opacity = Math.random() * (isMobile ? 0.2 : 0.3) + (isMobile ? 0.05 : 0.1);
+       
+       // Different hues between primary and secondary colors
+       const hue = Math.random() > 0.5 ? 
+                   Math.floor(Math.random() * 40) + 160 : // blue-green for primary
+                   Math.floor(Math.random() * 40) + 240;  // purple for secondary
+       
+       // Set styles
+       dot.style.left = `${posX}%`;
+       dot.style.top = `${posY}%`;
+       dot.style.width = `${size}px`;
+       dot.style.height = `${size}px`;
+       dot.style.setProperty('--move-x', `${moveX}vw`);
+       dot.style.setProperty('--move-y', `${moveY}vh`);
+       dot.style.animationDuration = `${duration}s`;
+       dot.style.animationDelay = `-${delay}s`; // Negative delay for immediate start
+       dot.style.opacity = opacity;
+       dot.style.background = `radial-gradient(circle, hsl(${hue}, 70%, 60%), hsl(${hue}, 90%,40%))`;
+       dot.style.boxShadow = `0 0 ${size*2}px hsl(${hue}, 70%, 60%, 0.3)`;
+       
+       dotsContainer.appendChild(dot);
+     }
+   }
+
+   // Scroll-triggered animations for sections
+   function handleScrollAnimations() {
+     const sections = document.querySelectorAll('.content-section');
+     const footer = document.querySelector('footer');
+     const footerElements = {
+       logo: document.querySelector('.footer-logo'),
+       text: document.querySelector('.footer-text'),
+       social: document.querySelector('.footer-social'),
+       bottom: document.querySelector('.footer-bottom')
+     };
+     
+     // Add animation to section titles when they come into view
+     const titles = document.querySelectorAll('.section-title');
+     titles.forEach(title => {
+       if (isElementInViewport(title) && !title.classList.contains('animated')) {
+         title.style.animation = 'fadeUp 0.8s ease forwards';
+         title.classList.add('animated');
+       }
+     });
+     
+     // Animate footer elements when footer comes into view
+     if (footer && isElementInViewport(footer)) {
+       Object.values(footerElements).forEach(el => {
+         if (el && !el.classList.contains('visible')) {
+           el.classList.add('visible');
+         }
+       });
+     }
+   }
+   
+   // Helper to check if element is in viewport
+   function isElementInViewport(el) {
+     const rect = el.getBoundingClientRect();
+     return (
+       rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.85 && 
+       rect.bottom >= 0
+     );
+   }
+
+   // Initialize everything when DOM is loaded
+   document.addEventListener('DOMContentLoaded', function() {
+     // Create floating dots animation
+     createFloatingDots();
+     
+     // Recreate dots when window is resized
+     let resizeTimer;
+     window.addEventListener('resize', function() {
+       clearTimeout(resizeTimer);
+       resizeTimer = setTimeout(createFloatingDots, 250);
+     });
+     
+     // Navigation links functionality
+     const navLinks = document.querySelectorAll('.nav-link');
+     const contentSections = document.querySelectorAll('.content-section');
+     const backToTop = document.getElementById('backToTop');
+     const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
+     const navItems = document.querySelector('.nav-items');
+     
+     // Mobile navigation toggle - Enhanced with "What we do" text
+     if (mobileNavToggle) {
+       let isMenuOpen = false;
+       
+       mobileNavToggle.addEventListener('click', function() {
+         isMenuOpen = !isMenuOpen;
+         navItems.classList.toggle('active');
+         
+         // Update button content
+         if (isMenuOpen) {
+           mobileNavToggle.innerHTML = '✕ <span>What we do</span>';
+         } else {
+           mobileNavToggle.innerHTML = '☰ <span>What we do</span>';
+         }
+       });
+       
+       // Keep "What we do" text always visible
+       mobileNavToggle.innerHTML = '☰ <span>What we do</span>';
+     }
+     
+     // Function to show a specific section
+     function showSection(sectionId) {
+       if (!sectionId || sectionId === 'home') {
+         sectionId = 'home';
+       }
+       
+       const targetSection = document.getElementById(`${sectionId}-section`);
+       if (!targetSection) {
+         return;
+       }
+       
+       // Update active nav link
+       navLinks.forEach(link => {
+         link.classList.remove('active');
+         if (link.getAttribute('data-section') === sectionId) {
+           link.classList.add('active');
+         }
+       });
+       
+       // Hide all sections
+       contentSections.forEach(section => {
+         section.classList.remove('active');
+       });
+       
+       // Show target section
+       targetSection.classList.add('active');
+       
+       // Close mobile menu if open
+       if (window.innerWidth <= 992 && navItems.classList.contains('active')) {
+         navItems.classList.remove('active');
+         mobileNavToggle.innerHTML = '☰ <span>What we do</span>';
+       }
+       
+       // Scroll to top
+       window.scrollTo({
+         top: 0,
+         behavior: 'smooth'
+       });
+       
+       // Apply scroll animations after section change
+       setTimeout(handleScrollAnimations, 200);
+     }
+     
+     // Navigation links handler
+     navLinks.forEach(link => {
+       link.addEventListener('click', function(e) {
+         e.preventDefault();
+         const sectionId = this.getAttribute('data-section');
+         showSection(sectionId);
+       });
+     });
+     
+     // Service buttons click handler - for pricing buttons
+     document.addEventListener('click', function(e) {
+       if (e.target.classList.contains('pricing-btn')) {
+         e.preventDefault();
+         const sectionId = e.target.getAttribute('data-section');
+         if (sectionId) {
+           showSection(sectionId);
+         }
+       }
+     });
+     
+     // Back to top button
+     if (backToTop) {
+       window.addEventListener('scroll', function() {
+         if (window.scrollY > 300) {
+           backToTop.classList.add('active');
+         } else {
+           backToTop.classList.remove('active');
+         }
+       });
+       
+       backToTop.addEventListener('click', function() {
+         window.scrollTo({
+           top: 0,
+           behavior: 'smooth'
+         });
+       });
+     }
+     
+     // Form submission handling for form
+     const form = document.getElementById('contactForm5');
+     const formMessage = document.getElementById('form-message-5');
+     
+     if (form && formMessage) {
+       form.addEventListener('submit', async function(e) {
+         e.preventDefault();
+         
+         // Animate the button
+         const submitButton = form.querySelector('button[type="submit"]');
+         submitButton.textContent = 'Sending...';
+         submitButton.style.background = 'rgba(255, 255, 255, 0.2)';
+         submitButton.disabled = true;
+         
+         const data = new FormData(form);
+         
+         try {
+           const response = await fetch(form.action, {
+             method: 'POST',
+             body: data,
+             headers: { 'Accept': 'application/json' }
+           });
+           
+           if (response.ok) {
+             formMessage.innerHTML = "<span style='color: var(--primary);'>✅ Thank you! Your message has been sent.</span>";
+             form.reset();
+             
+             // Success animation
+             submitButton.textContent = 'Message Sent!';
+             submitButton.style.background = 'var(--primary)';
+             submitButton.style.color = 'var(--dark)';
+             submitButton.style.transform = 'translateY(-5px)';
+             
+             // Reset button after delay
+             setTimeout(() => {
+               submitButton.textContent = 'Send Message';
+               submitButton.style.background = '';
+               submitButton.style.color = '';
+               submitButton.style.transform = '';
+               submitButton.disabled = false;
+             }, 3000);
+           } else {
+             formMessage.innerHTML = "<span style='color: #ff4d4d;'>❌ Oops! Something went wrong.</span>";
+             submitButton.textContent = 'Try Again';
+             submitButton.style.background = '';
+             submitButton.disabled = false;
+           }
+         } catch (error) {
+           formMessage.innerHTML = "<span style='color: #ff4d4d;'>❌ Network error. Please try again.</span>";
+           submitButton.textContent = 'Try Again';
+           submitButton.style.background = '';
+           submitButton.disabled = false;
+         }
+       });
+     }
+
+     // Initialize tools table functionality
+     initToolsTable();
+     
+     // Mouse follow effect for glow with performance optimization
+     const glowEffect = document.querySelector('.glow-effect');
+     let mouseTimer;
+     
+     if (glowEffect) {
+       document.addEventListener('mousemove', function(e) {
+         // Clear any existing timer
+         clearTimeout(mouseTimer);
+         
+         // Set a timer to update the position to avoid performance issues
+         mouseTimer = setTimeout(() => {
+           const x = e.clientX;
+           const y = e.clientY;
+           glowEffect.style.left = x + 'px';
+           glowEffect.style.top = y + 'px';
+           glowEffect.style.transform = 'translate(-50%, -50%)';
+         }, 10);
+       });
+     }
+     
+     // Initialize scroll animations
+     handleScrollAnimations();
+     window.addEventListener('scroll', handleScrollAnimations);
+     
+     // Fix for iOS 100vh issue
+     function fixMobileViewportHeight() {
+       const vh = window.innerHeight * 0.01;
+       document.documentElement.style.setProperty('--vh', `${vh}px`);
+       
+       document.querySelectorAll('.dashboard-hero').forEach(hero => {
+         hero.style.height = `calc(var(--vh, 1vh) * 100)`;
+       });
+     }
+     
+     // Run on page load and resize
+     fixMobileViewportHeight();
+     window.addEventListener('resize', fixMobileViewportHeight);
+   });
+   
+   // Tools table functionality (New)
+   function initToolsTable() {
+     const searchInput = document.getElementById('searchInput');
+     const toolsTable = document.getElementById('toolsTable');
+     
+     if (!searchInput || !toolsTable) {
+       return; // Exit if elements don't exist
+     }
+     
+     const tbody = toolsTable.querySelector('tbody');
+     const noResults = document.getElementById('noResults');
+     const resultsInfo = document.getElementById('resultsInfo');
+     const shownCount = document.getElementById('shownCount');
+     const totalCount = document.getElementById('totalCount');
+     const pagination = document.getElementById('pagination');
+     const filterButtons = document.querySelectorAll('.filter-button');
+     
+     // Variables to track current state
+     let currentPage = 1;
+     const itemsPerPage = 20;
+     let currentFilter = 'all';
+     let currentSort = { column: 'name', direction: 'asc' };
+     let filteredTools = [...toolsData];
+     
+     // Populate table with data
+     function renderTable() {
+       // Clear existing rows
+       tbody.innerHTML = '';
+       
+       // Apply filtering
+       let filtered = [...toolsData];
+       
+       // Apply search filter
+       if (searchInput.value.trim() !== '') {
+         const searchTerm = searchInput.value.trim().toLowerCase();
+         filtered = filtered.filter(tool => {
+           return (
+             tool.name.toLowerCase().includes(searchTerm) ||
+             tool.description.toLowerCase().includes(searchTerm) ||
+             tool.website.toLowerCase().includes(searchTerm) ||
+             tool.pricing.toLowerCase().includes(searchTerm)
+           );
+         });
+       }
+       
+       // Apply category filter
+       if (currentFilter !== 'all') {
+         if (currentFilter === 'free') {
+           filtered = filtered.filter(tool => tool.pricing === 'Free');
+         } else if (currentFilter === 'paid') {
+           filtered = filtered.filter(tool => tool.pricing === 'Paid only');
+         } else if (currentFilter === 'freemium') {
+           filtered = filtered.filter(tool => tool.pricing === 'Free & Paid');
+         }
+       }
+       
+       // Sort filtered data
+       filtered.sort((a, b) => {
+         const valA = a[currentSort.column].toLowerCase();
+         const valB = b[currentSort.column].toLowerCase();
+         
+         if (currentSort.direction === 'asc') {
+           return valA > valB ? 1 : -1;
+         } else {
+           return valA < valB ? 1 : -1;
+         }
+       });
+       
+       // Store the filtered tools for pagination
+       filteredTools = filtered;
+       
+       // Calculate pagination
+       const totalPages = Math.ceil(filteredTools.length / itemsPerPage);
+       const startIndex = (currentPage - 1) * itemsPerPage;
+       const endIndex = Math.min(startIndex + itemsPerPage, filteredTools.length);
+       const paginatedTools = filteredTools.slice(startIndex, endIndex);
+       
+       // Update results info
+       shownCount.textContent = filteredTools.length;
+       totalCount.textContent = toolsData.length;
+       
+       // Check if no results
+       if (filteredTools.length === 0) {
+         noResults.style.display = 'block';
+         resultsInfo.style.display = 'none';
+         pagination.style.display = 'none';
+       } else {
+         noResults.style.display = 'none';
+         resultsInfo.style.display = 'block';
+         pagination.style.display = 'flex';
+       }
+       
+       // Render table rows
+       paginatedTools.forEach(tool => {
+         const row = document.createElement('tr');
+         
+         const nameCell = document.createElement('td');
+         nameCell.textContent = tool.name;
+         row.appendChild(nameCell);
+         
+         const websiteCell = document.createElement('td');
+         const websiteLink = document.createElement('a');
+         websiteLink.href = tool.website;
+         websiteLink.textContent = new URL(tool.website).hostname.replace('www.', '');
+         websiteLink.target = '_blank';
+         websiteCell.appendChild(websiteLink);
+         row.appendChild(websiteCell);
+         
+         const descriptionCell = document.createElement('td');
+         descriptionCell.textContent = tool.description;
+         row.appendChild(descriptionCell);
+         
+         const pricingCell = document.createElement('td');
+         const pricingIndicator = document.createElement('span');
+         pricingIndicator.classList.add('status-indicator');
+         
+         if (tool.pricing === 'Free') {
+           pricingIndicator.classList.add('free');
+         } else if (tool.pricing === 'Paid only') {
+           pricingIndicator.classList.add('paid');
+         } else {
+           pricingIndicator.classList.add('free');
+           pricingIndicator.style.background = 'linear-gradient(to right, var(--primary) 50%, var(--secondary) 50%)';
+         }
+         
+         pricingCell.appendChild(pricingIndicator);
+         pricingCell.appendChild(document.createTextNode(tool.pricing));
+         row.appendChild(pricingCell);
+         
+         tbody.appendChild(row);
+       });
+       
+       // Update pagination
+       renderPagination(totalPages);
+     }
+
+     // Create pagination buttons
+     function renderPagination(totalPages) {
+       pagination.innerHTML = '';
+       
+       // Previous button
+       if (totalPages > 1) {
+         const prevButton = document.createElement('button');
+         prevButton.classList.add('page-button');
+         prevButton.innerHTML = '&laquo;';
+         if (currentPage === 1) {
+           prevButton.disabled = true;
+           prevButton.style.opacity = '0.5';
+           prevButton.style.cursor = 'not-allowed';
+         }
+         prevButton.addEventListener('click', () => {
+           if (currentPage > 1) {
+             currentPage--;
+             renderTable();
+             window.scrollTo({
+               top: toolsTable.offsetTop - 120,
+               behavior: 'smooth'
+             });
+           }
+         });
+         pagination.appendChild(prevButton);
+       }
+       
+       // Page buttons
+       let startPage = Math.max(1, currentPage - 2);
+       let endPage = Math.min(totalPages, startPage + 4);
+       
+       if (endPage - startPage < 4 && startPage > 1) {
+         startPage = Math.max(1, endPage - 4);
+       }
+       
+       for (let i = startPage; i <= endPage; i++) {
+         const pageButton = document.createElement('button');
+         pageButton.classList.add('page-button');
+         pageButton.textContent = i;
+         
+         if (i === currentPage) {
+           pageButton.classList.add('active');
+         }
+         
+         pageButton.addEventListener('click', () => {
+           currentPage = i;
+           renderTable();
+           window.scrollTo({
+             top: toolsTable.offsetTop - 120,
+             behavior: 'smooth'
+           });
+         });
+         
+         pagination.appendChild(pageButton);
+       }
+       
+       // Next button
+       if (totalPages > 1) {
+         const nextButton = document.createElement('button');
+         nextButton.classList.add('page-button');
+         nextButton.innerHTML = '&raquo;';
+         if (currentPage === totalPages) {
+           nextButton.disabled = true;
+           nextButton.style.opacity = '0.5';
+           nextButton.style.cursor = 'not-allowed';
+         }
+         nextButton.addEventListener('click', () => {
+           if (currentPage < totalPages) {
+             currentPage++;
+             renderTable();
+             window.scrollTo({
+               top: toolsTable.offsetTop - 120,
+               behavior: 'smooth'
+             });
+           }
+         });
+         pagination.appendChild(nextButton);
+       }
+     }
+     
+     // Event listeners
+     searchInput.addEventListener('input', () => {
+       currentPage = 1;
+       renderTable();
+     });
+     
+     // Sort table columns
+     const ths = toolsTable.querySelectorAll('th.sortable');
+     ths.forEach(th => {
+       th.addEventListener('click', () => {
+         const column = th.getAttribute('data-sort');
+         
+         // Update sort direction
+         if (currentSort.column === column) {
+           currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+         } else {
+           currentSort.column = column;
+           currentSort.direction = 'asc';
+         }
+         
+         // Update sort indicators
+         ths.forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
+         th.classList.add(`sort-${currentSort.direction}`);
+         
+         renderTable();
+       });
+     });
+     
+     // Filter buttons
+     filterButtons.forEach(button => {
+       button.addEventListener('click', () => {
+         filterButtons.forEach(btn => btn.classList.remove('active'));
+         button.classList.add('active');
+         currentFilter = button.getAttribute('data-filter');
+         currentPage = 1;
+         renderTable();
+       });
+     });
+     
+     // Initial render
+     renderTable();
+   }
+ </script>
+</body>
+</html>
