@@ -240,13 +240,13 @@
     }
 
     .nav-items {
-  display: flex;
-  width: 100%;
-  justify-content: center; /* Change from space-between to center */
-  align-items: center;
-  gap: 20px; /* Add a gap between items */
-  flex-wrap: nowrap;
-}
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: nowrap;
+    }
     
     .mobile-nav-toggle {
       display: none;
@@ -258,150 +258,64 @@
       z-index: 1001;
     }
 
-    @media (max-width: 992px) {
-  .nav-container {
-    justify-content: space-between;
-    padding: 0 20px;
-  }
-  
-  .mobile-nav-toggle {
-    display: block;
-  }
-  
-  .mobile-nav-toggle span {
-    font-size: 0.9rem; /* Smaller text for mobile menu toggle */
-  }
-  
-  .nav-items {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-    background: rgba(17, 17, 17, 0.95);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    transform: translateX(-100%);
-    transition: transform 0.4s ease;
-    padding: 120px 0;
-  }
-  
-  .nav-items.active {
-    transform: translateX(0);
-  }
-  
-  .nav-item {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  
-  .nav-items.active .nav-item {
-    animation: fadeIn 0.5s ease forwards;
-  }
-  
-  .nav-items.active .nav-item:nth-child(1) { animation-delay: 0.1s; }
-  .nav-items.active .nav-item:nth-child(2) { animation-delay: 0.2s; }
-  .nav-items.active .nav-item:nth-child(3) { animation-delay: 0.3s; }
-  .nav-items.active .nav-item:nth-child(4) { animation-delay: 0.4s; }
-  .nav-items.active .nav-item:nth-child(5) { animation-delay: 0.5s; }
-  .nav-items.active .nav-item:nth-child(6) { animation-delay: 0.6s; }
-  .nav-items.active .nav-item:nth-child(7) { animation-delay: 0.7s; }
-  .nav-items.active .nav-item:nth-child(8) { animation-delay: 0.8s; }
-  .nav-items.active .nav-item:nth-child(9) { animation-delay: 0.9s; }
-  
-  .nav-link {
-    font-size: 0.95rem; /* Smaller text for nav items on mobile */
-  }
-  
-  @keyframes fadeIn {
-    to {
-      opacity: 1;
-      transform: translateY(0);
+    /* Enhanced responsive navigation */
+    @media (max-width: 1200px) {
+      .nav-items {
+        gap: 15px;
+      }
+      
+      .nav-link {
+        padding: 10px 12px;
+        font-size: 0.95rem;
+      }
     }
-  }
-}
 
-.nav-item {
-  list-style: none;
-  text-align: center;
-}
-
-.nav-item:first-child {
-  text-align: left;
-}
-
-.nav-item:last-child {
-  text-align: right;
-}
-
-.nav-link {
-  color: #fff;
-  text-decoration: none;
-  padding: 12px 15px;
-  border-radius: 20px;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  position: relative;
-  font-weight: 500;
-  white-space: nowrap;
-  letter-spacing: 0.3px;
-  display: inline-block;
-}
-
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: 0;
-  height: 2px;
-  background: var(--primary);
-  transform: translateX(-50%);
-  transition: width 0.3s ease;
-}
-
-.nav-link:hover {
-  color: var(--primary);
-  background-color: rgba(0, 230, 168, 0.1);
-  transform: translateY(-2px);
-}
-
-.nav-link:hover::after {
-  width: 70%;
-}
-
-.nav-link.active {
-  color: var(--primary);
-  background-color: rgba(0, 230, 168, 0.15);
-}
-
-.nav-link.active::after {
-  width: 70%;
-}
-
-/* Background effect - Enhanced with animated gradient */
-.bg-effect {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: -2;
-  opacity: 0.4;
-}
-
-.bg-gradient {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(ellipse at top right, rgba(0,230,168,0.1), transparent 50%),
-              radial-gradient(ellipse at bottom left, rgba(108,99,255,0.1), transparent 50%);
-  animation: gradientShift 15s ease infinite alternate;
-}
+    @media (max-width: 992px) {
+      .nav-container {
+        justify-content: space-between;
+        padding: 0 20px;
+      }
+      
+      .mobile-nav-toggle {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      
+      .mobile-nav-toggle span {
+        font-size: 0.9rem;
+      }
+      
+      .nav-items {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        background: rgba(17, 17, 17, 0.95);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        transform: translateX(-100%);
+        transition: transform 0.4s ease;
+        padding: 120px 0;
+      }
+      
+      .nav-items.active {
+        transform: translateX(0);
+      }
+      
+      .nav-item {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      
+      .nav-items.active .nav-item {
+        animation: fadeIn 0.5s ease forwards;
+      }
       
       .nav-items.active .nav-item:nth-child(1) { animation-delay: 0.1s; }
       .nav-items.active .nav-item:nth-child(2) { animation-delay: 0.2s; }
@@ -412,6 +326,11 @@
       .nav-items.active .nav-item:nth-child(7) { animation-delay: 0.7s; }
       .nav-items.active .nav-item:nth-child(8) { animation-delay: 0.8s; }
       .nav-items.active .nav-item:nth-child(9) { animation-delay: 0.9s; }
+      .nav-items.active .nav-item:nth-child(10) { animation-delay: 1.0s; }
+      
+      .nav-link {
+        font-size: 0.95rem;
+      }
       
       @keyframes fadeIn {
         to {
@@ -477,6 +396,7 @@
     .nav-link.active::after {
       width: 70%;
     }
+
     /* Background effect - Enhanced with animated gradient */
     .bg-effect {
       position: fixed;
@@ -488,7 +408,7 @@
       z-index: -2;
       opacity: 0.4;
     }
-    
+
     .bg-gradient {
       position: absolute;
       width: 100%;
@@ -1743,110 +1663,6 @@
       </div>
     </div>
   </section>
-  <!-- Web Development Section -->
-  <section class="content-section" id="web-development-section">
-    <div class="container">
-      <h2 class="section-title">Web Development</h2>
-      
-      <div class="content-grid">
-        <div class="content-card">
-          <h3>Corporate Websites</h3>
-          <p>Professional websites that establish your brand identity and online presence. Our websites are designed to engage your audience and convert visitors into customers.</p>
-        </div>
-        
-        <div class="content-card">
-          <h3>E-commerce Solutions</h3>
-          <p>Online stores with seamless checkout experiences and comprehensive inventory management. Sell your products online with a store that's designed for conversions.</p>
-        </div>
-        
-        <div class="content-card">
-          <h3>Web Applications</h3>
-          <p>Custom web apps that solve specific business problems and optimize workflows. From internal tools to customer-facing applications, we build solutions that deliver results.</p>
-        </div>
-      </div>
-      
-      <div class="pricing-section">
-        <h3 class="section-title">Our Approach to Web Development</h3>
-        
-        <div class="content-card" style="max-width: 800px; margin: 0 auto;">
-          <h3>Collaborative Development Process</h3>
-          <p>At NAJ Developments, we believe in a collaborative approach to web development. We could offer a revenue sharing agreement which could be free of charge, depending on the project. Otherwise, you'll receive a detailed quote within 1-2 business days after a free consultation.</p>
-          <p>Our process begins with understanding your vision during a no-obligation consultation. We'll discuss your requirements, timeline, and budget to create a tailored solution that perfectly fits your needs.</p>
-          <p>Ready to bring your web project to life? <a href="#" data-section="contact" class="pricing-btn pulse-effect" style="display: inline-block; margin-top: 10px;">Tell us your idea</a></p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- App Development Section -->
-  <section class="content-section" id="app-development-section">
-    <div class="container">
-      <h2 class="section-title">App Development</h2>
-      
-      <div class="content-grid">
-        <div class="content-card">
-          <h3>iOS Development</h3>
-          <p>Premium iOS apps designed to Apple's high standards and guidelines. We create apps that provide exceptional user experiences and take advantage of the latest iOS features.</p>
-        </div>
-        
-        <div class="content-card">
-          <h3>Android Development</h3>
-          <p>Feature-rich Android apps optimized for the diverse Android ecosystem. Our Android apps are designed to work seamlessly across various devices and screen sizes.</p>
-        </div>
-        
-        <div class="content-card">
-          <h3>Cross-Platform Apps</h3>
-          <p>Cost-effective solutions that work seamlessly across iOS and Android. Get the best of both worlds with apps that share a single codebase while maintaining native performance.</p>
-        </div>
-      </div>
-      
-      <div class="pricing-section">
-        <h3 class="section-title">Our Approach to App Development</h3>
-        
-        <div class="content-card" style="max-width: 800px; margin: 0 auto;">
-          <h3>Flexible Collaboration Options</h3>
-          <p>We offer various collaboration models for app development, including revenue sharing agreements which could be free of charge, depending on the project. Otherwise, after a free consultation, we'll provide a detailed quote within 1-2 business days.</p>
-          <p>Our app development process starts with a thorough consultation to understand your vision, target audience, and business goals. We then create a development roadmap tailored to your specific needs.</p>
-          <p>Have an exciting app idea? <a href="#" data-section="contact" class="pricing-btn pulse-effect" style="display: inline-block; margin-top: 10px;">Tell us about it</a></p>
-        </div>
-      </div>
-    </div>
-  </section>
-  
-  <!-- Program Development Section -->
-  <section class="content-section" id="program-development-section">
-    <div class="container">
-      <h2 class="section-title">Program Development</h2>
-      
-      <div class="content-grid">
-        <div class="content-card">
-          <h3>Desktop Applications</h3>
-          <p>Custom desktop software designed to streamline your business operations. Develop tailored solutions that address your specific workflow needs and increase productivity.</p>
-        </div>
-        
-        <div class="content-card">
-          <h3>Business Software</h3>
-          <p>Specialized business software that solves specific operational challenges. From inventory management to customer relationship management, we build tools that drive efficiency.</p>
-        </div>
-        
-        <div class="content-card">
-          <h3>Industry-Specific Solutions</h3>
-          <p>Specialized software tailored to the requirements of specific industries or professions. Get solutions designed with deep understanding of your industry's needs and workflows.</p>
-        </div>
-      </div>
-      
-      <div class="pricing-section">
-        <h3 class="section-title">Our Approach to Program Development</h3>
-        
-        <div class="content-card" style="max-width: 800px; margin: 0 auto;">
-          <h3>Tailored Software Solutions</h3>
-          <p>We take a flexible approach to program development. We could offer a revenue sharing agreement which could be free of charge, depending on the project. For traditional projects, we provide custom quotes within 1-2 business days after a free consultation.</p>
-          <p>Our development process begins with a comprehensive needs assessment to ensure we create software that perfectly addresses your business requirements and operational challenges.</p>
-          <p>Need custom software for your business? <a href="#" data-section="contact" class="pricing-btn pulse-effect" style="display: inline-block; margin-top: 10px;">Share your requirements</a></p>
-        </div>
-      </div>
-    </div>
-  </section>
   <!-- Bot Creation Section (continued) -->
   <section class="content-section" id="bot-creation-section">
     <div class="container">
@@ -1931,7 +1747,7 @@
           <li>Flexible canvas with adjustable grid and background options</li>
           <li>Connect tasks with lines and arrows to visualize workflows</li>
         </ul>
-        <a href="taskmanager.html" target="_blank" class="pricing-btn pulse-effect" style="display: inline-block; margin-top: 20px;">Launch NAJ Task Manager</a>
+        <a href="taskmanager.html" target="_blank" class="pricing-btn pulse-effect" style="display: inline-block; margin-top: 20px;" onclick="window.open('taskmanager.html', '_blank'); return false;">Launch NAJ Task Manager</a>
       </div>
       
       <div class="content-card">
@@ -1953,7 +1769,7 @@
       
       <div class="search-container">
         <h3>Find the Perfect Tools</h3>
-        <p>Browse through our curated list of AI tools, frameworks, and platforms to help you bring your ideas to life. Use the search box below to filter by name, description, or any criteria. This list was updated 18/05/2025.</p>
+        <p>Browse through our curated list of AI tools, frameworks, and platforms to help you bring your ideas to life. Use the search box below to filter by name, description, or any criteria. This list was updated 23/05/2025.</p>
         
         <input type="text" id="searchInput" class="search-input" placeholder="Search for tools, features, or categories...">
         
@@ -2105,6 +1921,8 @@
       { name: "AI2SQL", website: "https://ai2sql.io/", description: "AI-powered tool that generates error-free SQL queries and supports various databases", pricing: "Free & Paid" },
       { name: "AirOps AI Data Sidekick", website: "https://airops.com/", description: "Free software that enhances SQL query workflow with powerful formulas and tools for writing optimizing and troubleshooting queries", pricing: "Free" },
       { name: "AITable", website: "https://aitable.ai/", description: "AI data organization tool that combines database and spreadsheet features for streamlined CRM and project management", pricing: "Free & Paid" },
+      { name: "AIToolHub", website: "https://aitoolhub.co", description: "Platform showcasing various AI agents and tools for different use cases", pricing: "Free" },
+      { name: "AITopTools", website: "https://aitoptools.com", description: "Best AI tools search in any category - comprehensive directory for finding AI solutions", pricing: "Free" },
       { name: "Akkio", website: "https://akkio.com", description: "No-code AI platform for data analytics and machine learning, enabling users to build predictive models and insights quickly", pricing: "Free & Paid" },
       { name: "AlphaCode (DeepMind)", website: "https://deepmind.google/discover/blog/competitive-programming-with-alphacode/", description: "AI system by DeepMind designed to solve competitive programming problems by generating code, showcased at human-level problem-solving, not publicly available", pricing: "Free" },
       { name: "AnswerRocket", website: "https://answerrocket.com", description: "AI-powered analytics tool that answers business questions in plain English by generating insights and visualizations from data", pricing: "Paid only" },
@@ -2147,6 +1965,7 @@
       { name: "DeepL", website: "https://deepl.com", description: "High-quality AI translation service that translates text between multiple languages and offers a writing assistant for rephrasing and tone adjustments", pricing: "Free & Paid" },
       { name: "DeepLiveCam", website: "https://deeplivecam.net/", description: "AI-driven live webcam enhancements", pricing: "Free & Paid" },
       { name: "DevDocs.io", website: "https://devdocs.io", description: "API documentation browser", pricing: "Free" },
+      { name: "DomoAI", website: "https://domoai.app", description: "Generate animated art and avatars for free with AI", pricing: "Free" },
       { name: "DoNotPay", website: "https://donotpay.com", description: "AI legal assistant", pricing: "Free" },
       { name: "EasyPrompt", website: "https://easyprompt.ai", description: "AI prompt generator and explorer", pricing: "Free" },
       { name: "Edraw.ai", website: "https://edraw.ai", description: "Diagramming tool", pricing: "Free & Paid" },
@@ -2159,6 +1978,7 @@
       { name: "Filmora", website: "https://filmora.wondershare.com", description: "User-friendly video editing software (Wondershare) offering a range of effects and AI features for quick video enhancements", pricing: "Free & Paid" },
       { name: "Firebase Studio", website: "https://firebase.google.com", description: "App development platform", pricing: "Free & Paid" },
       { name: "Fliki AI", website: "https://fliki.ai", description: "AI content creation tool that turns text into videos and voiceovers with lifelike AI voices in numerous languages", pricing: "Free & Paid" },
+      { name: "Fluig", website: "https://fluig.cc/home", description: "Convert prompts to diagrams easily with AI", pricing: "Free" },
       { name: "FlowCV.com", website: "https://flowcv.com", description: "Resume builder", pricing: "Free & Paid" },
       { name: "Fonts Ninja", website: "https://fontsninja.com", description: "Font identification tool", pricing: "Free & Paid" },
       { name: "FormulaBot.com", website: "https://formulabot.com", description: "Excel formula generator", pricing: "Free & Paid" },
@@ -2177,6 +1997,7 @@
       { name: "Harpa", website: "https://harpa.ai", description: "AI assistant for web automation tasks", pricing: "Free" },
       { name: "HayoAI", website: "https://hayo.ai", description: "AI-driven interactive storytelling game", pricing: "Free" },
       { name: "Hemingway", website: "https://hemingwayapp.com", description: "Writing editor that uses AI to highlight complex sentences and common errors to improve readability and clarity", pricing: "Free & Paid" },
+      { name: "HeyGen", website: "https://heygen.com", description: "AI video generation platform for creating spokesperson videos with AI avatars", pricing: "Free & Paid" },
       { name: "HeyJen", website: "https://heyjen.ai", description: "Conversational AI platform (powered by GPT-4) offering a free alternative to ChatGPT for content creation and brainstorming", pricing: "Free" },
       { name: "HeyLibby", website: "https://heylibby.ai", description: "AI chatbot for lead capture", pricing: "Free & Paid" },
       { name: "Home.by.Me", website: "https://home.by.me", description: "3D home design", pricing: "Free & Paid" },
@@ -2228,7 +2049,7 @@
       { name: "Nir Diamant GenAI Agents", website: "https://github.com/diamond/genai-agents", description: "Repository of GenAI agents", pricing: "Free" },
       { name: "Notion AI", website: "https://www.notion.so", description: "AI-powered writing and productivity assistant integrated into Notion, helping users draft content, brainstorm ideas, and summarize notes", pricing: "Paid only" },
       { name: "Notebook LM Podcast", website: "https://notebooklm.google.com", description: "AI-generated podcast summaries", pricing: "Free" },
-      { name: "Notta.ai", website: "https://notta.ai", description: "Transcription service", pricing: "Free & Paid" },
+      { name: "Notta.ai", website: "https://notta.ai", description: "Transcription service showcasing AI dubbing for translating videos", pricing: "Free & Paid" },
       { name: "Ocoya", website: "https://ocoya.com", description: "All-in-one marketing content creation and scheduling platform with AI copywriting and social media automation features", pricing: "Free & Paid" },
       { name: "OctiAI", website: "https://octi.ai", description: "AI prompt optimization tool", pricing: "Free" },
       { name: "Open Assistant", website: "https://open-assistant.io", description: "Open-source conversational AI model and chat interface created by a global community, aiming to provide a free ChatGPT-like experience", pricing: "Free" },
@@ -2253,6 +2074,7 @@
       { name: "Poe (Quora)", website: "https://poe.com", description: "Multi-chatbot app by Quora that provides access to several AI chatbots (like ChatGPT, Claude) through a single interface", pricing: "Free & Paid" },
       { name: "PopAI", website: "https://popai.co", description: "AI presentation tool", pricing: "Free & Paid" },
       { name: "Pro Rank Tracker", website: "https://proranktracker.com", description: "SEO tool for tracking keyword rankings and SERP positions with detailed reports on search performance", pricing: "Free & Paid" },
+      { name: "ProductionCrate", website: "https://productioncrate.com", description: "Library of production assets including VFX, music, and graphics for creators", pricing: "Free & Paid" },
       { name: "ProPhotos", website: "https://prophotos.ai", description: "AI professional photo editing", pricing: "Free" },
       { name: "PromptPal", website: "https://promptpal.me", description: "AI prompt sharing platform", pricing: "Free" },
       { name: "ProWritingAid", website: "https://prowritingaid.com", description: "Comprehensive editing software with AI that offers grammar checks, style improvements, and in-depth writing analysis", pricing: "Free & Paid" },
@@ -2262,6 +2084,7 @@
       { name: "Rank Math Pro", website: "https://rankmath.com", description: "Advanced SEO plugin for WordPress that offers SEO analysis, optimization tips, and AI suggestions for content", pricing: "Free & Paid" },
       { name: "Raw Query", website: "https://rawquery.com/", description: "User-friendly AI chat tool for easily connecting to databases and performing queries", pricing: "Free & Paid" },
       { name: "Recall", website: "https://recall.ai", description: "AI tool for summarizing and researching content", pricing: "Free" },
+      { name: "Recraft.ai", website: "https://recraft.ai", description: "AI-powered design tool for creating vector graphics and illustrations", pricing: "Free & Paid" },
       { name: "ReimagineHome", website: "https://reimaginehome.ai", description: "AI interior design assistant", pricing: "Free" },
       { name: "Replicate", website: "https://replicate.com", description: "Run machine learning models in the cloud", pricing: "Free" },
       { name: "Replit.com", website: "https://replit.com", description: "Online coding platform", pricing: "Free & Paid" },
@@ -2288,6 +2111,7 @@
       { name: "Semrush", website: "https://semrush.com", description: "Comprehensive digital marketing and SEO suite with tools for keyword research, competitor analysis, and content optimization", pricing: "Free & Paid" },
       { name: "SEO Checker", website: "https://writesonic.com/seo-checker-and-optimizer", description: "SEO analysis and optimization tool by Writesonic that helps improve content's search engine ranking and keyword usage", pricing: "Free & Paid" },
       { name: "Serif", website: "https://www.serif.ai/", description: "AI tool that organizes your inbox and drafts ready-to-send email replies in Gmail", pricing: "Free & Paid" },
+      { name: "Serverless", website: "https://serverless.com", description: "Free hosting for serverless applications and websites", pricing: "Free & Paid" },
       { name: "Shopify", website: "https://www.shopify.com/", description: "Comprehensive e-commerce platform for creating managing and growing online stores", pricing: "Paid only" },
       { name: "Skillate", website: "https://skillate.com", description: "AI recruitment platform that automates resume screening, shortlisting candidates, and reducing time-to-hire for HR teams", pricing: "Paid only" },
       { name: "SlidesAI", website: "https://slidesai.io", description: "AI tool to create slides from text", pricing: "Free" },
@@ -2297,11 +2121,13 @@
       { name: "Source Boosters", website: "https://zoho.com/recruit", description: "Feature within Zoho Recruit that uses AI to source candidates from multiple job boards and sources in a single search to expand the talent pool", pricing: "Paid only" },
       { name: "SpaceLogo", website: "https://spacelogo.ai", description: "AI logo generation platform", pricing: "Free" },
       { name: "Stable Diffusion", website: "https://stability.ai/stable-diffusion/", description: "Open-source AI image generator that creates detailed images from text descriptions", pricing: "Free" },
+      { name: "Supa", website: "https://supa.inc", description: "Create presentations in minutes with AI assistance", pricing: "Free & Paid" },
       { name: "Supermeme.ai", website: "https://supermeme.ai", description: "AI meme generator that creates humorous memes from text inputs, allowing customization of templates and captions", pricing: "Free & Paid" },
       { name: "Supertranslate", website: "https://supertranslate.ai", description: "AI tool for translating videos", pricing: "Free" },
       { name: "SurferSEO", website: "https://surferseo.com", description: "SEO optimization platform with AI insights to help create and optimize content for better search rankings", pricing: "Paid only" },
       { name: "Syntea", website: "https://syntea.net", description: "AI education platform designed to assist with personalized learning or training content generation (no widely available public details)", pricing: "Free & Paid" },
       { name: "Synthesia", website: "https://www.synthesia.io", description: "AI video generation platform that creates videos with realistic avatars speaking from your text scripts", pricing: "Paid only" },
+      { name: "SynthflowAI", website: "https://synthflow.ai", description: "AI voice agents for automated calls", pricing: "Paid only" },
       { name: "Tabnine", website: "https://tabnine.com", description: "AI-powered code completion tool that predicts and suggests code in multiple programming languages using trained models", pricing: "Free & Paid" },
       { name: "Tagbox", website: "https://tagbox.ai/", description: "AI tool that helps businesses and teams organize media files efficiently using smart tags and filters", pricing: "Free & Paid" },
       { name: "Take It Down", website: "https://takeitdown.ncmec.org", description: "Service that helps remove non-consensual intimate or explicit images of minors from the internet using secure digital fingerprints", pricing: "Free" },
@@ -2321,6 +2147,7 @@
       { name: "TinyWow.com", website: "https://tinywow.com", description: "Free online tools", pricing: "Free" },
       { name: "Tome", website: "https://tome.app", description: "AI storytelling and presentation platform", pricing: "Free" },
       { name: "Tongyi Wanxiang", website: "https://wanxiang.aliyun.com", description: "AI-powered image generation", pricing: "Free" },
+      { name: "Toolify.ai", website: "https://toolify.ai", description: "AI tools directory organized by categories", pricing: "Free" },
       { name: "Toolsaday", website: "https://toolsaday.com", description: "Suite of AI writing tools including email generator", pricing: "Free" },
       { name: "Trade Vector AI", website: "https://tradevector.ai/", description: "Automated trading platform using AI for investment strategies", pricing: "Paid only" },
       { name: "Trae.ai", website: "https://trae.ai", description: "AI assistant coding environment", pricing: "Free" },
@@ -2329,11 +2156,13 @@
       { name: "UIBall.com", website: "https://uiball.com", description: "UI components and animations", pricing: "Free" },
       { name: "Uiverse.io", website: "https://uiverse.io", description: "UI component library", pricing: "Free" },
       { name: "UiPath", website: "https://uipath.com", description: "Robotic Process Automation platform that uses AI to automate repetitive business processes and tasks across enterprise applications", pricing: "Free & Paid" },
+      { name: "Veo 2", website: "https://deepmind.google/veo", description: "Google's advanced AI video generation model (not yet available in Australia)", pricing: "Free" },
       { name: "VidClue", website: "https://vidclue.com", description: "Library of images and videos", pricing: "Free & Paid" },
       { name: "Vidu.studio", website: "https://vidu.studio", description: "Video creation platform", pricing: "Free & Paid" },
       { name: "Vinteo AI", website: "https://vinteo.ai/", description: "Tool for retailers manufacturers and online stores to create high-quality product visuals using AI", pricing: "Free & Paid" },
       { name: "Visual Studio Code", website: "https://code.visualstudio.com/", description: "Code editor with AI extensions", pricing: "Free" },
       { name: "VIZ", website: "https://viz.ai/", description: "Data visualization tool for exploring datasets through conversational interfaces", pricing: "Free & Paid" },
+      { name: "Von.dev", website: "https://von.dev", description: "Vibe coding tool for web development", pricing: "Free" },
       { name: "Watermark Remover", website: "https://watermarkremover.io", description: "Remove watermarks from images using AI", pricing: "Free" },
       { name: "WaveApp", website: "https://wave.app", description: "AI-powered audio editing tool", pricing: "Free" },
       { name: "Webhook.site", website: "https://webhook.site", description: "Test and debug webhooks", pricing: "Free" },
@@ -2458,12 +2287,24 @@
       const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
       const navItems = document.querySelector('.nav-items');
       
-      // Mobile navigation toggle
+      // Mobile navigation toggle - Enhanced with "What we do" text
       if (mobileNavToggle) {
+        let isMenuOpen = false;
+        
         mobileNavToggle.addEventListener('click', function() {
+          isMenuOpen = !isMenuOpen;
           navItems.classList.toggle('active');
-          mobileNavToggle.textContent = navItems.classList.contains('active') ? '✕' : '☰';
+          
+          // Update button content
+          if (isMenuOpen) {
+            mobileNavToggle.innerHTML = '✕ <span>What we do</span>';
+          } else {
+            mobileNavToggle.innerHTML = '☰ <span>What we do</span>';
+          }
         });
+        
+        // Keep "What we do" text always visible
+        mobileNavToggle.innerHTML = '☰ <span>What we do</span>';
       }
       
       // Function to show a specific section
@@ -2496,7 +2337,7 @@
         // Close mobile menu if open
         if (window.innerWidth <= 992 && navItems.classList.contains('active')) {
           navItems.classList.remove('active');
-          mobileNavToggle.textContent = '☰';
+          mobileNavToggle.innerHTML = '☰ <span>What we do</span>';
         }
         
         // Scroll to top
@@ -2904,3 +2745,106 @@
   </script>
 </body>
 </html>
+  <!-- Web Development Section -->
+  <section class="content-section" id="web-development-section">
+    <div class="container">
+      <h2 class="section-title">Web Development</h2>
+      
+      <div class="content-grid">
+        <div class="content-card">
+          <h3>Corporate Websites</h3>
+          <p>Professional websites that establish your brand identity and online presence. Our websites are designed to engage your audience and convert visitors into customers.</p>
+        </div>
+        
+        <div class="content-card">
+          <h3>E-commerce Solutions</h3>
+          <p>Online stores with seamless checkout experiences and comprehensive inventory management. Sell your products online with a store that's designed for conversions.</p>
+        </div>
+        
+        <div class="content-card">
+          <h3>Web Applications</h3>
+          <p>Custom web apps that solve specific business problems and optimize workflows. From internal tools to customer-facing applications, we build solutions that deliver results.</p>
+        </div>
+      </div>
+      
+      <div class="pricing-section">
+        <h3 class="section-title">Our Approach to Web Development</h3>
+        
+        <div class="content-card" style="max-width: 800px; margin: 0 auto;">
+          <h3>Collaborative Development Process</h3>
+          <p>At NAJ Developments, we believe in a collaborative approach to web development. We could offer a revenue sharing agreement which could be free of charge, depending on the project. Otherwise, you'll receive a detailed quote within 1-2 business days after a free consultation.</p>
+          <p>Our process begins with understanding your vision during a no-obligation consultation. We'll discuss your requirements, timeline, and budget to create a tailored solution that perfectly fits your needs.</p>
+          <p>Ready to bring your web project to life? <a href="#" data-section="contact" class="pricing-btn pulse-effect" style="display: inline-block; margin-top: 10px;">Tell us your idea</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- App Development Section -->
+  <section class="content-section" id="app-development-section">
+    <div class="container">
+      <h2 class="section-title">App Development</h2>
+      
+      <div class="content-grid">
+        <div class="content-card">
+          <h3>iOS Development</h3>
+          <p>Premium iOS apps designed to Apple's high standards and guidelines. We create apps that provide exceptional user experiences and take advantage of the latest iOS features.</p>
+        </div>
+        
+        <div class="content-card">
+          <h3>Android Development</h3>
+          <p>Feature-rich Android apps optimized for the diverse Android ecosystem. Our Android apps are designed to work seamlessly across various devices and screen sizes.</p>
+        </div>
+        
+        <div class="content-card">
+          <h3>Cross-Platform Apps</h3>
+          <p>Cost-effective solutions that work seamlessly across iOS and Android. Get the best of both worlds with apps that share a single codebase while maintaining native performance.</p>
+        </div>
+      </div>
+      
+      <div class="pricing-section">
+        <h3 class="section-title">Our Approach to App Development</h3>
+        
+        <div class="content-card" style="max-width: 800px; margin: 0 auto;">
+          <h3>Flexible Collaboration Options</h3>
+          <p>We offer various collaboration models for app development, including revenue sharing agreements which could be free of charge, depending on the project. Otherwise, after a free consultation, we'll provide a detailed quote within 1-2 business days.</p>
+          <p>Our app development process starts with a thorough consultation to understand your vision, target audience, and business goals. We then create a development roadmap tailored to your specific needs.</p>
+          <p>Have an exciting app idea? <a href="#" data-section="contact" class="pricing-btn pulse-effect" style="display: inline-block; margin-top: 10px;">Tell us about it</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Program Development Section -->
+  <section class="content-section" id="program-development-section">
+    <div class="container">
+      <h2 class="section-title">Program Development</h2>
+      
+      <div class="content-grid">
+        <div class="content-card">
+          <h3>Desktop Applications</h3>
+          <p>Custom desktop software designed to streamline your business operations. Develop tailored solutions that address your specific workflow needs and increase productivity.</p>
+        </div>
+        
+        <div class="content-card">
+          <h3>Business Software</h3>
+          <p>Specialized business software that solves specific operational challenges. From inventory management to customer relationship management, we build tools that drive efficiency.</p>
+        </div>
+        
+        <div class="content-card">
+          <h3>Industry-Specific Solutions</h3>
+          <p>Specialized software tailored to the requirements of specific industries or professions. Get solutions designed with deep understanding of your industry's needs and workflows.</p>
+        </div>
+      </div>
+      
+      <div class="pricing-section">
+        <h3 class="section-title">Our Approach to Program Development</h3>
+        
+        <div class="content-card" style="max-width: 800px; margin: 0 auto;">
+          <h3>Tailored Software Solutions</h3>
+          <p>We take a flexible approach to program development. We could offer a revenue sharing agreement which could be free of charge, depending on the project. For traditional projects, we provide custom quotes within 1-2 business days after a free consultation.</p>
+          <p>Our development process begins with a comprehensive needs assessment to ensure we create software that perfectly addresses your business requirements and operational challenges.</p>
+          <p>Need custom software for your business? <a href="#" data-section="contact" class="pricing-btn pulse-effect" style="display: inline-block; margin-top: 10px;">Share your requirements</a></p>
+        </div>
+      </div>
+    </div
