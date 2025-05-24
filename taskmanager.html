@@ -178,16 +178,16 @@
       position: relative;
       overflow: auto;
       background: #f5f7fa;
+      background-image: 
+        linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+      background-size: 20px 20px;
     }
 
     .canvas {
       position: relative;
       width: 2000px;
       height: 2000px;
-      background-image: 
-        linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
-      background-size: 20px 20px;
     }
 
     /* Task Cards */
@@ -1436,22 +1436,20 @@
 
       toggleGrid() {
         this.gridVisible = !this.gridVisible;
-        const canvas = document.getElementById('canvas');
+        const canvasArea = document.getElementById('canvasArea');
         if (this.gridVisible) {
-          canvas.style.backgroundImage = 
+          canvasArea.style.backgroundImage = 
             'linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px), ' +
             'linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px)';
         } else {
-          canvas.style.backgroundImage = 'none';
+          canvasArea.style.backgroundImage = 'none';
         }
         this.saveToLocalStorage();
       }
 
       changeBackgroundColor(color) {
         this.backgroundColor = color;
-        const canvas = document.getElementById('canvas');
         const canvasArea = document.getElementById('canvasArea');
-        canvas.style.backgroundColor = color;
         canvasArea.style.backgroundColor = color;
         this.saveToLocalStorage();
       }
