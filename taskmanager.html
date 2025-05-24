@@ -946,7 +946,7 @@
         const task = {
           id: taskId,
           title: 'New Task',
-          description: 'Click to edit description',
+          description: '',
           status: 'pending',
           x: x || 100,
           y: y || 100,
@@ -1002,7 +1002,7 @@
             </div>
           </div>
           <div class="task-body">
-            <p class="task-description">${task.description}</p>
+            ${task.description && task.description !== 'Click to edit description' ? `<p class="task-description">${task.description}</p>` : ''}
             <div class="task-meta">
               ${task.dueDate ? `<span>Due: ${new Date(task.dueDate).toLocaleDateString()}</span>` : ''}
               ${task.subtasks.length > 0 ? `<span>${task.subtasks.filter(s => s.completed).length}/${task.subtasks.length} subtasks</span>` : ''}
