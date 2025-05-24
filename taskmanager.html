@@ -197,16 +197,11 @@
       border-radius: 8px;
       box-shadow: 0 2px 8px var(--shadow);
       min-width: 200px;
-      max-width: none;
-      width: 250px;
-      height: auto;
+      max-width: 300px;
       cursor: move;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
       user-select: none;
       border: 2px solid #4a90e2;
-      overflow: hidden;
-      resize: both;
-      min-height: 120px;
     }
 
     .task-card:hover {
@@ -217,15 +212,10 @@
       opacity: 0.8;
       cursor: grabbing;
       z-index: 1000;
-      resize: none;
     }
 
     .task-card.selected {
       box-shadow: 0 0 0 3px var(--primary);
-    }
-
-    .task-card.resizing {
-      cursor: nw-resize;
     }
 
     .task-header {
@@ -253,10 +243,6 @@
       font-weight: 600;
       color: var(--dark);
       flex: 1;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      hyphens: auto;
-      line-height: 1.3;
     }
 
     .task-actions {
@@ -280,10 +266,6 @@
 
     .task-body {
       padding: 1rem;
-      overflow: hidden;
-      word-wrap: break-word;
-      height: calc(100% - 60px);
-      box-sizing: border-box;
     }
 
     .task-description {
@@ -291,19 +273,6 @@
       font-size: 14px;
       margin-bottom: 1rem;
       line-height: 1.5;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      hyphens: auto;
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-    }
-
-    .task-description.expanded {
-      -webkit-line-clamp: unset;
-      overflow: visible;
-      display: block;
     }
 
     .task-meta {
@@ -317,8 +286,6 @@
       margin-top: 1rem;
       padding-top: 1rem;
       border-top: 1px solid var(--border);
-      max-height: 150px;
-      overflow-y: auto;
     }
 
     .subtask {
@@ -410,52 +377,6 @@
       font-size: 14px;
       background: white;
       cursor: pointer;
-    }
-
-    /* Modals */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 2000;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .modal.active {
-      display: flex;
-    }
-
-    .modal-content {
-      background: white;
-      border-radius: 8px;
-      padding: 2rem;
-      max-width: 500px;
-      width: 90%;
-      max-height: 80vh;
-      overflow-y: auto;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    }
-
-    .modal-header {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      color: var(--dark);
-    }
-
-    .modal-body {
-      margin-bottom: 1.5rem;
-    }
-
-    .modal-footer {
-      display: flex;
-      justify-content: flex-end;
-      gap: 1rem;
     }
 
     /* Context Menu */
@@ -562,53 +483,6 @@
       opacity: 1;
     }
 
-    /* Text Boxes */
-    .text-box {
-      position: absolute;
-      background: transparent;
-      border: 1px dashed transparent;
-      border-radius: 4px;
-      padding: 0.5rem;
-      cursor: move;
-      transition: all 0.2s ease;
-      user-select: none;
-      min-width: 100px;
-      font-family: inherit;
-    }
-
-    .text-box:hover {
-      border-color: var(--primary);
-      background: rgba(74, 144, 226, 0.05);
-    }
-
-    .text-box.selected {
-      border-color: var(--primary);
-      background: rgba(74, 144, 226, 0.1);
-      box-shadow: 0 0 0 2px var(--primary);
-    }
-
-    .text-box.dragging {
-      opacity: 0.8;
-      cursor: grabbing;
-      z-index: 1000;
-    }
-
-    .text-content {
-      color: var(--dark);
-      font-size: 14px;
-      line-height: 1.4;
-      word-wrap: break-word;
-      outline: none;
-      background: transparent;
-      border: none;
-      resize: none;
-      width: 100%;
-      min-height: 20px;
-    }
-
-    .text-content:focus {
-      outline: none;
-    }
     /* Responsive */
     @media (max-width: 768px) {
       .sidebar {
@@ -696,7 +570,7 @@
           <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path>
         </svg>
       </button>
-      <button class="tool-btn" onclick="taskManager.setTool('connect')" title="Connect Tasks">
+      <button class="tool-btn" onclick="taskManager.setTool('connect')" title="Draw Lines">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="5" y1="12" x2="19" y2="12"></line>
           <polyline points="12 5 19 12 12 19"></polyline>
@@ -848,18 +722,23 @@
             name: 'Default Project',
             tasks: {},
             textBoxes: {},
+            lines: [],
             connections: []
           }
         };
         this.selectedTask = null;
         this.selectedTextBox = null;
+        this.selectedLine = null;
         this.currentTool = 'select';
         this.draggedTask = null;
         this.connectionStart = null;
+        this.drawingLine = false;
+        this.lineStart = null;
         this.undoStack = [];
         this.redoStack = [];
         this.taskIdCounter = 0;
         this.textBoxIdCounter = 0;
+        this.lineIdCounter = 0;
         this.zoom = 1;
         this.gridVisible = true;
         this.backgroundColor = '#f5f7fa';
@@ -950,9 +829,20 @@
             const x = (e.clientX - rect.left + e.target.parentElement.scrollLeft) / this.zoom;
             const y = (e.clientY - rect.top + e.target.parentElement.scrollTop) / this.zoom;
             this.createTextBox(x, y);
+          } else if (this.currentTool === 'connect') {
+            const rect = e.target.getBoundingClientRect();
+            const x = (e.clientX - rect.left + e.target.parentElement.scrollLeft) / this.zoom;
+            const y = (e.clientY - rect.top + e.target.parentElement.scrollTop) / this.zoom;
+            
+            if (!this.drawingLine) {
+              this.startDrawingLine(x, y);
+            } else {
+              this.finishDrawingLine(x, y);
+            }
           } else {
             this.selectTask(null);
             this.selectTextBox(null);
+            this.selectLine(null);
           }
         }
       }
@@ -960,12 +850,8 @@
       handleContextMenu(e) {
         e.preventDefault();
         const taskCard = e.target.closest('.task-card');
-        const textBox = e.target.closest('.text-box');
-        
         if (taskCard) {
-          this.showContextMenu(e.clientX, e.clientY, taskCard.dataset.taskId, 'task');
-        } else if (textBox) {
-          this.showContextMenu(e.clientX, e.clientY, textBox.dataset.textboxId, 'textbox');
+          this.showContextMenu(e.clientX, e.clientY, taskCard.dataset.taskId);
         } else if (e.target.id === 'canvas') {
           // Show context menu for canvas
           this.showCanvasContextMenu(e.clientX, e.clientY, e);
@@ -976,7 +862,6 @@
         const menu = document.getElementById('contextMenu');
         menu.innerHTML = `
           <div class="context-item" onclick="taskManager.contextAction('add')">Add Task Here</div>
-          <div class="context-item" onclick="taskManager.contextAction('addTextBox')">Add Text Box Here</div>
           <div class="context-divider"></div>
           <div class="context-item" onclick="taskManager.toggleGrid()">Toggle Grid</div>
           <div class="context-item" onclick="taskManager.promptBackgroundColor()">Change Background Color</div>
@@ -994,33 +879,22 @@
         menu.dataset.isCanvas = 'true';
       }
 
-      showContextMenu(x, y, itemId, type = 'task') {
+      showContextMenu(x, y, taskId) {
         const menu = document.getElementById('contextMenu');
-        
-        if (type === 'task') {
-          menu.innerHTML = `
-            <div class="context-item" onclick="taskManager.contextAction('edit')">Edit Task</div>
-            <div class="context-item" onclick="taskManager.contextAction('duplicate')">Duplicate</div>
-            <div class="context-divider"></div>
-            <div class="context-item" onclick="taskManager.contextAction('connect')">Connect To...</div>
-            <div class="context-item" onclick="taskManager.contextAction('disconnect')">Remove Connections</div>
-            <div class="context-divider"></div>
-            <div class="context-item" onclick="taskManager.contextAction('delete')">Delete</div>
-          `;
-        } else if (type === 'textbox') {
-          menu.innerHTML = `
-            <div class="context-item" onclick="taskManager.contextAction('editText')">Edit Text</div>
-            <div class="context-item" onclick="taskManager.contextAction('duplicateText')">Duplicate</div>
-            <div class="context-divider"></div>
-            <div class="context-item" onclick="taskManager.contextAction('deleteText')">Delete</div>
-          `;
-        }
+        menu.innerHTML = `
+          <div class="context-item" onclick="taskManager.contextAction('edit')">Edit Task</div>
+          <div class="context-item" onclick="taskManager.contextAction('duplicate')">Duplicate</div>
+          <div class="context-divider"></div>
+          <div class="context-item" onclick="taskManager.contextAction('connect')">Connect To...</div>
+          <div class="context-item" onclick="taskManager.contextAction('disconnect')">Remove Connections</div>
+          <div class="context-divider"></div>
+          <div class="context-item" onclick="taskManager.contextAction('delete')">Delete</div>
+        `;
         
         menu.style.left = `${x}px`;
         menu.style.top = `${y}px`;
         menu.classList.add('active');
-        menu.dataset.itemId = itemId;
-        menu.dataset.itemType = type;
+        menu.dataset.taskId = taskId;
         menu.dataset.isCanvas = 'false';
       }
 
@@ -1032,49 +906,57 @@
           const x = parseFloat(menu.dataset.canvasX);
           const y = parseFloat(menu.dataset.canvasY);
           this.createTask(x, y);
-        } else if (isCanvas && action === 'addTextBox') {
-          const x = parseFloat(menu.dataset.canvasX);
-          const y = parseFloat(menu.dataset.canvasY);
-          this.createTextBox(x, y);
         } else {
-          const itemId = menu.dataset.itemId;
-          const itemType = menu.dataset.itemType;
+          const taskId = menu.dataset.taskId;
           
-          if (itemType === 'task') {
-            switch(action) {
-              case 'edit':
-                this.selectTask(itemId);
-                break;
-              case 'duplicate':
-                this.duplicateTask(itemId);
-                break;
-              case 'delete':
-                this.deleteTask(itemId);
-                break;
-              case 'connect':
-                this.startConnection(itemId);
-                break;
-              case 'disconnect':
-                this.removeConnections(itemId);
-                break;
-            }
-          } else if (itemType === 'textbox') {
-            switch(action) {
-              case 'editText':
-                this.selectTextBox(itemId);
-                this.editTextBox(itemId);
-                break;
-              case 'duplicateText':
-                this.duplicateTextBox(itemId);
-                break;
-              case 'deleteText':
-                this.deleteTextBox(itemId);
-                break;
-            }
+          switch(action) {
+            case 'edit':
+              this.selectTask(taskId);
+              break;
+            case 'duplicate':
+              this.duplicateTask(taskId);
+              break;
+            case 'delete':
+              this.deleteTask(taskId);
+              break;
+            case 'connect':
+              this.startConnection(taskId);
+              break;
+            case 'disconnect':
+              this.removeConnections(taskId);
+              break;
           }
         }
         
         menu.classList.remove('active');
+      }
+
+      createTask(x, y) {
+        const taskId = `task_${++this.taskIdCounter}`;
+        const task = {
+          id: taskId,
+          title: 'New Task',
+          description: '',
+          status: 'pending',
+          x: x || 100,
+          y: y || 100,
+          subtasks: [],
+          createdAt: new Date().toISOString(),
+          dueDate: null,
+          style: {
+            backgroundColor: '#ffffff',
+            borderColor: '#4a90e2',
+            width: '250px',
+            height: 'auto'
+          }
+        };
+        
+        this.projects[this.currentProject].tasks[taskId] = task;
+        this.renderTask(task);
+        this.selectTask(taskId);
+        this.saveState();
+        this.saveToLocalStorage();
+        this.showNotification('Task created');
       }
 
       createTextBox(x, y) {
@@ -1108,7 +990,6 @@
         textBoxElement.style.left = `${textBox.x}px`;
         textBoxElement.style.top = `${textBox.y}px`;
         
-        // Apply saved styles
         if (textBox.style) {
           textBoxElement.style.fontSize = textBox.style.fontSize || '14px';
           textBoxElement.style.fontWeight = textBox.style.fontWeight || 'normal';
@@ -1117,7 +998,7 @@
         }
         
         textBoxElement.innerHTML = `
-          <div class="text-content" onclick="taskManager.editTextBox('${textBox.id}')">${textBox.text}</div>
+          <div class="text-content" ondblclick="taskManager.editTextBox('${textBox.id}')">${textBox.text}</div>
         `;
         
         canvas.appendChild(textBoxElement);
@@ -1157,7 +1038,6 @@
             isDragging = false;
             element.classList.remove('dragging');
             
-            // Update text box position in data
             const textBoxId = element.dataset.textboxId;
             const textBox = this.projects[this.currentProject].textBoxes[textBoxId];
             if (textBox) {
@@ -1169,7 +1049,6 @@
           }
         });
         
-        // Click to select
         element.addEventListener('click', (e) => {
           if (!e.target.classList.contains('text-content') || e.target.contentEditable !== 'true') {
             this.selectTextBox(element.dataset.textboxId);
@@ -1178,13 +1057,12 @@
       }
 
       selectTextBox(textBoxId) {
-        // Remove previous selection
         document.querySelectorAll('.text-box').forEach(box => {
           box.classList.remove('selected');
         });
         
-        // Clear task selection
         this.selectTask(null);
+        this.selectLine(null);
         
         if (textBoxId) {
           const textBoxElement = document.querySelector(`[data-textbox-id="${textBoxId}"]`);
@@ -1206,7 +1084,6 @@
         textContent.contentEditable = true;
         textContent.focus();
         
-        // Select all text
         const range = document.createRange();
         range.selectNodeContents(textContent);
         const selection = window.getSelection();
@@ -1232,42 +1109,6 @@
         });
       }
 
-      duplicateTextBox(textBoxId) {
-        const originalTextBox = this.projects[this.currentProject].textBoxes[textBoxId];
-        if (originalTextBox) {
-          const newTextBox = {
-            ...originalTextBox,
-            id: `textbox_${++this.textBoxIdCounter}`,
-            x: originalTextBox.x + 20,
-            y: originalTextBox.y + 20,
-            style: originalTextBox.style ? {...originalTextBox.style} : {
-              fontSize: '14px',
-              fontWeight: 'normal',
-              color: '#2c3e50',
-              width: '200px'
-            }
-          };
-          
-          this.projects[this.currentProject].textBoxes[newTextBox.id] = newTextBox;
-          this.renderTextBox(newTextBox);
-          this.saveToLocalStorage();
-          this.saveState();
-          this.showNotification('Text box duplicated');
-        }
-      }
-
-      deleteTextBox(textBoxId) {
-        if (confirm('Are you sure you want to delete this text box?')) {
-          delete this.projects[this.currentProject].textBoxes[textBoxId];
-          this.renderTextBoxes();
-          this.hideProperties();
-          this.selectedTextBox = null;
-          this.saveToLocalStorage();
-          this.saveState();
-          this.showNotification('Text box deleted');
-        }
-      }
-
       showTextBoxProperties(textBoxId) {
         const textBox = this.projects[this.currentProject].textBoxes[textBoxId];
         if (!textBox) return;
@@ -1275,7 +1116,6 @@
         const panel = document.getElementById('propertiesPanel');
         panel.classList.add('active');
         
-        // Update panel for text box
         panel.innerHTML = `
           <h3>Text Box Properties</h3>
           <div class="property-group">
@@ -1313,7 +1153,6 @@
           </div>
         `;
         
-        // Add event listeners
         document.getElementById('textBoxTextInput').addEventListener('input', (e) => this.updateTextBoxProperty('text', e.target.value));
         document.getElementById('textBoxFontSize').addEventListener('change', (e) => this.updateTextBoxStyle('fontSize', e.target.value));
         document.getElementById('textBoxFontWeight').addEventListener('change', (e) => this.updateTextBoxStyle('fontWeight', e.target.value));
@@ -1349,7 +1188,6 @@
           
           textBox.style[property] = value;
           
-          // Apply style to the element
           const textBoxElement = document.querySelector(`[data-textbox-id="${this.selectedTextBox}"]`);
           if (textBoxElement) {
             textBoxElement.style[property] = value;
@@ -1357,6 +1195,18 @@
           
           this.saveToLocalStorage();
           this.saveState();
+        }
+      }
+
+      deleteTextBox(textBoxId) {
+        if (confirm('Are you sure you want to delete this text box?')) {
+          delete this.projects[this.currentProject].textBoxes[textBoxId];
+          this.renderTextBoxes();
+          this.hideProperties();
+          this.selectedTextBox = null;
+          this.saveToLocalStorage();
+          this.saveState();
+          this.showNotification('Text box deleted');
         }
       }
 
@@ -1369,31 +1219,175 @@
           this.renderTextBox(textBox);
         });
       }
-        const taskId = `task_${++this.taskIdCounter}`;
-        const task = {
-          id: taskId,
-          title: 'New Task',
-          description: '',
-          status: 'pending',
-          x: x || 100,
-          y: y || 100,
-          subtasks: [],
-          createdAt: new Date().toISOString(),
-          dueDate: null,
-          style: {
-            backgroundColor: '#ffffff',
-            borderColor: '#4a90e2',
-            width: '250px',
-            height: 'auto'
-          }
-        };
+
+      // Line drawing functionality
+      startDrawingLine(x, y) {
+        this.drawingLine = true;
+        this.lineStart = { x, y };
+        this.showNotification('Click to end line');
+      }
+
+      finishDrawingLine(x, y) {
+        if (this.lineStart) {
+          const lineId = `line_${++this.lineIdCounter}`;
+          const line = {
+            id: lineId,
+            x1: this.lineStart.x,
+            y1: this.lineStart.y,
+            x2: x,
+            y2: y,
+            style: {
+              color: '#4a90e2',
+              width: 2
+            }
+          };
+          
+          this.projects[this.currentProject].lines.push(line);
+          this.renderLines();
+          this.saveState();
+          this.saveToLocalStorage();
+          this.showNotification('Line created');
+        }
         
-        this.projects[this.currentProject].tasks[taskId] = task;
-        this.renderTask(task);
-        this.selectTask(taskId);
-        this.saveState();
-        this.saveToLocalStorage();
-        this.showNotification('Task created');
+        this.drawingLine = false;
+        this.lineStart = null;
+      }
+
+      renderLines() {
+        const canvas = document.getElementById('canvas');
+        const existingSvg = canvas.querySelector('.line-svg');
+        if (existingSvg) {
+          existingSvg.remove();
+        }
+        
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('class', 'line-svg');
+        svg.style.position = 'absolute';
+        svg.style.top = '0';
+        svg.style.left = '0';
+        svg.style.width = '100%';
+        svg.style.height = '100%';
+        svg.style.pointerEvents = 'none';
+        svg.style.zIndex = '10';
+        
+        this.projects[this.currentProject].lines.forEach(line => {
+          const lineElement = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          lineElement.setAttribute('x1', line.x1);
+          lineElement.setAttribute('y1', line.y1);
+          lineElement.setAttribute('x2', line.x2);
+          lineElement.setAttribute('y2', line.y2);
+          lineElement.setAttribute('class', 'drawn-line');
+          lineElement.setAttribute('data-line-id', line.id);
+          lineElement.style.pointerEvents = 'auto';
+          
+          if (line.style) {
+            lineElement.style.stroke = line.style.color || '#4a90e2';
+            lineElement.style.strokeWidth = line.style.width || '2';
+          }
+          
+          // Add arrow at the end
+          const angle = Math.atan2(line.y2 - line.y1, line.x2 - line.x1);
+          const arrowSize = 10;
+          const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+          arrow.setAttribute('points', `
+            ${line.x2},${line.y2} 
+            ${line.x2 - arrowSize * Math.cos(angle - Math.PI / 6)},${line.y2 - arrowSize * Math.sin(angle - Math.PI / 6)} 
+            ${line.x2 - arrowSize * Math.cos(angle + Math.PI / 6)},${line.y2 - arrowSize * Math.sin(angle + Math.PI / 6)}
+          `);
+          arrow.setAttribute('class', 'line-arrow');
+          arrow.style.fill = line.style?.color || '#4a90e2';
+          
+          lineElement.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.selectLine(line.id);
+          });
+          
+          svg.appendChild(lineElement);
+          svg.appendChild(arrow);
+        });
+        
+        canvas.appendChild(svg);
+      }
+
+      selectLine(lineId) {
+        document.querySelectorAll('.drawn-line').forEach(line => {
+          line.classList.remove('selected');
+        });
+        
+        this.selectTask(null);
+        this.selectTextBox(null);
+        
+        if (lineId) {
+          const lineElement = document.querySelector(`[data-line-id="${lineId}"]`);
+          if (lineElement) {
+            lineElement.classList.add('selected');
+            this.selectedLine = lineId;
+            this.showLineProperties(lineId);
+          }
+        } else {
+          this.selectedLine = null;
+          this.hideProperties();
+        }
+      }
+
+      showLineProperties(lineId) {
+        const line = this.projects[this.currentProject].lines.find(l => l.id === lineId);
+        if (!line) return;
+        
+        const panel = document.getElementById('propertiesPanel');
+        panel.classList.add('active');
+        
+        panel.innerHTML = `
+          <h3>Line Properties</h3>
+          <div class="property-group">
+            <label class="property-label">Line Color</label>
+            <input type="color" class="property-input" id="lineColor" value="${line.style?.color || '#4a90e2'}">
+          </div>
+          <div class="property-group">
+            <label class="property-label">Line Width</label>
+            <select class="property-select" id="lineWidth">
+              <option value="1" ${line.style?.width === 1 ? 'selected' : ''}>Thin (1px)</option>
+              <option value="2" ${line.style?.width === 2 ? 'selected' : ''}>Normal (2px)</option>
+              <option value="3" ${line.style?.width === 3 ? 'selected' : ''}>Medium (3px)</option>
+              <option value="4" ${line.style?.width === 4 ? 'selected' : ''}>Thick (4px)</option>
+              <option value="6" ${line.style?.width === 6 ? 'selected' : ''}>Very Thick (6px)</option>
+            </select>
+          </div>
+          <div class="property-group">
+            <button class="btn btn-danger" onclick="taskManager.deleteLine('${lineId}')">Delete Line</button>
+          </div>
+        `;
+        
+        document.getElementById('lineColor').addEventListener('change', (e) => this.updateLineStyle('color', e.target.value));
+        document.getElementById('lineWidth').addEventListener('change', (e) => this.updateLineStyle('width', parseInt(e.target.value)));
+      }
+
+      updateLineStyle(property, value) {
+        if (!this.selectedLine) return;
+        
+        const line = this.projects[this.currentProject].lines.find(l => l.id === this.selectedLine);
+        if (line) {
+          if (!line.style) {
+            line.style = { color: '#4a90e2', width: 2 };
+          }
+          
+          line.style[property] = value;
+          this.renderLines();
+          this.saveToLocalStorage();
+          this.saveState();
+        }
+      }
+
+      deleteLine(lineId) {
+        if (confirm('Are you sure you want to delete this line?')) {
+          this.projects[this.currentProject].lines = this.projects[this.currentProject].lines.filter(l => l.id !== lineId);
+          this.renderLines();
+          this.hideProperties();
+          this.selectedLine = null;
+          this.saveToLocalStorage();
+          this.saveState();
+          this.showNotification('Line deleted');
+        }
       }
 
       renderTask(task) {
@@ -1409,7 +1403,7 @@
           taskCard.style.backgroundColor = task.style.backgroundColor || '#ffffff';
           taskCard.style.borderColor = task.style.borderColor || '#4a90e2';
           taskCard.style.width = task.style.width || '250px';
-          if (task.style.height && task.style.height !== 'auto') {
+          if (task.style.height !== 'auto') {
             taskCard.style.height = task.style.height;
           }
         }
@@ -1456,15 +1450,43 @@
         this.updateTaskList();
       }
 
+      makeResizable(element) {
+        element.style.resize = 'both';
+        element.style.overflow = 'hidden';
+        
+        let lastWidth = element.offsetWidth;
+        let lastHeight = element.offsetHeight;
+        
+        const checkResize = () => {
+          const currentWidth = element.offsetWidth;
+          const currentHeight = element.offsetHeight;
+          
+          if (currentWidth !== lastWidth || currentHeight !== lastHeight) {
+            const taskId = element.dataset.taskId;
+            const task = this.projects[this.currentProject].tasks[taskId];
+            if (task) {
+              if (!task.style) task.style = {};
+              task.style.width = `${currentWidth}px`;
+              task.style.height = `${currentHeight}px`;
+              this.updateConnections();
+              this.saveToLocalStorage();
+            }
+            lastWidth = currentWidth;
+            lastHeight = currentHeight;
+          }
+        };
+        
+        setInterval(checkResize, 500);
+      }
+
       makeDraggable(element) {
         let isDragging = false;
         let startX, startY, initialX, initialY;
         
         const taskHeader = element.querySelector('.task-header');
         
-        const handleMouseDown = (e) => {
-          // Don't interfere with resize handles or action buttons
-          if (e.target.closest('.task-action') || e.target.closest('button')) return;
+        taskHeader.addEventListener('mousedown', (e) => {
+          if (e.target.closest('.task-action')) return;
           
           isDragging = true;
           element.classList.add('dragging');
@@ -1475,10 +1497,9 @@
           initialY = element.offsetTop;
           
           e.preventDefault();
-          e.stopPropagation();
-        };
+        });
         
-        const handleMouseMove = (e) => {
+        document.addEventListener('mousemove', (e) => {
           if (!isDragging) return;
           
           const dx = e.clientX - startX;
@@ -1489,9 +1510,9 @@
           
           // Update connections
           this.updateConnections();
-        };
+        });
         
-        const handleMouseUp = () => {
+        document.addEventListener('mouseup', () => {
           if (isDragging) {
             isDragging = false;
             element.classList.remove('dragging');
@@ -1503,54 +1524,16 @@
               task.x = element.offsetLeft;
               task.y = element.offsetTop;
               this.saveToLocalStorage();
+              this.saveState();
             }
           }
-        };
+        });
         
-        const handleClick = (e) => {
-          if (!e.target.closest('.task-action') && !e.target.closest('button')) {
+        // Click to select
+        element.addEventListener('click', (e) => {
+          if (!e.target.closest('.task-action')) {
             this.selectTask(element.dataset.taskId);
           }
-        };
-        
-        // Add event listeners
-        taskHeader.addEventListener('mousedown', handleMouseDown);
-        document.addEventListener('mousemove', handleMouseMove);
-        document.addEventListener('mouseup', handleMouseUp);
-        element.addEventListener('click', handleClick);
-      }
-
-      makeResizable(element) {
-        // Simple resize handling without ResizeObserver conflicts
-        let resizeTimeout;
-        
-        // Add resize event listener
-        const handleResize = () => {
-          clearTimeout(resizeTimeout);
-          resizeTimeout = setTimeout(() => {
-            const taskId = element.dataset.taskId;
-            const task = this.projects[this.currentProject].tasks[taskId];
-            if (task) {
-              // Update task style with new dimensions
-              if (!task.style) task.style = {};
-              const rect = element.getBoundingClientRect();
-              task.style.width = `${element.offsetWidth}px`;
-              task.style.height = `${element.offsetHeight}px`;
-              
-              // Update connections when task is resized
-              this.updateConnections();
-              
-              // Save changes
-              this.saveToLocalStorage();
-            }
-          }, 100);
-        };
-        
-        // Use MutationObserver for style changes instead of ResizeObserver
-        const observer = new MutationObserver(handleResize);
-        observer.observe(element, {
-          attributes: true,
-          attributeFilter: ['style']
         });
       }
 
@@ -1560,8 +1543,9 @@
           card.classList.remove('selected');
         });
         
-        // Clear text box selection
+        // Clear other selections
         this.selectTextBox(null);
+        this.selectLine(null);
         
         if (taskId) {
           const taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
@@ -1573,15 +1557,6 @@
         } else {
           this.selectedTask = null;
           this.hideProperties();
-        }
-        
-        // Handle connection tool
-        if (this.currentTool === 'connect' && taskId && this.connectionStart && this.connectionStart !== taskId) {
-          this.createConnection(this.connectionStart, taskId);
-          this.connectionStart = null;
-          this.setTool('select');
-        } else if (this.currentTool === 'connect' && taskId) {
-          this.connectionStart = taskId;
         }
       }
 
@@ -1828,6 +1803,7 @@
         });
         
         this.renderTextBoxes();
+        this.renderLines();
         this.renderConnections();
         this.updateTaskList();
       }
@@ -1848,6 +1824,8 @@
       setTool(tool) {
         this.currentTool = tool;
         this.connectionStart = null;
+        this.drawingLine = false;
+        this.lineStart = null;
         
         // Update UI
         document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
@@ -1944,6 +1922,7 @@
             name: name,
             tasks: {},
             textBoxes: {},
+            lines: [],
             connections: []
           };
           this.switchProject(projectId);
@@ -1957,6 +1936,7 @@
         this.currentProject = projectId;
         this.selectedTask = null;
         this.selectedTextBox = null;
+        this.selectedLine = null;
         this.renderTasks();
         this.hideProperties();
         this.saveState();
@@ -2011,6 +1991,7 @@
           currentProject: this.currentProject,
           taskIdCounter: this.taskIdCounter,
           textBoxIdCounter: this.textBoxIdCounter,
+          lineIdCounter: this.lineIdCounter,
           zoom: this.zoom,
           gridVisible: this.gridVisible,
           backgroundColor: this.backgroundColor
@@ -2027,6 +2008,7 @@
             this.currentProject = data.currentProject || this.currentProject;
             this.taskIdCounter = data.taskIdCounter || 0;
             this.textBoxIdCounter = data.textBoxIdCounter || 0;
+            this.lineIdCounter = data.lineIdCounter || 0;
             this.zoom = data.zoom || 1;
             this.gridVisible = data.gridVisible !== undefined ? data.gridVisible : true;
             this.backgroundColor = data.backgroundColor || '#f5f7fa';
@@ -2392,10 +2374,6 @@
         }, 250);
         
         this.showNotification('Diagram ready - use print dialog to save as PDF');
-      }
-
-      exportPDF() {
-        this.exportList();
       }
 
       showNotification(message) {
