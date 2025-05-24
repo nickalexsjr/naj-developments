@@ -1462,8 +1462,9 @@
         
         const taskHeader = element.querySelector('.task-header');
         
-        taskHeader.addEventListener('mousedown', (e) => {
-          if (e.target.closest('.task-action')) return;
+        const handleMouseDown = (e) => {
+          // Don't interfere with resize handles or action buttons
+          if (e.target.closest('.task-action') || e.target.closest('button')) return;
           
           isDragging = true;
           element.classList.add('dragging');
@@ -1474,9 +1475,10 @@
           initialY = element.offsetTop;
           
           e.preventDefault();
-        });
+          e.stopPropagation();
+        };
         
-        document.addEventListener('mousemove', (e) => {
+        const handleMouseMove = (e) => {
           if (!isDragging) return;
           
           const dx = e.clientX - startX;
@@ -1487,9 +1489,9 @@
           
           // Update connections
           this.updateConnections();
-        });
+        };
         
-        document.addEventListener('mouseup', () => {
+        const handleMouseUp = () => {
           if (isDragging) {
             isDragging = false;
             element.classList.remove('dragging');
@@ -1501,48 +1503,55 @@
               task.x = element.offsetLeft;
               task.y = element.offsetTop;
               this.saveToLocalStorage();
-              this.saveState();
             }
           }
-        });
+        };
         
-        // Click to select
-        element.addEventListener('click', (e) => {
-          if (!e.target.closest('.task-action')) {
+        const handleClick = (e) => {
+          if (!e.target.closest('.task-action') && !e.target.closest('button')) {
             this.selectTask(element.dataset.taskId);
           }
-        });
+        };
+        
+        // Add event listeners
+        taskHeader.addEventListener('mousedown', handleMouseDown);
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+        element.addEventListener('click', handleClick);
       }
 
       makeResizable(element) {
-        // Enable CSS resize and handle resize events
-        element.style.resize = 'both';
-        element.style.overflow = 'hidden';
+        // Simple resize handling without ResizeObserver conflicts
+        let resizeTimeout;
         
-        // Use ResizeObserver to detect when the element is resized
-        if (window.ResizeObserver) {
-          const resizeObserver = new ResizeObserver(entries => {
-            for (let entry of entries) {
-              const taskId = element.dataset.taskId;
-              const task = this.projects[this.currentProject].tasks[taskId];
-              if (task) {
-                // Update task style with new dimensions
-                if (!task.style) task.style = {};
-                task.style.width = `${entry.contentRect.width}px`;
-                task.style.height = `${entry.contentRect.height}px`;
-                
-                // Update connections when task is resized
-                this.updateConnections();
-                
-                // Save changes
-                this.saveToLocalStorage();
-                this.saveState();
-              }
+        // Add resize event listener
+        const handleResize = () => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(() => {
+            const taskId = element.dataset.taskId;
+            const task = this.projects[this.currentProject].tasks[taskId];
+            if (task) {
+              // Update task style with new dimensions
+              if (!task.style) task.style = {};
+              const rect = element.getBoundingClientRect();
+              task.style.width = `${element.offsetWidth}px`;
+              task.style.height = `${element.offsetHeight}px`;
+              
+              // Update connections when task is resized
+              this.updateConnections();
+              
+              // Save changes
+              this.saveToLocalStorage();
             }
-          });
-          
-          resizeObserver.observe(element);
-        }
+          }, 100);
+        };
+        
+        // Use MutationObserver for style changes instead of ResizeObserver
+        const observer = new MutationObserver(handleResize);
+        observer.observe(element, {
+          attributes: true,
+          attributeFilter: ['style']
+        });
       }
 
       selectTask(taskId) {
