@@ -197,11 +197,16 @@
       border-radius: 8px;
       box-shadow: 0 2px 8px var(--shadow);
       min-width: 200px;
-      max-width: 300px;
+      max-width: none;
+      width: 250px;
+      height: auto;
       cursor: move;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
       user-select: none;
       border: 2px solid #4a90e2;
+      overflow: hidden;
+      resize: both;
+      min-height: 120px;
     }
 
     .task-card:hover {
@@ -212,10 +217,15 @@
       opacity: 0.8;
       cursor: grabbing;
       z-index: 1000;
+      resize: none;
     }
 
     .task-card.selected {
       box-shadow: 0 0 0 3px var(--primary);
+    }
+
+    .task-card.resizing {
+      cursor: nw-resize;
     }
 
     .task-header {
@@ -243,6 +253,10 @@
       font-weight: 600;
       color: var(--dark);
       flex: 1;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      hyphens: auto;
+      line-height: 1.3;
     }
 
     .task-actions {
@@ -266,6 +280,10 @@
 
     .task-body {
       padding: 1rem;
+      overflow: hidden;
+      word-wrap: break-word;
+      height: calc(100% - 60px);
+      box-sizing: border-box;
     }
 
     .task-description {
@@ -273,6 +291,19 @@
       font-size: 14px;
       margin-bottom: 1rem;
       line-height: 1.5;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      hyphens: auto;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+    }
+
+    .task-description.expanded {
+      -webkit-line-clamp: unset;
+      overflow: visible;
+      display: block;
     }
 
     .task-meta {
@@ -286,6 +317,8 @@
       margin-top: 1rem;
       padding-top: 1rem;
       border-top: 1px solid var(--border);
+      max-height: 150px;
+      overflow-y: auto;
     }
 
     .subtask {
@@ -529,6 +562,53 @@
       opacity: 1;
     }
 
+    /* Text Boxes */
+    .text-box {
+      position: absolute;
+      background: transparent;
+      border: 1px dashed transparent;
+      border-radius: 4px;
+      padding: 0.5rem;
+      cursor: move;
+      transition: all 0.2s ease;
+      user-select: none;
+      min-width: 100px;
+      font-family: inherit;
+    }
+
+    .text-box:hover {
+      border-color: var(--primary);
+      background: rgba(74, 144, 226, 0.05);
+    }
+
+    .text-box.selected {
+      border-color: var(--primary);
+      background: rgba(74, 144, 226, 0.1);
+      box-shadow: 0 0 0 2px var(--primary);
+    }
+
+    .text-box.dragging {
+      opacity: 0.8;
+      cursor: grabbing;
+      z-index: 1000;
+    }
+
+    .text-content {
+      color: var(--dark);
+      font-size: 14px;
+      line-height: 1.4;
+      word-wrap: break-word;
+      outline: none;
+      background: transparent;
+      border: none;
+      resize: none;
+      width: 100%;
+      min-height: 20px;
+    }
+
+    .text-content:focus {
+      outline: none;
+    }
     /* Responsive */
     @media (max-width: 768px) {
       .sidebar {
@@ -620,6 +700,15 @@
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="5" y1="12" x2="19" y2="12"></line>
           <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </button>
+      <button class="tool-btn" onclick="taskManager.setTool('textbox')" title="Add Text Box">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14,2 14,8 20,8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10,9 9,9 8,9"></polyline>
         </svg>
       </button>
     </div>
@@ -758,16 +847,19 @@
           default: {
             name: 'Default Project',
             tasks: {},
+            textBoxes: {},
             connections: []
           }
         };
         this.selectedTask = null;
+        this.selectedTextBox = null;
         this.currentTool = 'select';
         this.draggedTask = null;
         this.connectionStart = null;
         this.undoStack = [];
         this.redoStack = [];
         this.taskIdCounter = 0;
+        this.textBoxIdCounter = 0;
         this.zoom = 1;
         this.gridVisible = true;
         this.backgroundColor = '#f5f7fa';
@@ -853,15 +945,27 @@
 
       handleCanvasClick(e) {
         if (e.target.id === 'canvas') {
-          this.selectTask(null);
+          if (this.currentTool === 'textbox') {
+            const rect = e.target.getBoundingClientRect();
+            const x = (e.clientX - rect.left + e.target.parentElement.scrollLeft) / this.zoom;
+            const y = (e.clientY - rect.top + e.target.parentElement.scrollTop) / this.zoom;
+            this.createTextBox(x, y);
+          } else {
+            this.selectTask(null);
+            this.selectTextBox(null);
+          }
         }
       }
 
       handleContextMenu(e) {
         e.preventDefault();
         const taskCard = e.target.closest('.task-card');
+        const textBox = e.target.closest('.text-box');
+        
         if (taskCard) {
-          this.showContextMenu(e.clientX, e.clientY, taskCard.dataset.taskId);
+          this.showContextMenu(e.clientX, e.clientY, taskCard.dataset.taskId, 'task');
+        } else if (textBox) {
+          this.showContextMenu(e.clientX, e.clientY, textBox.dataset.textboxId, 'textbox');
         } else if (e.target.id === 'canvas') {
           // Show context menu for canvas
           this.showCanvasContextMenu(e.clientX, e.clientY, e);
@@ -872,6 +976,7 @@
         const menu = document.getElementById('contextMenu');
         menu.innerHTML = `
           <div class="context-item" onclick="taskManager.contextAction('add')">Add Task Here</div>
+          <div class="context-item" onclick="taskManager.contextAction('addTextBox')">Add Text Box Here</div>
           <div class="context-divider"></div>
           <div class="context-item" onclick="taskManager.toggleGrid()">Toggle Grid</div>
           <div class="context-item" onclick="taskManager.promptBackgroundColor()">Change Background Color</div>
@@ -889,22 +994,33 @@
         menu.dataset.isCanvas = 'true';
       }
 
-      showContextMenu(x, y, taskId) {
+      showContextMenu(x, y, itemId, type = 'task') {
         const menu = document.getElementById('contextMenu');
-        menu.innerHTML = `
-          <div class="context-item" onclick="taskManager.contextAction('edit')">Edit Task</div>
-          <div class="context-item" onclick="taskManager.contextAction('duplicate')">Duplicate</div>
-          <div class="context-divider"></div>
-          <div class="context-item" onclick="taskManager.contextAction('connect')">Connect To...</div>
-          <div class="context-item" onclick="taskManager.contextAction('disconnect')">Remove Connections</div>
-          <div class="context-divider"></div>
-          <div class="context-item" onclick="taskManager.contextAction('delete')">Delete</div>
-        `;
+        
+        if (type === 'task') {
+          menu.innerHTML = `
+            <div class="context-item" onclick="taskManager.contextAction('edit')">Edit Task</div>
+            <div class="context-item" onclick="taskManager.contextAction('duplicate')">Duplicate</div>
+            <div class="context-divider"></div>
+            <div class="context-item" onclick="taskManager.contextAction('connect')">Connect To...</div>
+            <div class="context-item" onclick="taskManager.contextAction('disconnect')">Remove Connections</div>
+            <div class="context-divider"></div>
+            <div class="context-item" onclick="taskManager.contextAction('delete')">Delete</div>
+          `;
+        } else if (type === 'textbox') {
+          menu.innerHTML = `
+            <div class="context-item" onclick="taskManager.contextAction('editText')">Edit Text</div>
+            <div class="context-item" onclick="taskManager.contextAction('duplicateText')">Duplicate</div>
+            <div class="context-divider"></div>
+            <div class="context-item" onclick="taskManager.contextAction('deleteText')">Delete</div>
+          `;
+        }
         
         menu.style.left = `${x}px`;
         menu.style.top = `${y}px`;
         menu.classList.add('active');
-        menu.dataset.taskId = taskId;
+        menu.dataset.itemId = itemId;
+        menu.dataset.itemType = type;
         menu.dataset.isCanvas = 'false';
       }
 
@@ -916,32 +1032,343 @@
           const x = parseFloat(menu.dataset.canvasX);
           const y = parseFloat(menu.dataset.canvasY);
           this.createTask(x, y);
+        } else if (isCanvas && action === 'addTextBox') {
+          const x = parseFloat(menu.dataset.canvasX);
+          const y = parseFloat(menu.dataset.canvasY);
+          this.createTextBox(x, y);
         } else {
-          const taskId = menu.dataset.taskId;
+          const itemId = menu.dataset.itemId;
+          const itemType = menu.dataset.itemType;
           
-          switch(action) {
-            case 'edit':
-              this.selectTask(taskId);
-              break;
-            case 'duplicate':
-              this.duplicateTask(taskId);
-              break;
-            case 'delete':
-              this.deleteTask(taskId);
-              break;
-            case 'connect':
-              this.startConnection(taskId);
-              break;
-            case 'disconnect':
-              this.removeConnections(taskId);
-              break;
+          if (itemType === 'task') {
+            switch(action) {
+              case 'edit':
+                this.selectTask(itemId);
+                break;
+              case 'duplicate':
+                this.duplicateTask(itemId);
+                break;
+              case 'delete':
+                this.deleteTask(itemId);
+                break;
+              case 'connect':
+                this.startConnection(itemId);
+                break;
+              case 'disconnect':
+                this.removeConnections(itemId);
+                break;
+            }
+          } else if (itemType === 'textbox') {
+            switch(action) {
+              case 'editText':
+                this.selectTextBox(itemId);
+                this.editTextBox(itemId);
+                break;
+              case 'duplicateText':
+                this.duplicateTextBox(itemId);
+                break;
+              case 'deleteText':
+                this.deleteTextBox(itemId);
+                break;
+            }
           }
         }
         
         menu.classList.remove('active');
       }
 
-      createTask(x, y) {
+      createTextBox(x, y) {
+        const textBoxId = `textbox_${++this.textBoxIdCounter}`;
+        const textBox = {
+          id: textBoxId,
+          text: 'Double-click to edit',
+          x: x || 100,
+          y: y || 100,
+          style: {
+            fontSize: '14px',
+            fontWeight: 'normal',
+            color: '#2c3e50',
+            width: '200px'
+          }
+        };
+        
+        this.projects[this.currentProject].textBoxes[textBoxId] = textBox;
+        this.renderTextBox(textBox);
+        this.selectTextBox(textBoxId);
+        this.saveState();
+        this.saveToLocalStorage();
+        this.showNotification('Text box created');
+      }
+
+      renderTextBox(textBox) {
+        const canvas = document.getElementById('canvas');
+        const textBoxElement = document.createElement('div');
+        textBoxElement.className = 'text-box';
+        textBoxElement.dataset.textboxId = textBox.id;
+        textBoxElement.style.left = `${textBox.x}px`;
+        textBoxElement.style.top = `${textBox.y}px`;
+        
+        // Apply saved styles
+        if (textBox.style) {
+          textBoxElement.style.fontSize = textBox.style.fontSize || '14px';
+          textBoxElement.style.fontWeight = textBox.style.fontWeight || 'normal';
+          textBoxElement.style.color = textBox.style.color || '#2c3e50';
+          textBoxElement.style.width = textBox.style.width || '200px';
+        }
+        
+        textBoxElement.innerHTML = `
+          <div class="text-content" onclick="taskManager.editTextBox('${textBox.id}')">${textBox.text}</div>
+        `;
+        
+        canvas.appendChild(textBoxElement);
+        this.makeTextBoxDraggable(textBoxElement);
+      }
+
+      makeTextBoxDraggable(element) {
+        let isDragging = false;
+        let startX, startY, initialX, initialY;
+        
+        element.addEventListener('mousedown', (e) => {
+          if (e.target.classList.contains('text-content') && e.target.contentEditable === 'true') return;
+          
+          isDragging = true;
+          element.classList.add('dragging');
+          
+          startX = e.clientX;
+          startY = e.clientY;
+          initialX = element.offsetLeft;
+          initialY = element.offsetTop;
+          
+          e.preventDefault();
+        });
+        
+        document.addEventListener('mousemove', (e) => {
+          if (!isDragging) return;
+          
+          const dx = e.clientX - startX;
+          const dy = e.clientY - startY;
+          
+          element.style.left = `${initialX + dx}px`;
+          element.style.top = `${initialY + dy}px`;
+        });
+        
+        document.addEventListener('mouseup', () => {
+          if (isDragging) {
+            isDragging = false;
+            element.classList.remove('dragging');
+            
+            // Update text box position in data
+            const textBoxId = element.dataset.textboxId;
+            const textBox = this.projects[this.currentProject].textBoxes[textBoxId];
+            if (textBox) {
+              textBox.x = element.offsetLeft;
+              textBox.y = element.offsetTop;
+              this.saveToLocalStorage();
+              this.saveState();
+            }
+          }
+        });
+        
+        // Click to select
+        element.addEventListener('click', (e) => {
+          if (!e.target.classList.contains('text-content') || e.target.contentEditable !== 'true') {
+            this.selectTextBox(element.dataset.textboxId);
+          }
+        });
+      }
+
+      selectTextBox(textBoxId) {
+        // Remove previous selection
+        document.querySelectorAll('.text-box').forEach(box => {
+          box.classList.remove('selected');
+        });
+        
+        // Clear task selection
+        this.selectTask(null);
+        
+        if (textBoxId) {
+          const textBoxElement = document.querySelector(`[data-textbox-id="${textBoxId}"]`);
+          if (textBoxElement) {
+            textBoxElement.classList.add('selected');
+            this.selectedTextBox = textBoxId;
+            this.showTextBoxProperties(textBoxId);
+          }
+        } else {
+          this.selectedTextBox = null;
+          this.hideProperties();
+        }
+      }
+
+      editTextBox(textBoxId) {
+        const textBoxElement = document.querySelector(`[data-textbox-id="${textBoxId}"]`);
+        const textContent = textBoxElement.querySelector('.text-content');
+        
+        textContent.contentEditable = true;
+        textContent.focus();
+        
+        // Select all text
+        const range = document.createRange();
+        range.selectNodeContents(textContent);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        
+        const saveText = () => {
+          textContent.contentEditable = false;
+          const textBox = this.projects[this.currentProject].textBoxes[textBoxId];
+          if (textBox) {
+            textBox.text = textContent.textContent || 'Double-click to edit';
+            this.saveToLocalStorage();
+            this.saveState();
+          }
+        };
+        
+        textContent.addEventListener('blur', saveText, { once: true });
+        textContent.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            saveText();
+          }
+        });
+      }
+
+      duplicateTextBox(textBoxId) {
+        const originalTextBox = this.projects[this.currentProject].textBoxes[textBoxId];
+        if (originalTextBox) {
+          const newTextBox = {
+            ...originalTextBox,
+            id: `textbox_${++this.textBoxIdCounter}`,
+            x: originalTextBox.x + 20,
+            y: originalTextBox.y + 20,
+            style: originalTextBox.style ? {...originalTextBox.style} : {
+              fontSize: '14px',
+              fontWeight: 'normal',
+              color: '#2c3e50',
+              width: '200px'
+            }
+          };
+          
+          this.projects[this.currentProject].textBoxes[newTextBox.id] = newTextBox;
+          this.renderTextBox(newTextBox);
+          this.saveToLocalStorage();
+          this.saveState();
+          this.showNotification('Text box duplicated');
+        }
+      }
+
+      deleteTextBox(textBoxId) {
+        if (confirm('Are you sure you want to delete this text box?')) {
+          delete this.projects[this.currentProject].textBoxes[textBoxId];
+          this.renderTextBoxes();
+          this.hideProperties();
+          this.selectedTextBox = null;
+          this.saveToLocalStorage();
+          this.saveState();
+          this.showNotification('Text box deleted');
+        }
+      }
+
+      showTextBoxProperties(textBoxId) {
+        const textBox = this.projects[this.currentProject].textBoxes[textBoxId];
+        if (!textBox) return;
+        
+        const panel = document.getElementById('propertiesPanel');
+        panel.classList.add('active');
+        
+        // Update panel for text box
+        panel.innerHTML = `
+          <h3>Text Box Properties</h3>
+          <div class="property-group">
+            <label class="property-label">Text</label>
+            <textarea class="property-input property-textarea" id="textBoxTextInput" placeholder="Enter text">${textBox.text}</textarea>
+          </div>
+          <div class="property-group">
+            <label class="property-label">Font Size</label>
+            <select class="property-select" id="textBoxFontSize">
+              <option value="12px" ${textBox.style?.fontSize === '12px' ? 'selected' : ''}>Small (12px)</option>
+              <option value="14px" ${textBox.style?.fontSize === '14px' ? 'selected' : ''}>Normal (14px)</option>
+              <option value="16px" ${textBox.style?.fontSize === '16px' ? 'selected' : ''}>Medium (16px)</option>
+              <option value="20px" ${textBox.style?.fontSize === '20px' ? 'selected' : ''}>Large (20px)</option>
+              <option value="24px" ${textBox.style?.fontSize === '24px' ? 'selected' : ''}>X-Large (24px)</option>
+              <option value="32px" ${textBox.style?.fontSize === '32px' ? 'selected' : ''}>Heading (32px)</option>
+            </select>
+          </div>
+          <div class="property-group">
+            <label class="property-label">Font Weight</label>
+            <select class="property-select" id="textBoxFontWeight">
+              <option value="normal" ${textBox.style?.fontWeight === 'normal' ? 'selected' : ''}>Normal</option>
+              <option value="bold" ${textBox.style?.fontWeight === 'bold' ? 'selected' : ''}>Bold</option>
+            </select>
+          </div>
+          <div class="property-group">
+            <label class="property-label">Text Color</label>
+            <input type="color" class="property-input" id="textBoxColor" value="${textBox.style?.color || '#2c3e50'}">
+          </div>
+          <div class="property-group">
+            <label class="property-label">Width</label>
+            <input type="number" class="property-input" id="textBoxWidth" value="${parseInt(textBox.style?.width) || 200}" min="50" max="800">
+          </div>
+          <div class="property-group">
+            <button class="btn btn-danger" onclick="taskManager.deleteTextBox('${textBoxId}')">Delete Text Box</button>
+          </div>
+        `;
+        
+        // Add event listeners
+        document.getElementById('textBoxTextInput').addEventListener('input', (e) => this.updateTextBoxProperty('text', e.target.value));
+        document.getElementById('textBoxFontSize').addEventListener('change', (e) => this.updateTextBoxStyle('fontSize', e.target.value));
+        document.getElementById('textBoxFontWeight').addEventListener('change', (e) => this.updateTextBoxStyle('fontWeight', e.target.value));
+        document.getElementById('textBoxColor').addEventListener('change', (e) => this.updateTextBoxStyle('color', e.target.value));
+        document.getElementById('textBoxWidth').addEventListener('input', (e) => this.updateTextBoxStyle('width', e.target.value + 'px'));
+      }
+
+      updateTextBoxProperty(property, value) {
+        if (!this.selectedTextBox) return;
+        
+        const textBox = this.projects[this.currentProject].textBoxes[this.selectedTextBox];
+        if (textBox) {
+          textBox[property] = value;
+          this.renderTextBoxes();
+          this.saveToLocalStorage();
+          this.saveState();
+        }
+      }
+
+      updateTextBoxStyle(property, value) {
+        if (!this.selectedTextBox) return;
+        
+        const textBox = this.projects[this.currentProject].textBoxes[this.selectedTextBox];
+        if (textBox) {
+          if (!textBox.style) {
+            textBox.style = {
+              fontSize: '14px',
+              fontWeight: 'normal',
+              color: '#2c3e50',
+              width: '200px'
+            };
+          }
+          
+          textBox.style[property] = value;
+          
+          // Apply style to the element
+          const textBoxElement = document.querySelector(`[data-textbox-id="${this.selectedTextBox}"]`);
+          if (textBoxElement) {
+            textBoxElement.style[property] = value;
+          }
+          
+          this.saveToLocalStorage();
+          this.saveState();
+        }
+      }
+
+      renderTextBoxes() {
+        const canvas = document.getElementById('canvas');
+        const textBoxElements = canvas.querySelectorAll('.text-box');
+        textBoxElements.forEach(element => element.remove());
+        
+        Object.values(this.projects[this.currentProject].textBoxes || {}).forEach(textBox => {
+          this.renderTextBox(textBox);
+        });
+      }
         const taskId = `task_${++this.taskIdCounter}`;
         const task = {
           id: taskId,
@@ -982,7 +1409,7 @@
           taskCard.style.backgroundColor = task.style.backgroundColor || '#ffffff';
           taskCard.style.borderColor = task.style.borderColor || '#4a90e2';
           taskCard.style.width = task.style.width || '250px';
-          if (task.style.height !== 'auto') {
+          if (task.style.height && task.style.height !== 'auto') {
             taskCard.style.height = task.style.height;
           }
         }
@@ -1023,6 +1450,7 @@
         
         canvas.appendChild(taskCard);
         this.makeDraggable(taskCard);
+        this.makeResizable(taskCard);
         
         // Update sidebar
         this.updateTaskList();
@@ -1086,11 +1514,45 @@
         });
       }
 
+      makeResizable(element) {
+        // Enable CSS resize and handle resize events
+        element.style.resize = 'both';
+        element.style.overflow = 'hidden';
+        
+        // Use ResizeObserver to detect when the element is resized
+        if (window.ResizeObserver) {
+          const resizeObserver = new ResizeObserver(entries => {
+            for (let entry of entries) {
+              const taskId = element.dataset.taskId;
+              const task = this.projects[this.currentProject].tasks[taskId];
+              if (task) {
+                // Update task style with new dimensions
+                if (!task.style) task.style = {};
+                task.style.width = `${entry.contentRect.width}px`;
+                task.style.height = `${entry.contentRect.height}px`;
+                
+                // Update connections when task is resized
+                this.updateConnections();
+                
+                // Save changes
+                this.saveToLocalStorage();
+                this.saveState();
+              }
+            }
+          });
+          
+          resizeObserver.observe(element);
+        }
+      }
+
       selectTask(taskId) {
         // Remove previous selection
         document.querySelectorAll('.task-card').forEach(card => {
           card.classList.remove('selected');
         });
+        
+        // Clear text box selection
+        this.selectTextBox(null);
         
         if (taskId) {
           const taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
@@ -1356,6 +1818,7 @@
           this.renderTask(task);
         });
         
+        this.renderTextBoxes();
         this.renderConnections();
         this.updateTaskList();
       }
@@ -1385,6 +1848,8 @@
         const canvas = document.getElementById('canvas');
         if (tool === 'connect') {
           canvas.style.cursor = 'crosshair';
+        } else if (tool === 'textbox') {
+          canvas.style.cursor = 'text';
         } else {
           canvas.style.cursor = 'default';
         }
@@ -1469,6 +1934,7 @@
           this.projects[projectId] = {
             name: name,
             tasks: {},
+            textBoxes: {},
             connections: []
           };
           this.switchProject(projectId);
@@ -1481,6 +1947,7 @@
       switchProject(projectId) {
         this.currentProject = projectId;
         this.selectedTask = null;
+        this.selectedTextBox = null;
         this.renderTasks();
         this.hideProperties();
         this.saveState();
@@ -1534,6 +2001,7 @@
           projects: this.projects,
           currentProject: this.currentProject,
           taskIdCounter: this.taskIdCounter,
+          textBoxIdCounter: this.textBoxIdCounter,
           zoom: this.zoom,
           gridVisible: this.gridVisible,
           backgroundColor: this.backgroundColor
@@ -1549,6 +2017,7 @@
             this.projects = data.projects || this.projects;
             this.currentProject = data.currentProject || this.currentProject;
             this.taskIdCounter = data.taskIdCounter || 0;
+            this.textBoxIdCounter = data.textBoxIdCounter || 0;
             this.zoom = data.zoom || 1;
             this.gridVisible = data.gridVisible !== undefined ? data.gridVisible : true;
             this.backgroundColor = data.backgroundColor || '#f5f7fa';
@@ -1932,11 +2401,20 @@
 
       // Additional utility methods
       toggleTaskExpand(taskId) {
-        // This could be expanded to show/hide task details
         const taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
         if (taskCard) {
-          const body = taskCard.querySelector('.task-body');
-          body.style.display = body.style.display === 'none' ? 'block' : 'none';
+          const description = taskCard.querySelector('.task-description');
+          if (description) {
+            description.classList.toggle('expanded');
+            
+            // Update the expand button icon
+            const expandBtn = taskCard.querySelector('.task-action svg path');
+            if (description.classList.contains('expanded')) {
+              expandBtn.setAttribute('d', 'M18 15l-6-6-6 6'); // Up arrow
+            } else {
+              expandBtn.setAttribute('d', 'M6 9l6 6 6-6'); // Down arrow
+            }
+          }
         }
       }
     }
