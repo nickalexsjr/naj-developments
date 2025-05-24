@@ -765,8 +765,32 @@
         const canvas = document.getElementById('canvas');
         const canvasArea = document.getElementById('canvasArea');
         
-        // Canvas click events
-        canvas.addEventListener('click', (e) => this.handleCanvasClick(e));
+        // Canvas click events - KEEP ORIGINAL SIMPLE VERSION
+        canvas.addEventListener('click', (e) => {
+          if (e.target.id === 'canvas') {
+            if (this.currentTool === 'textbox') {
+              const rect = e.target.getBoundingClientRect();
+              const x = (e.clientX - rect.left + e.target.parentElement.scrollLeft) / this.zoom;
+              const y = (e.clientY - rect.top + e.target.parentElement.scrollTop) / this.zoom;
+              this.createTextBox(x, y);
+            } else if (this.currentTool === 'connect') {
+              const rect = e.target.getBoundingClientRect();
+              const x = (e.clientX - rect.left + e.target.parentElement.scrollLeft) / this.zoom;
+              const y = (e.clientY - rect.top + e.target.parentElement.scrollTop) / this.zoom;
+              
+              if (!this.drawingLine) {
+                this.startDrawingLine(x, y);
+              } else {
+                this.finishDrawingLine(x, y);
+              }
+            } else {
+              this.selectTask(null);
+              this.selectTextBox(null);
+              this.selectLine(null);
+            }
+          }
+        });
+        
         canvas.addEventListener('contextmenu', (e) => this.handleContextMenu(e));
         
         // Mouse wheel zoom
@@ -1057,12 +1081,11 @@
       }
 
       selectTextBox(textBoxId) {
+        if (!textBoxId) return;
+        
         document.querySelectorAll('.text-box').forEach(box => {
           box.classList.remove('selected');
         });
-        
-        this.selectTask(null);
-        this.selectLine(null);
         
         if (textBoxId) {
           const textBoxElement = document.querySelector(`[data-textbox-id="${textBoxId}"]`);
@@ -1073,7 +1096,6 @@
           }
         } else {
           this.selectedTextBox = null;
-          this.hideProperties();
         }
       }
 
@@ -1543,10 +1565,6 @@
           card.classList.remove('selected');
         });
         
-        // Clear other selections
-        this.selectTextBox(null);
-        this.selectLine(null);
-        
         if (taskId) {
           const taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
           if (taskCard) {
@@ -1802,8 +1820,14 @@
           this.renderTask(task);
         });
         
-        this.renderTextBoxes();
-        this.renderLines();
+        // Only render these if they exist
+        if (this.projects[this.currentProject].textBoxes) {
+          this.renderTextBoxes();
+        }
+        if (this.projects[this.currentProject].lines) {
+          this.renderLines();
+        }
+        
         this.renderConnections();
         this.updateTaskList();
       }
