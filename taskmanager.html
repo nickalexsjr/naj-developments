@@ -2656,6 +2656,7 @@
                 color: #2c3e50; 
                 border-bottom: 2px solid #3498db;
                 padding-bottom: 10px;
+                word-wrap: break-word;
               }
               .meta {
                 color: #666;
@@ -2668,30 +2669,45 @@
                 border: 1px solid #ddd; 
                 border-radius: 8px;
                 page-break-inside: avoid;
+                overflow-wrap: break-word;
+                word-wrap: break-word;
+                word-break: break-word;
               }
               .task-header {
                 display: flex;
                 justify-content: space-between;
-                align-items: center;
+                align-items: flex-start;
                 margin-bottom: 10px;
+                gap: 10px;
               }
               .task-title { 
                 font-weight: bold; 
                 font-size: 18px; 
                 color: #2c3e50;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                flex: 1;
+                min-width: 0;
               }
               .task-meta { 
                 color: #666; 
                 font-size: 12px; 
-                margin-bottom: 10px; 
+                margin-bottom: 10px;
+                word-wrap: break-word;
               }
               .task-description {
                 margin-bottom: 10px;
                 color: #444;
+                white-space: pre-wrap;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                word-break: break-word;
               }
               .subtask { 
                 margin-left: 20px; 
-                padding: 5px 0; 
+                padding: 5px 0;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
               }
               .subtask-header {
                 font-weight: 600;
@@ -2709,6 +2725,8 @@
                 font-size: 12px; 
                 font-weight: 600;
                 text-transform: uppercase;
+                white-space: nowrap;
+                flex-shrink: 0;
               }
               .status-pending { 
                 background: #fff3cd; 
@@ -2726,10 +2744,18 @@
                 margin-top: 10px;
                 font-size: 12px;
                 color: #666;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
               }
               @media print {
                 body { padding: 10px; }
-                .task { break-inside: avoid; }
+                .task { 
+                  break-inside: avoid;
+                  max-width: 100%;
+                }
+                .task-title {
+                  max-width: 70%;
+                }
               }
             </style>
           </head>
@@ -2761,7 +2787,7 @@
                   Created: ${new Date(task.createdAt).toLocaleDateString()}
                   ${task.dueDate ? ` | Due: ${new Date(task.dueDate).toLocaleDateString()}` : ''}
                 </div>
-                <div class="task-description">${task.description}</div>
+                <div class="task-description">${task.description || ''}</div>
                 ${task.subtasks.length > 0 ? `
                   <div class="subtask-header">Subtasks (${task.subtasks.filter(s => s.completed).length}/${task.subtasks.length} completed):</div>
                   ${task.subtasks.map(subtask => `
@@ -2800,14 +2826,38 @@
         // Find canvas bounds
         let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
         tasks.forEach(task => {
+          const width = task.style?.width ? parseInt(task.style.width) : 250;
+          const height = task.style?.height && task.style.height !== 'auto' ? parseInt(task.style.height) : 150;
           minX = Math.min(minX, task.x);
           minY = Math.min(minY, task.y);
-          maxX = Math.max(maxX, task.x + 300); // Approximate width
-          maxY = Math.max(maxY, task.y + 200); // Approximate height
+          maxX = Math.max(maxX, task.x + width);
+          maxY = Math.max(maxY, task.y + height);
         });
         
-        const width = Math.max(maxX - minX + 100, 800);
-        const height = Math.max(maxY - minY + 100, 600);
+        // Include text boxes in bounds calculation
+        if (project.textBoxes) {
+          Object.values(project.textBoxes).forEach(textBox => {
+            const width = textBox.style?.width ? parseInt(textBox.style.width) : 200;
+            minX = Math.min(minX, textBox.x);
+            minY = Math.min(minY, textBox.y);
+            maxX = Math.max(maxX, textBox.x + width);
+            maxY = Math.max(maxY, textBox.y + 50);
+          });
+        }
+        
+        // Include lines in bounds calculation
+        if (project.lines) {
+          project.lines.forEach(line => {
+            minX = Math.min(minX, line.x1, line.x2);
+            minY = Math.min(minY, line.y1, line.y2);
+            maxX = Math.max(maxX, line.x1, line.x2);
+            maxY = Math.max(maxY, line.y1, line.y2);
+          });
+        }
+        
+        const padding = 50;
+        const width = Math.max(maxX - minX + padding * 2, 800);
+        const height = Math.max(maxY - minY + padding * 2, 600);
         
         const html = `
           <!DOCTYPE html>
@@ -2820,7 +2870,7 @@
                 margin: 10mm;
               }
               body { 
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; 
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
                 margin: 0;
                 padding: 20px;
               }
@@ -2828,6 +2878,7 @@
                 color: #2c3e50; 
                 font-size: 24px;
                 margin-bottom: 10px;
+                word-wrap: break-word;
               }
               .meta {
                 color: #666;
@@ -2846,45 +2897,113 @@
                     linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
                   background-size: 20px 20px;
                 ` : ''}
+                overflow: hidden;
               }
-              .task-box {
+              
+              /* Task Cards - matching the actual styles */
+              .task-card {
                 position: absolute;
                 background: white;
-                border: 2px solid #4a90e2;
                 border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                min-width: 200px;
-                max-width: 300px;
-                font-size: 12px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                border: 2px solid #4a90e2;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                box-sizing: border-box;
               }
+              
               .task-header {
-                padding: 8px;
-                background: #f8f9fa;
-                border-bottom: 1px solid #dee2e6;
+                padding: 1rem;
+                border-bottom: 1px solid #bdc3c7;
+                background: #ecf0f1;
                 border-radius: 6px 6px 0 0;
-                font-weight: bold;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-shrink: 0;
               }
-              .task-content {
-                padding: 8px;
-              }
-              .task-description {
-                color: #666;
-                margin-bottom: 5px;
-              }
-              .task-meta {
-                font-size: 10px;
-                color: #999;
-              }
-              .status-indicator {
-                display: inline-block;
+              
+              .task-status {
                 width: 8px;
                 height: 8px;
                 border-radius: 50%;
-                margin-right: 5px;
+                margin-right: 0.5rem;
+                flex-shrink: 0;
               }
-              .status-pending { background: #ffc107; }
-              .status-progress { background: #007bff; }
-              .status-complete { background: #28a745; }
+              
+              .status-pending { background: #f0ad4e; }
+              .status-progress { background: #4a90e2; }
+              .status-complete { background: #5cb85c; }
+              
+              .task-title {
+                font-weight: 600;
+                color: #2c3e50;
+                flex: 1;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+              }
+              
+              .task-body {
+                padding: 1rem;
+                overflow: auto;
+                flex: 1;
+                min-height: 0;
+              }
+              
+              .task-description {
+                color: #666;
+                font-size: 14px;
+                margin-bottom: 1rem;
+                line-height: 1.5;
+                word-wrap: break-word;
+                word-break: break-word;
+                white-space: pre-wrap;
+                overflow-wrap: break-word;
+                max-width: 100%;
+              }
+              
+              .task-meta {
+                display: flex;
+                gap: 1rem;
+                font-size: 12px;
+                color: #999;
+                flex-shrink: 0;
+              }
+              
+              .task-meta:empty {
+                display: none;
+              }
+              
+              .task-subtasks {
+                margin-top: 1rem;
+                padding-top: 1rem;
+                border-top: 1px solid #bdc3c7;
+              }
+              
+              .subtask {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.25rem 0;
+                font-size: 14px;
+              }
+              
+              .subtask.completed {
+                text-decoration: line-through;
+                color: #999;
+              }
+              
+              /* Text boxes */
+              .text-box {
+                position: absolute;
+                padding: 8px;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                word-break: break-word;
+              }
+              
+              /* SVG for connections and lines */
               svg {
                 position: absolute;
                 top: 0;
@@ -2893,18 +3012,38 @@
                 height: 100%;
                 pointer-events: none;
               }
+              
               .connection-line {
                 stroke: #4a90e2;
                 stroke-width: 2;
                 fill: none;
                 opacity: 0.6;
               }
+              
+              .connection-arrow {
+                fill: #4a90e2;
+                opacity: 0.6;
+              }
+              
+              .drawn-line {
+                stroke: #4a90e2;
+                stroke-width: 2;
+                fill: none;
+              }
+              
+              .line-arrow {
+                fill: #4a90e2;
+              }
+              
               @media print {
                 body { padding: 0; }
                 h1 { font-size: 18px; }
                 .diagram-container { 
                   max-width: 100%; 
                   overflow: visible;
+                  page-break-inside: avoid;
+                }
+                .task-card {
                   page-break-inside: avoid;
                 }
               }
@@ -2916,48 +3055,110 @@
             
             <div class="diagram-container">
               <svg>
+                <!-- Connections between tasks -->
                 ${project.connections.map(conn => {
                   const fromTask = project.tasks[conn.from];
                   const toTask = project.tasks[conn.to];
                   if (!fromTask || !toTask) return '';
                   
-                  const x1 = fromTask.x - minX + 125;
-                  const y1 = fromTask.y - minY + 50;
-                  const x2 = toTask.x - minX + 125;
-                  const y2 = toTask.y - minY + 50;
+                  const fromWidth = fromTask.style?.width ? parseInt(fromTask.style.width) : 250;
+                  const fromHeight = fromTask.style?.height && fromTask.style.height !== 'auto' ? parseInt(fromTask.style.height) : 150;
+                  const toWidth = toTask.style?.width ? parseInt(toTask.style.width) : 250;
+                  const toHeight = toTask.style?.height && toTask.style.height !== 'auto' ? parseInt(toTask.style.height) : 150;
+                  
+                  const x1 = fromTask.x - minX + padding + fromWidth / 2;
+                  const y1 = fromTask.y - minY + padding + fromHeight / 2;
+                  const x2 = toTask.x - minX + padding + toWidth / 2;
+                  const y2 = toTask.y - minY + padding + toHeight / 2;
                   
                   const dx = x2 - x1;
                   const dy = y2 - y1;
                   const cx = x1 + dx / 2;
                   const cy = y1 + dy / 2 - Math.abs(dx) * 0.2;
                   
-                  return `<path d="M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}" class="connection-line"/>`;
+                  const angle = Math.atan2(y2 - cy, x2 - cx);
+                  const arrowSize = 10;
+                  
+                  return `
+                    <path d="M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}" class="connection-line"/>
+                    <polygon points="${x2},${y2} ${x2 - arrowSize * Math.cos(angle - Math.PI / 6)},${y2 - arrowSize * Math.sin(angle - Math.PI / 6)} ${x2 - arrowSize * Math.cos(angle + Math.PI / 6)},${y2 - arrowSize * Math.sin(angle + Math.PI / 6)}" class="connection-arrow"/>
+                  `;
                 }).join('')}
+                
+                <!-- Drawn lines -->
+                ${project.lines ? project.lines.map(line => {
+                  const x1 = line.x1 - minX + padding;
+                  const y1 = line.y1 - minY + padding;
+                  const x2 = line.x2 - minX + padding;
+                  const y2 = line.y2 - minY + padding;
+                  
+                  const angle = Math.atan2(y2 - y1, x2 - x1);
+                  const arrowSize = 10;
+                  
+                  return `
+                    <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" 
+                      class="drawn-line" 
+                      style="stroke: ${line.style?.color || '#4a90e2'}; stroke-width: ${line.style?.width || 2}"/>
+                    <polygon points="${x2},${y2} ${x2 - arrowSize * Math.cos(angle - Math.PI / 6)},${y2 - arrowSize * Math.sin(angle - Math.PI / 6)} ${x2 - arrowSize * Math.cos(angle + Math.PI / 6)},${y2 - arrowSize * Math.sin(angle + Math.PI / 6)}" 
+                      class="line-arrow" 
+                      style="fill: ${line.style?.color || '#4a90e2'}"/>
+                  `;
+                }).join('') : ''}
               </svg>
               
+              <!-- Task cards -->
               ${tasks.map(task => `
-                <div class="task-box" style="
-                  left: ${task.x - minX}px; 
-                  top: ${task.y - minY}px;
+                <div class="task-card" style="
+                  left: ${task.x - minX + padding}px; 
+                  top: ${task.y - minY + padding}px;
                   ${task.style ? `
                     background-color: ${task.style.backgroundColor || '#ffffff'};
                     border-color: ${task.style.borderColor || '#4a90e2'};
                     width: ${task.style.width || '250px'};
-                  ` : ''}
+                    ${task.style.height && task.style.height !== 'auto' ? `height: ${task.style.height};` : ''}
+                  ` : 'width: 250px;'}
                 ">
                   <div class="task-header">
-                    <span class="status-indicator status-${task.status}"></span>
-                    ${task.title}
-                  </div>
-                  <div class="task-content">
-                    <div class="task-description">${task.description}</div>
-                    <div class="task-meta">
-                      ${task.dueDate ? `Due: ${new Date(task.dueDate).toLocaleDateString()}` : ''}
-                      ${task.subtasks.length > 0 ? ` | ${task.subtasks.filter(s => s.completed).length}/${task.subtasks.length} subtasks` : ''}
+                    <div style="display: flex; align-items: center;">
+                      <span class="task-status status-${task.status}"></span>
+                      <span class="task-title">${task.title}</span>
                     </div>
+                  </div>
+                  <div class="task-body">
+                    ${task.description ? `<p class="task-description">${task.description}</p>` : ''}
+                    <div class="task-meta">
+                      ${task.dueDate ? `<span>Due: ${new Date(task.dueDate).toLocaleDateString()}</span>` : ''}
+                      ${task.subtasks.length > 0 ? `<span>${task.subtasks.filter(s => s.completed).length}/${task.subtasks.length} subtasks</span>` : ''}
+                    </div>
+                    ${task.subtasks.length > 0 ? `
+                      <div class="task-subtasks">
+                        ${task.subtasks.map(subtask => `
+                          <div class="subtask ${subtask.completed ? 'completed' : ''}">
+                            <span>${subtask.completed ? '☑' : '☐'}</span>
+                            <span>${subtask.text}</span>
+                          </div>
+                        `).join('')}
+                      </div>
+                    ` : ''}
                   </div>
                 </div>
               `).join('')}
+              
+              <!-- Text boxes -->
+              ${project.textBoxes ? Object.values(project.textBoxes).map(textBox => `
+                <div class="text-box" style="
+                  left: ${textBox.x - minX + padding}px;
+                  top: ${textBox.y - minY + padding}px;
+                  ${textBox.style ? `
+                    font-size: ${textBox.style.fontSize || '14px'};
+                    font-weight: ${textBox.style.fontWeight || 'normal'};
+                    color: ${textBox.style.color || '#2c3e50'};
+                    width: ${textBox.style.width || '200px'};
+                  ` : ''}
+                ">
+                  ${textBox.text}
+                </div>
+              `).join('') : ''}
             </div>
           </body>
           </html>
