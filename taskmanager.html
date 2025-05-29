@@ -197,13 +197,30 @@
       border-radius: 8px;
       box-shadow: 0 2px 8px var(--shadow);
       min-width: 200px;
-      max-width: 600px;
+      min-height: 100px;
       cursor: move;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
       user-select: none;
       border: 2px solid #4a90e2;
       resize: both;
-      overflow: auto;
+      overflow: hidden;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+    }
+    
+    /* Add a visual resize handle */
+    .task-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(135deg, transparent 50%, #ccc 50%);
+      cursor: se-resize;
+      border-bottom-right-radius: 6px;
     }
 
     .task-card:hover {
@@ -218,6 +235,7 @@
 
     .task-card.selected {
       box-shadow: 0 0 0 3px var(--primary);
+      z-index: 100;
     }
 
     .task-header {
@@ -229,6 +247,7 @@
       justify-content: space-between;
       align-items: center;
       cursor: move;
+      flex-shrink: 0;
     }
 
     .task-status {
@@ -269,7 +288,9 @@
 
     .task-body {
       padding: 1rem;
-      overflow: visible;
+      overflow: auto;
+      flex: 1;
+      min-height: 0;
     }
 
     .task-description {
@@ -281,6 +302,7 @@
       word-break: break-word;
       white-space: pre-wrap;
       overflow-wrap: break-word;
+      max-width: 100%;
     }
 
     .task-meta {
@@ -288,6 +310,12 @@
       gap: 1rem;
       font-size: 12px;
       color: #999;
+      min-height: 0;
+      flex-shrink: 0;
+    }
+    
+    .task-meta:empty {
+      display: none;
     }
 
     .task-subtasks {
@@ -412,10 +440,12 @@
       padding: 1.5rem;
       overflow-y: auto;
       display: none;
+      position: relative;
+      z-index: 50;
     }
 
     .properties-panel.active {
-      display: block;
+      display: block !important;
     }
 
     .property-group {
@@ -715,50 +745,7 @@
 
     <!-- Properties Panel -->
     <aside class="properties-panel" id="propertiesPanel">
-      <h3>Task Properties</h3>
-      <div class="property-group">
-        <label class="property-label">Title</label>
-        <input type="text" class="property-input" id="taskTitleInput" placeholder="Task title">
-      </div>
-      <div class="property-group">
-        <label class="property-label">Description</label>
-        <textarea class="property-input property-textarea" id="taskDescInput" placeholder="Task description"></textarea>
-      </div>
-      <div class="property-group">
-        <label class="property-label">Status</label>
-        <select class="property-select" id="taskStatusInput">
-          <option value="pending">Pending</option>
-          <option value="progress">In Progress</option>
-          <option value="complete">Complete</option>
-        </select>
-      </div>
-      <div class="property-group">
-        <label class="property-label">Due Date</label>
-        <input type="date" class="property-input" id="taskDueInput">
-      </div>
-      <div class="property-group">
-        <label class="property-label">Subtasks</label>
-        <div id="subtasksList"></div>
-        <button class="btn btn-secondary" style="margin-top: 0.5rem;" onclick="taskManager.addSubtask()">
-          + Add Subtask
-        </button>
-      </div>
-      <div class="property-group">
-        <label class="property-label">Appearance</label>
-        <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
-          <div style="flex: 1;">
-            <label style="font-size: 12px; color: #666;">Fill Color</label>
-            <input type="color" class="property-input" id="taskFillColor" value="#ffffff" onchange="taskManager.updateTaskStyle('backgroundColor', this.value)">
-          </div>
-          <div style="flex: 1;">
-            <label style="font-size: 12px; color: #666;">Border Color</label>
-            <input type="color" class="property-input" id="taskBorderColor" value="#4a90e2" onchange="taskManager.updateTaskStyle('borderColor', this.value)">
-          </div>
-        </div>
-      </div>
-      <div class="property-group">
-        <button class="btn btn-danger" onclick="taskManager.deleteSelectedTask()">Delete Task</button>
-      </div>
+      <!-- Properties content will be dynamically inserted here -->
     </aside>
   </div>
 
@@ -809,6 +796,7 @@
         this.zoom = 1;
         this.gridVisible = true;
         this.backgroundColor = '#f5f7fa';
+        this.saveTimeout = null;
         
         this.init();
       }
@@ -873,12 +861,6 @@
             this.setZoom(this.zoom + delta);
           }
         });
-        
-        // Property inputs
-        document.getElementById('taskTitleInput').addEventListener('input', (e) => this.updateTaskProperty('title', e.target.value));
-        document.getElementById('taskDescInput').addEventListener('input', (e) => this.updateTaskProperty('description', e.target.value));
-        document.getElementById('taskStatusInput').addEventListener('change', (e) => this.updateTaskProperty('status', e.target.value));
-        document.getElementById('taskDueInput').addEventListener('change', (e) => this.updateTaskProperty('dueDate', e.target.value));
         
         // Hide context menu on click
         document.addEventListener('click', () => {
@@ -1044,7 +1026,9 @@
         };
         
         this.projects[this.currentProject].tasks[taskId] = task;
-        this.renderTask(task);
+        
+        // Re-render all tasks
+        this.renderTasks();
         this.selectTask(taskId);
         this.saveState();
         this.saveToLocalStorage();
@@ -1088,8 +1072,15 @@
           textBoxElement.style.width = textBox.style.width || '200px';
         }
         
+        // Escape HTML function
+        const escapeHtml = (str) => {
+          const div = document.createElement('div');
+          div.textContent = str;
+          return div.innerHTML;
+        };
+        
         textBoxElement.innerHTML = `
-          <div class="text-content" ondblclick="taskManager.editTextBox('${textBox.id}')">${textBox.text}</div>
+          <div class="text-content" ondblclick="taskManager.editTextBox('${textBox.id}')">${escapeHtml(textBox.text)}</div>
         `;
         
         canvas.appendChild(textBoxElement);
@@ -1148,9 +1139,22 @@
       }
 
       selectTextBox(textBoxId) {
+        // Clear all selections
         document.querySelectorAll('.text-box').forEach(box => {
           box.classList.remove('selected');
         });
+        document.querySelectorAll('.task-card').forEach(card => {
+          card.classList.remove('selected');
+        });
+        document.querySelectorAll('.drawn-line').forEach(line => {
+          line.classList.remove('selected');
+        });
+        document.querySelectorAll('.line-svg').forEach(svg => {
+          svg.classList.remove('line-selected');
+        });
+        
+        this.selectedTask = null;
+        this.selectedLine = null;
         
         if (textBoxId) {
           const textBoxElement = document.querySelector(`[data-textbox-id="${textBoxId}"]`);
@@ -1161,6 +1165,7 @@
           }
         } else {
           this.selectedTextBox = null;
+          this.hideProperties();
         }
       }
 
@@ -1203,11 +1208,18 @@
         const panel = document.getElementById('propertiesPanel');
         panel.classList.add('active');
         
+        // Escape HTML function
+        const escapeHtml = (str) => {
+          const div = document.createElement('div');
+          div.textContent = str;
+          return div.innerHTML;
+        };
+        
         panel.innerHTML = `
           <h3>Text Box Properties</h3>
           <div class="property-group">
             <label class="property-label">Text</label>
-            <textarea class="property-input property-textarea" id="textBoxTextInput" placeholder="Enter text">${textBox.text}</textarea>
+            <textarea class="property-input property-textarea" id="textBoxTextInput" placeholder="Enter text">${escapeHtml(textBox.text)}</textarea>
           </div>
           <div class="property-group">
             <label class="property-label">Font Size</label>
@@ -1253,9 +1265,18 @@
         const textBox = this.projects[this.currentProject].textBoxes[this.selectedTextBox];
         if (textBox) {
           textBox[property] = value;
-          this.renderTextBoxes();
-          this.saveToLocalStorage();
-          this.saveState();
+          
+          // Update display
+          const textBoxElement = document.querySelector(`[data-textbox-id="${this.selectedTextBox}"]`);
+          if (textBoxElement && property === 'text') {
+            const textContent = textBoxElement.querySelector('.text-content');
+            if (textContent) {
+              textContent.textContent = value;
+            }
+          }
+          
+          // Use debounced save for text changes
+          this.debouncedSave();
         }
       }
 
@@ -1281,7 +1302,7 @@
           }
           
           this.saveToLocalStorage();
-          this.saveState();
+          // Don't save state for style changes
         }
       }
 
@@ -1355,7 +1376,7 @@
         svg.style.width = '100%';
         svg.style.height = '100%';
         svg.style.pointerEvents = 'none';
-        svg.style.zIndex = '10';
+        svg.style.zIndex = '5';
         
         this.projects[this.currentProject].lines.forEach(line => {
           const lineElement = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -1547,7 +1568,7 @@
           line.style[property] = value;
           this.renderLines();
           this.saveToLocalStorage();
-          this.saveState();
+          // Don't save state for style changes
         }
       }
 
@@ -1565,31 +1586,60 @@
 
       renderTask(task) {
         const canvas = document.getElementById('canvas');
+        
+        // Check if task card already exists and get its current dimensions
+        const existingCard = document.querySelector(`[data-task-id="${task.id}"]`);
+        let currentWidth = null;
+        let currentHeight = null;
+        if (existingCard) {
+          currentWidth = existingCard.offsetWidth;
+          currentHeight = existingCard.offsetHeight;
+          existingCard.remove();
+        }
+        
         const taskCard = document.createElement('div');
         taskCard.className = 'task-card';
         taskCard.dataset.taskId = task.id;
         taskCard.style.left = `${task.x}px`;
         taskCard.style.top = `${task.y}px`;
         
-        // Apply saved styles
+        // Apply saved styles including dimensions
         if (task.style) {
           taskCard.style.backgroundColor = task.style.backgroundColor || '#ffffff';
           taskCard.style.borderColor = task.style.borderColor || '#4a90e2';
-          taskCard.style.width = task.style.width || '250px';
-          if (task.style.height && task.style.height !== 'auto') {
-            taskCard.style.height = task.style.height;
+          
+          // Use current dimensions if available, otherwise use saved dimensions
+          if (currentWidth && currentHeight) {
+            taskCard.style.width = `${currentWidth}px`;
+            taskCard.style.height = `${currentHeight}px`;
+          } else if (task.style.width) {
+            taskCard.style.width = task.style.width;
+            if (task.style.height && task.style.height !== 'auto') {
+              taskCard.style.height = task.style.height;
+            }
+          } else {
+            taskCard.style.width = '250px';
           }
+        } else {
+          taskCard.style.width = '250px';
         }
+        
+        // Escape HTML function
+        const escapeHtml = (str) => {
+          const div = document.createElement('div');
+          div.textContent = str;
+          return div.innerHTML;
+        };
         
         taskCard.innerHTML = `
           <div class="task-header">
             <div style="display: flex; align-items: center;">
               <span class="task-status status-${task.status}"></span>
-              <span class="task-title">${task.title}</span>
+              <span class="task-title">${escapeHtml(task.title)}</span>
             </div>
           </div>
           <div class="task-body">
-            ${task.description ? `<p class="task-description">${task.description}</p>` : ''}
+            ${task.description ? `<p class="task-description">${escapeHtml(task.description)}</p>` : ''}
             <div class="task-meta">
               ${task.dueDate ? `<span>Due: ${new Date(task.dueDate).toLocaleDateString()}</span>` : ''}
               ${task.subtasks.length > 0 ? `<span>${task.subtasks.filter(s => s.completed).length}/${task.subtasks.length} subtasks</span>` : ''}
@@ -1600,7 +1650,7 @@
                   <div class="subtask ${subtask.completed ? 'completed' : ''}">
                     <input type="checkbox" ${subtask.completed ? 'checked' : ''} 
                       onchange="taskManager.toggleSubtask('${task.id}', ${index})">
-                    <label>${subtask.text}</label>
+                    <label>${escapeHtml(subtask.text)}</label>
                   </div>
                 `).join('')}
               </div>
@@ -1618,6 +1668,9 @@
       makeDraggable(element) {
         let isDragging = false;
         let startX, startY, initialX, initialY;
+        let isManualResize = false;
+        let lastWidth = element.offsetWidth;
+        let lastHeight = element.offsetHeight;
         
         const taskHeader = element.querySelector('.task-header');
         
@@ -1665,38 +1718,83 @@
           }
         });
         
-        // Click to select
+        // Click to select - add to both header and card
         element.addEventListener('click', (e) => {
-          if (!e.target.closest('.task-action')) {
+          e.stopPropagation(); // Prevent canvas click
+          if (!e.target.closest('.task-action') && !e.target.closest('input[type="checkbox"]')) {
             this.selectTask(element.dataset.taskId);
           }
         });
         
-        // Monitor resize
-        const resizeObserver = new ResizeObserver((entries) => {
-          for (let entry of entries) {
-            const taskId = entry.target.dataset.taskId;
-            const task = this.projects[this.currentProject].tasks[taskId];
-            if (task) {
-              if (!task.style) task.style = {};
-              task.style.width = `${entry.contentRect.width}px`;
-              task.style.height = `${entry.contentRect.height}px`;
-              this.updateConnections();
+        // Also add click handler to task body
+        const taskBody = element.querySelector('.task-body');
+        if (taskBody) {
+          taskBody.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (!e.target.closest('input[type="checkbox"]')) {
+              this.selectTask(element.dataset.taskId);
+            }
+          });
+        }
+        
+        // Detect manual resize
+        element.addEventListener('mousedown', (e) => {
+          const rect = element.getBoundingClientRect();
+          const isNearRightEdge = e.clientX > rect.right - 25;
+          const isNearBottomEdge = e.clientY > rect.bottom - 25;
+          const isNearBottomRightCorner = isNearRightEdge && isNearBottomEdge;
+          
+          if (isNearRightEdge || isNearBottomEdge || isNearBottomRightCorner) {
+            isManualResize = true;
+            lastWidth = element.offsetWidth;
+            lastHeight = element.offsetHeight;
+          }
+        });
+        
+        document.addEventListener('mouseup', () => {
+          if (isManualResize) {
+            isManualResize = false;
+            
+            // Check if size actually changed
+            if (element.offsetWidth !== lastWidth || element.offsetHeight !== lastHeight) {
+              const taskId = element.dataset.taskId;
+              const task = this.projects[this.currentProject].tasks[taskId];
+              if (task) {
+                if (!task.style) task.style = {};
+                task.style.width = `${element.offsetWidth}px`;
+                task.style.height = `${element.offsetHeight}px`;
+                this.saveToLocalStorage();
+                this.saveState();
+              }
             }
           }
+        });
+        
+        // Monitor resize for connection updates only
+        const resizeObserver = new ResizeObserver(() => {
+          this.updateConnections();
         });
         
         resizeObserver.observe(element);
       }
 
       selectTask(taskId) {
-        // Remove previous selection
+        // Remove all previous selections
         document.querySelectorAll('.task-card').forEach(card => {
           card.classList.remove('selected');
         });
+        document.querySelectorAll('.text-box').forEach(box => {
+          box.classList.remove('selected');
+        });
+        document.querySelectorAll('.drawn-line').forEach(line => {
+          line.classList.remove('selected');
+        });
+        document.querySelectorAll('.line-svg').forEach(svg => {
+          svg.classList.remove('line-selected');
+        });
         
-        this.selectTextBox(null);
-        this.selectLine(null);
+        this.selectedTextBox = null;
+        this.selectedLine = null;
         
         if (taskId) {
           const taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
@@ -1715,26 +1813,101 @@
         const task = this.projects[this.currentProject].tasks[taskId];
         if (!task) return;
         
+        // Save current dimensions of the task card
+        const taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
+        if (taskCard) {
+          if (!task.style) task.style = {};
+          task.style.width = taskCard.style.width || `${taskCard.offsetWidth}px`;
+          task.style.height = taskCard.style.height || `${taskCard.offsetHeight}px`;
+        }
+        
         const panel = document.getElementById('propertiesPanel');
+        
+        // Escape values for HTML
+        const escapeHtml = (str) => {
+          const div = document.createElement('div');
+          div.textContent = str;
+          return div.innerHTML;
+        };
+        
+        // Set the HTML content first
+        panel.innerHTML = `
+          <h3>Task Properties</h3>
+          <div class="property-group">
+            <label class="property-label">Title</label>
+            <input type="text" class="property-input" id="taskTitleInput" placeholder="Task title" value="${escapeHtml(task.title)}">
+          </div>
+          <div class="property-group">
+            <label class="property-label">Description</label>
+            <textarea class="property-input property-textarea" id="taskDescInput" placeholder="Task description">${escapeHtml(task.description || '')}</textarea>
+          </div>
+          <div class="property-group">
+            <label class="property-label">Status</label>
+            <select class="property-select" id="taskStatusInput">
+              <option value="pending" ${task.status === 'pending' ? 'selected' : ''}>Pending</option>
+              <option value="progress" ${task.status === 'progress' ? 'selected' : ''}>In Progress</option>
+              <option value="complete" ${task.status === 'complete' ? 'selected' : ''}>Complete</option>
+            </select>
+          </div>
+          <div class="property-group">
+            <label class="property-label">Due Date</label>
+            <input type="date" class="property-input" id="taskDueInput" value="${task.dueDate || ''}">
+          </div>
+          <div class="property-group">
+            <label class="property-label">Subtasks</label>
+            <div id="subtasksList"></div>
+            <button class="btn btn-secondary" style="margin-top: 0.5rem;" onclick="taskManager.addSubtask()">
+              + Add Subtask
+            </button>
+          </div>
+          <div class="property-group">
+            <label class="property-label">Appearance</label>
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+              <div style="flex: 1;">
+                <label style="font-size: 12px; color: #666;">Fill Color</label>
+                <input type="color" class="property-input" id="taskFillColor" value="${task.style?.backgroundColor || '#ffffff'}" onchange="taskManager.updateTaskStyle('backgroundColor', this.value)">
+              </div>
+              <div style="flex: 1;">
+                <label style="font-size: 12px; color: #666;">Border Color</label>
+                <input type="color" class="property-input" id="taskBorderColor" value="${task.style?.borderColor || '#4a90e2'}" onchange="taskManager.updateTaskStyle('borderColor', this.value)">
+              </div>
+            </div>
+          </div>
+          <div class="property-group">
+            <button class="btn btn-danger" onclick="taskManager.deleteSelectedTask()">Delete Task</button>
+          </div>
+        `;
+        
+        // Then add the active class
         panel.classList.add('active');
         
-        document.getElementById('taskTitleInput').value = task.title;
-        document.getElementById('taskDescInput').value = task.description;
-        document.getElementById('taskStatusInput').value = task.status;
-        document.getElementById('taskDueInput').value = task.dueDate || '';
-        
-        // Set appearance values
-        if (task.style) {
-          document.getElementById('taskFillColor').value = task.style.backgroundColor || '#ffffff';
-          document.getElementById('taskBorderColor').value = task.style.borderColor || '#4a90e2';
-        }
+        // Add event listeners
+        document.getElementById('taskTitleInput').addEventListener('input', (e) => this.updateTaskProperty('title', e.target.value));
+        document.getElementById('taskDescInput').addEventListener('input', (e) => this.updateTaskProperty('description', e.target.value));
+        document.getElementById('taskStatusInput').addEventListener('change', (e) => this.updateTaskProperty('status', e.target.value));
+        document.getElementById('taskDueInput').addEventListener('change', (e) => this.updateTaskProperty('dueDate', e.target.value));
         
         // Render subtasks
         this.renderSubtasks(task);
       }
 
       hideProperties() {
-        document.getElementById('propertiesPanel').classList.remove('active');
+        const panel = document.getElementById('propertiesPanel');
+        panel.classList.remove('active');
+        panel.innerHTML = ''; // Clear content to avoid ID conflicts
+      }
+
+      debouncedSave() {
+        // Clear existing timeout
+        if (this.saveTimeout) {
+          clearTimeout(this.saveTimeout);
+        }
+        
+        // Set new timeout for saving
+        this.saveTimeout = setTimeout(() => {
+          this.saveToLocalStorage();
+          // Don't save state here - just save to localStorage
+        }, 500); // Save after 500ms of no activity
       }
 
       updateTaskProperty(property, value) {
@@ -1743,19 +1916,100 @@
         const task = this.projects[this.currentProject].tasks[this.selectedTask];
         if (task) {
           task[property] = value;
-          this.renderTasks();
-          this.saveToLocalStorage();
-          this.saveState();
+          
+          // Update only the specific element instead of re-rendering everything
+          const taskCard = document.querySelector(`[data-task-id="${this.selectedTask}"]`);
+          if (taskCard) {
+            // Save current dimensions before any updates
+            if (!task.style) task.style = {};
+            task.style.width = taskCard.style.width || `${taskCard.offsetWidth}px`;
+            task.style.height = taskCard.style.height || `${taskCard.offsetHeight}px`;
+            
+            const escapeHtml = (str) => {
+              const div = document.createElement('div');
+              div.textContent = str;
+              return div.innerHTML;
+            };
+            
+            switch(property) {
+              case 'title':
+                const titleElement = taskCard.querySelector('.task-title');
+                if (titleElement) titleElement.textContent = value;
+                break;
+              case 'description':
+                const descElement = taskCard.querySelector('.task-description');
+                if (value) {
+                  if (descElement) {
+                    descElement.textContent = value;
+                  } else {
+                    // Create description element if it doesn't exist
+                    const taskBody = taskCard.querySelector('.task-body');
+                    const newDesc = document.createElement('p');
+                    newDesc.className = 'task-description';
+                    newDesc.textContent = value;
+                    taskBody.insertBefore(newDesc, taskBody.firstChild);
+                  }
+                } else if (descElement) {
+                  descElement.remove();
+                }
+                break;
+              case 'status':
+                const statusElement = taskCard.querySelector('.task-status');
+                if (statusElement) {
+                  statusElement.className = `task-status status-${value}`;
+                }
+                // Save state for status changes
+                this.saveState();
+                break;
+              case 'dueDate':
+                const metaElement = taskCard.querySelector('.task-meta');
+                if (metaElement) {
+                  const dueDateSpan = metaElement.querySelector('span:first-child');
+                  if (value) {
+                    const dateText = `Due: ${new Date(value).toLocaleDateString()}`;
+                    if (dueDateSpan && dueDateSpan.textContent.startsWith('Due:')) {
+                      dueDateSpan.textContent = dateText;
+                    } else {
+                      const newSpan = document.createElement('span');
+                      newSpan.textContent = dateText;
+                      metaElement.insertBefore(newSpan, metaElement.firstChild);
+                    }
+                  } else if (dueDateSpan && dueDateSpan.textContent.startsWith('Due:')) {
+                    dueDateSpan.remove();
+                  }
+                }
+                // Save state for date changes
+                this.saveState();
+                break;
+            }
+          }
+          
+          this.updateTaskList();
+          
+          // Always save to localStorage
+          if (property === 'description' || property === 'title') {
+            this.debouncedSave();
+          } else {
+            this.saveToLocalStorage();
+          }
         }
       }
 
       renderSubtasks(task) {
         const container = document.getElementById('subtasksList');
+        
+        // Escape HTML function
+        const escapeHtml = (str) => {
+          const div = document.createElement('div');
+          div.textContent = str;
+          return div.innerHTML;
+        };
+        
         container.innerHTML = task.subtasks.map((subtask, index) => `
           <div class="subtask ${subtask.completed ? 'completed' : ''}">
             <input type="checkbox" ${subtask.completed ? 'checked' : ''} 
               onchange="taskManager.toggleSubtask('${task.id}', ${index})">
-            <input type="text" class="property-input" value="${subtask.text}" 
+            <input type="text" class="property-input" value="${escapeHtml(subtask.text)}" 
               onchange="taskManager.updateSubtask('${task.id}', ${index}, this.value)"
               style="flex: 1; margin-left: 0.5rem;">
             <button class="task-action" onclick="taskManager.removeSubtask('${task.id}', ${index})">
@@ -1777,10 +2031,60 @@
             text: 'New subtask',
             completed: false
           });
+          
+          // Update the properties panel
           this.renderSubtasks(task);
-          this.renderTasks();
+          
+          // Update only the task card's subtask section
+          const taskCard = document.querySelector(`[data-task-id="${this.selectedTask}"]`);
+          if (taskCard) {
+            // Save current dimensions
+            if (!task.style) task.style = {};
+            task.style.width = taskCard.style.width || `${taskCard.offsetWidth}px`;
+            task.style.height = taskCard.style.height || `${taskCard.offsetHeight}px`;
+            
+            // Update subtask count
+            const metaElement = taskCard.querySelector('.task-meta');
+            if (metaElement) {
+              let subtaskSpan = Array.from(metaElement.querySelectorAll('span')).find(span => 
+                span.textContent.includes('subtasks')
+              );
+              if (subtaskSpan) {
+                subtaskSpan.textContent = `${task.subtasks.filter(s => s.completed).length}/${task.subtasks.length} subtasks`;
+              } else {
+                subtaskSpan = document.createElement('span');
+                subtaskSpan.textContent = `${task.subtasks.filter(s => s.completed).length}/${task.subtasks.length} subtasks`;
+                metaElement.appendChild(subtaskSpan);
+              }
+            }
+            
+            // Update subtasks list
+            let subtasksContainer = taskCard.querySelector('.task-subtasks');
+            if (!subtasksContainer && task.subtasks.length > 0) {
+              subtasksContainer = document.createElement('div');
+              subtasksContainer.className = 'task-subtasks';
+              taskCard.querySelector('.task-body').appendChild(subtasksContainer);
+            }
+            
+            if (subtasksContainer) {
+              const escapeHtml = (str) => {
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+              };
+              
+              subtasksContainer.innerHTML = task.subtasks.map((subtask, index) => `
+                <div class="subtask ${subtask.completed ? 'completed' : ''}">
+                  <input type="checkbox" ${subtask.completed ? 'checked' : ''} 
+                    onchange="taskManager.toggleSubtask('${task.id}', ${index})">
+                  <label>${escapeHtml(subtask.text)}</label>
+                </div>
+              `).join('');
+            }
+          }
+          
           this.saveToLocalStorage();
-          this.saveState();
+          // Don't save state for content changes
         }
       }
 
@@ -1788,9 +2092,38 @@
         const task = this.projects[this.currentProject].tasks[taskId];
         if (task && task.subtasks[index]) {
           task.subtasks[index].completed = !task.subtasks[index].completed;
-          this.renderTasks();
+          
+          // Update only the specific subtask element
+          const taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
+          if (taskCard) {
+            const subtaskElements = taskCard.querySelectorAll('.subtask');
+            if (subtaskElements[index]) {
+              if (task.subtasks[index].completed) {
+                subtaskElements[index].classList.add('completed');
+              } else {
+                subtaskElements[index].classList.remove('completed');
+              }
+            }
+            
+            // Update the subtask count in meta
+            const metaElement = taskCard.querySelector('.task-meta');
+            if (metaElement) {
+              const subtaskSpan = Array.from(metaElement.querySelectorAll('span')).find(span => 
+                span.textContent.includes('subtasks')
+              );
+              if (subtaskSpan) {
+                subtaskSpan.textContent = `${task.subtasks.filter(s => s.completed).length}/${task.subtasks.length} subtasks`;
+              }
+            }
+          }
+          
+          // Update the properties panel if this task is selected
+          if (this.selectedTask === taskId) {
+            this.renderSubtasks(task);
+          }
+          
           this.saveToLocalStorage();
-          this.saveState();
+          // Don't save state for checkbox toggles
         }
       }
 
@@ -1798,8 +2131,18 @@
         const task = this.projects[this.currentProject].tasks[taskId];
         if (task && task.subtasks[index]) {
           task.subtasks[index].text = text;
-          this.saveToLocalStorage();
-          this.saveState();
+          
+          // Update the task card display
+          const taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
+          if (taskCard) {
+            const subtaskElements = taskCard.querySelectorAll('.subtask label');
+            if (subtaskElements[index]) {
+              subtaskElements[index].textContent = text;
+            }
+          }
+          
+          // Save to localStorage without saving state
+          this.debouncedSave();
         }
       }
 
@@ -1807,10 +2150,58 @@
         const task = this.projects[this.currentProject].tasks[taskId];
         if (task) {
           task.subtasks.splice(index, 1);
+          
+          // Update the properties panel
           this.renderSubtasks(task);
-          this.renderTasks();
+          
+          // Update only the task card's subtask section
+          const taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
+          if (taskCard) {
+            // Save current dimensions
+            if (!task.style) task.style = {};
+            task.style.width = taskCard.style.width || `${taskCard.offsetWidth}px`;
+            task.style.height = taskCard.style.height || `${taskCard.offsetHeight}px`;
+            
+            // Update subtask count or remove the span if no subtasks
+            const metaElement = taskCard.querySelector('.task-meta');
+            if (metaElement) {
+              const subtaskSpan = Array.from(metaElement.querySelectorAll('span')).find(span => 
+                span.textContent.includes('subtasks')
+              );
+              if (subtaskSpan) {
+                if (task.subtasks.length > 0) {
+                  subtaskSpan.textContent = `${task.subtasks.filter(s => s.completed).length}/${task.subtasks.length} subtasks`;
+                } else {
+                  subtaskSpan.remove();
+                }
+              }
+            }
+            
+            // Update or remove subtasks container
+            const subtasksContainer = taskCard.querySelector('.task-subtasks');
+            if (subtasksContainer) {
+              if (task.subtasks.length > 0) {
+                const escapeHtml = (str) => {
+                  const div = document.createElement('div');
+                  div.textContent = str;
+                  return div.innerHTML;
+                };
+                
+                subtasksContainer.innerHTML = task.subtasks.map((subtask, idx) => `
+                  <div class="subtask ${subtask.completed ? 'completed' : ''}">
+                    <input type="checkbox" ${subtask.completed ? 'checked' : ''} 
+                      onchange="taskManager.toggleSubtask('${task.id}', ${idx})">
+                    <label>${escapeHtml(subtask.text)}</label>
+                  </div>
+                `).join('');
+              } else {
+                subtasksContainer.remove();
+              }
+            }
+          }
+          
           this.saveToLocalStorage();
-          this.saveState();
+          // Don't save state for content changes
         }
       }
 
@@ -1857,7 +2248,9 @@
           };
           
           this.projects[this.currentProject].tasks[newTask.id] = newTask;
-          this.renderTask(newTask);
+          
+          // Re-render all tasks to ensure proper display
+          this.renderTasks();
           this.saveToLocalStorage();
           this.saveState();
           this.showNotification('Task duplicated');
@@ -1944,6 +2337,13 @@
 
       renderTasks() {
         const canvas = document.getElementById('canvas');
+        const canvasArea = document.getElementById('canvasArea');
+        
+        // Save scroll position
+        const scrollLeft = canvasArea.scrollLeft;
+        const scrollTop = canvasArea.scrollTop;
+        
+        // Remove only task cards, not other elements
         const taskCards = canvas.querySelectorAll('.task-card');
         taskCards.forEach(card => card.remove());
         
@@ -1961,16 +2361,35 @@
         
         this.renderConnections();
         this.updateTaskList();
+        
+        // Restore scroll position
+        canvasArea.scrollLeft = scrollLeft;
+        canvasArea.scrollTop = scrollTop;
+        
+        // Re-select the previously selected task if it exists
+        if (this.selectedTask) {
+          const taskCard = document.querySelector(`[data-task-id="${this.selectedTask}"]`);
+          if (taskCard) {
+            taskCard.classList.add('selected');
+          }
+        }
       }
 
       updateTaskList() {
         const taskList = document.getElementById('taskList');
         const tasks = Object.values(this.projects[this.currentProject].tasks);
         
+        // Escape HTML function
+        const escapeHtml = (str) => {
+          const div = document.createElement('div');
+          div.textContent = str;
+          return div.innerHTML;
+        };
+        
         taskList.innerHTML = tasks.map(task => `
           <div class="project-item" onclick="taskManager.selectTask('${task.id}')">
             <span class="task-status status-${task.status}"></span>
-            <span class="project-name">${task.title}</span>
+            <span class="project-name">${escapeHtml(task.title)}</span>
             <span class="project-count">${task.status}</span>
           </div>
         `).join('');
@@ -2018,11 +2437,27 @@
           // Apply style to the element
           const taskCard = document.querySelector(`[data-task-id="${this.selectedTask}"]`);
           if (taskCard) {
-            taskCard.style[property] = value;
+            // Preserve current size if changing colors
+            if (property === 'backgroundColor' || property === 'borderColor') {
+              const currentWidth = taskCard.style.width || `${taskCard.offsetWidth}px`;
+              const currentHeight = taskCard.style.height || `${taskCard.offsetHeight}px`;
+              
+              taskCard.style[property] = value;
+              
+              // Restore size
+              taskCard.style.width = currentWidth;
+              taskCard.style.height = currentHeight;
+              
+              // Save dimensions to task
+              task.style.width = currentWidth;
+              task.style.height = currentHeight;
+            } else {
+              taskCard.style[property] = value;
+            }
           }
           
           this.saveToLocalStorage();
-          this.saveState();
+          // Don't save state for style changes
         }
       }
 
@@ -2107,6 +2542,11 @@
       }
 
       saveState() {
+        // Only call this for structural changes like:
+        // - Creating/deleting tasks, text boxes, lines, connections
+        // - Moving items
+        // - Switching projects
+        // DO NOT call for content/style updates
         const state = {
           currentProject: this.currentProject,
           projects: JSON.parse(JSON.stringify(this.projects))
