@@ -197,11 +197,13 @@
       border-radius: 8px;
       box-shadow: 0 2px 8px var(--shadow);
       min-width: 200px;
-      max-width: 300px;
+      max-width: 600px;
       cursor: move;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
       user-select: none;
       border: 2px solid #4a90e2;
+      resize: both;
+      overflow: auto;
     }
 
     .task-card:hover {
@@ -226,6 +228,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      cursor: move;
     }
 
     .task-status {
@@ -266,6 +269,7 @@
 
     .task-body {
       padding: 1rem;
+      overflow: visible;
     }
 
     .task-description {
@@ -273,6 +277,10 @@
       font-size: 14px;
       margin-bottom: 1rem;
       line-height: 1.5;
+      word-wrap: break-word;
+      word-break: break-word;
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
     }
 
     .task-meta {
@@ -303,6 +311,78 @@
     .subtask.completed label {
       text-decoration: line-through;
       color: #999;
+    }
+
+    /* Text Boxes */
+    .text-box {
+      position: absolute;
+      background: transparent;
+      padding: 8px;
+      cursor: move;
+      user-select: none;
+      border: 2px solid transparent;
+      transition: border-color 0.2s ease;
+    }
+
+    .text-box:hover {
+      border-color: rgba(74, 144, 226, 0.3);
+    }
+
+    .text-box.selected {
+      border-color: var(--primary);
+    }
+
+    .text-box.dragging {
+      opacity: 0.8;
+      cursor: grabbing;
+      z-index: 1000;
+    }
+
+    .text-content {
+      cursor: text;
+      padding: 4px;
+      min-width: 50px;
+      min-height: 20px;
+    }
+
+    .text-content[contenteditable="true"] {
+      outline: 2px solid var(--primary);
+      background: white;
+      cursor: text;
+    }
+
+    /* Lines */
+    .drawn-line {
+      cursor: pointer;
+      stroke: #4a90e2;
+      stroke-width: 2;
+      transition: stroke-width 0.2s ease;
+    }
+
+    .drawn-line:hover {
+      stroke-width: 4;
+    }
+
+    .drawn-line.selected {
+      stroke: var(--primary);
+      stroke-width: 4;
+    }
+
+    .line-arrow {
+      cursor: pointer;
+    }
+
+    .line-handle {
+      fill: var(--primary);
+      stroke: white;
+      stroke-width: 2;
+      cursor: move;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .line-svg.line-selected .line-handle {
+      opacity: 1;
     }
 
     /* Connection Lines */
@@ -675,21 +755,6 @@
             <input type="color" class="property-input" id="taskBorderColor" value="#4a90e2" onchange="taskManager.updateTaskStyle('borderColor', this.value)">
           </div>
         </div>
-        <div style="display: flex; gap: 0.5rem;">
-          <div style="flex: 1;">
-            <label style="font-size: 12px; color: #666;">Width</label>
-            <input type="number" class="property-input" id="taskWidth" value="250" min="150" max="500" onchange="taskManager.updateTaskStyle('width', this.value + 'px')">
-          </div>
-          <div style="flex: 1;">
-            <label style="font-size: 12px; color: #666;">Height</label>
-            <select class="property-select" id="taskHeight" onchange="taskManager.updateTaskStyle('height', this.value)">
-              <option value="auto">Auto</option>
-              <option value="150px">Small</option>
-              <option value="200px">Medium</option>
-              <option value="300px">Large</option>
-            </select>
-          </div>
-        </div>
       </div>
       <div class="property-group">
         <button class="btn btn-danger" onclick="taskManager.deleteSelectedTask()">Delete Task</button>
@@ -734,6 +799,8 @@
         this.connectionStart = null;
         this.drawingLine = false;
         this.lineStart = null;
+        this.draggingLine = null;
+        this.draggingLineEnd = null;
         this.undoStack = [];
         this.redoStack = [];
         this.taskIdCounter = 0;
@@ -765,18 +832,23 @@
         const canvas = document.getElementById('canvas');
         const canvasArea = document.getElementById('canvasArea');
         
-        // Canvas click events - KEEP ORIGINAL SIMPLE VERSION
+        // Canvas click events
         canvas.addEventListener('click', (e) => {
           if (e.target.id === 'canvas') {
             if (this.currentTool === 'textbox') {
-              const rect = e.target.getBoundingClientRect();
-              const x = (e.clientX - rect.left + e.target.parentElement.scrollLeft) / this.zoom;
-              const y = (e.clientY - rect.top + e.target.parentElement.scrollTop) / this.zoom;
+              const rect = canvas.getBoundingClientRect();
+              const scrollLeft = canvasArea.scrollLeft;
+              const scrollTop = canvasArea.scrollTop;
+              const x = (e.clientX - rect.left + scrollLeft) / this.zoom;
+              const y = (e.clientY - rect.top + scrollTop) / this.zoom;
               this.createTextBox(x, y);
+              this.showNotification('Double-click text to edit');
             } else if (this.currentTool === 'connect') {
-              const rect = e.target.getBoundingClientRect();
-              const x = (e.clientX - rect.left + e.target.parentElement.scrollLeft) / this.zoom;
-              const y = (e.clientY - rect.top + e.target.parentElement.scrollTop) / this.zoom;
+              const rect = canvas.getBoundingClientRect();
+              const scrollLeft = canvasArea.scrollLeft;
+              const scrollTop = canvasArea.scrollTop;
+              const x = (e.clientX - rect.left + scrollLeft) / this.zoom;
+              const y = (e.clientY - rect.top + scrollTop) / this.zoom;
               
               if (!this.drawingLine) {
                 this.startDrawingLine(x, y);
@@ -840,44 +912,28 @@
                 this.zoomOut();
                 break;
             }
-          } else if (e.key === 'Delete' && this.selectedTask) {
-            this.deleteSelectedTask();
+          } else if (e.key === 'Delete') {
+            if (this.selectedTask) {
+              this.deleteSelectedTask();
+            } else if (this.selectedTextBox) {
+              this.deleteTextBox(this.selectedTextBox);
+            } else if (this.selectedLine) {
+              this.deleteLine(this.selectedLine);
+            }
           }
         });
-      }
-
-      handleCanvasClick(e) {
-        if (e.target.id === 'canvas') {
-          if (this.currentTool === 'textbox') {
-            const rect = e.target.getBoundingClientRect();
-            const x = (e.clientX - rect.left + e.target.parentElement.scrollLeft) / this.zoom;
-            const y = (e.clientY - rect.top + e.target.parentElement.scrollTop) / this.zoom;
-            this.createTextBox(x, y);
-          } else if (this.currentTool === 'connect') {
-            const rect = e.target.getBoundingClientRect();
-            const x = (e.clientX - rect.left + e.target.parentElement.scrollLeft) / this.zoom;
-            const y = (e.clientY - rect.top + e.target.parentElement.scrollTop) / this.zoom;
-            
-            if (!this.drawingLine) {
-              this.startDrawingLine(x, y);
-            } else {
-              this.finishDrawingLine(x, y);
-            }
-          } else {
-            this.selectTask(null);
-            this.selectTextBox(null);
-            this.selectLine(null);
-          }
-        }
       }
 
       handleContextMenu(e) {
         e.preventDefault();
         const taskCard = e.target.closest('.task-card');
+        const lineElement = e.target.closest('.drawn-line');
+        
         if (taskCard) {
           this.showContextMenu(e.clientX, e.clientY, taskCard.dataset.taskId);
+        } else if (lineElement) {
+          this.showLineContextMenu(e.clientX, e.clientY, lineElement.dataset.lineId);
         } else if (e.target.id === 'canvas') {
-          // Show context menu for canvas
           this.showCanvasContextMenu(e.clientX, e.clientY, e);
         }
       }
@@ -892,8 +948,9 @@
         `;
         
         const rect = e.target.getBoundingClientRect();
-        const canvasX = (e.clientX - rect.left + e.target.parentElement.scrollLeft) / this.zoom;
-        const canvasY = (e.clientY - rect.top + e.target.parentElement.scrollTop) / this.zoom;
+        const canvasArea = document.getElementById('canvasArea');
+        const canvasX = (e.clientX - rect.left + canvasArea.scrollLeft) / this.zoom;
+        const canvasY = (e.clientY - rect.top + canvasArea.scrollTop) / this.zoom;
         
         menu.style.left = `${x}px`;
         menu.style.top = `${y}px`;
@@ -901,6 +958,17 @@
         menu.dataset.canvasX = canvasX;
         menu.dataset.canvasY = canvasY;
         menu.dataset.isCanvas = 'true';
+      }
+
+      showLineContextMenu(x, y, lineId) {
+        const menu = document.getElementById('contextMenu');
+        menu.innerHTML = `
+          <div class="context-item" onclick="taskManager.deleteLine('${lineId}')">Delete Line</div>
+        `;
+        
+        menu.style.left = `${x}px`;
+        menu.style.top = `${y}px`;
+        menu.classList.add('active');
       }
 
       showContextMenu(x, y, taskId) {
@@ -1003,7 +1071,6 @@
         this.selectTextBox(textBoxId);
         this.saveState();
         this.saveToLocalStorage();
-        this.showNotification('Text box created');
       }
 
       renderTextBox(textBox) {
@@ -1081,8 +1148,6 @@
       }
 
       selectTextBox(textBoxId) {
-        if (!textBoxId) return;
-        
         document.querySelectorAll('.text-box').forEach(box => {
           box.classList.remove('selected');
         });
@@ -1318,22 +1383,107 @@
           `);
           arrow.setAttribute('class', 'line-arrow');
           arrow.style.fill = line.style?.color || '#4a90e2';
+          arrow.style.pointerEvents = 'auto';
+          arrow.setAttribute('data-line-id', line.id);
+          
+          // Add handles for dragging
+          const handle1 = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          handle1.setAttribute('cx', line.x1);
+          handle1.setAttribute('cy', line.y1);
+          handle1.setAttribute('r', '8');
+          handle1.setAttribute('class', 'line-handle');
+          handle1.setAttribute('data-line-id', line.id);
+          handle1.setAttribute('data-handle', 'start');
+          
+          const handle2 = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          handle2.setAttribute('cx', line.x2);
+          handle2.setAttribute('cy', line.y2);
+          handle2.setAttribute('r', '8');
+          handle2.setAttribute('class', 'line-handle');
+          handle2.setAttribute('data-line-id', line.id);
+          handle2.setAttribute('data-handle', 'end');
           
           lineElement.addEventListener('click', (e) => {
             e.stopPropagation();
             this.selectLine(line.id);
           });
           
+          arrow.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.selectLine(line.id);
+          });
+          
+          lineElement.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.showLineContextMenu(e.clientX, e.clientY, line.id);
+          });
+          
+          arrow.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.showLineContextMenu(e.clientX, e.clientY, line.id);
+          });
+          
+          // Handle dragging
+          this.makeLineDraggable(handle1, line, 'start');
+          this.makeLineDraggable(handle2, line, 'end');
+          
           svg.appendChild(lineElement);
           svg.appendChild(arrow);
+          svg.appendChild(handle1);
+          svg.appendChild(handle2);
         });
         
         canvas.appendChild(svg);
       }
 
+      makeLineDraggable(handle, line, handleType) {
+        let isDragging = false;
+        
+        handle.addEventListener('mousedown', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          isDragging = true;
+          this.selectLine(line.id);
+        });
+        
+        document.addEventListener('mousemove', (e) => {
+          if (!isDragging) return;
+          
+          const canvas = document.getElementById('canvas');
+          const canvasArea = document.getElementById('canvasArea');
+          const rect = canvas.getBoundingClientRect();
+          const x = (e.clientX - rect.left + canvasArea.scrollLeft) / this.zoom;
+          const y = (e.clientY - rect.top + canvasArea.scrollTop) / this.zoom;
+          
+          if (handleType === 'start') {
+            line.x1 = x;
+            line.y1 = y;
+          } else {
+            line.x2 = x;
+            line.y2 = y;
+          }
+          
+          this.renderLines();
+        });
+        
+        document.addEventListener('mouseup', () => {
+          if (isDragging) {
+            isDragging = false;
+            this.saveToLocalStorage();
+            this.saveState();
+          }
+        });
+      }
+
       selectLine(lineId) {
         document.querySelectorAll('.drawn-line').forEach(line => {
           line.classList.remove('selected');
+        });
+        
+        document.querySelectorAll('.line-svg').forEach(svg => {
+          svg.classList.remove('line-selected');
         });
         
         this.selectTask(null);
@@ -1343,6 +1493,7 @@
           const lineElement = document.querySelector(`[data-line-id="${lineId}"]`);
           if (lineElement) {
             lineElement.classList.add('selected');
+            lineElement.parentElement.classList.add('line-selected');
             this.selectedLine = lineId;
             this.showLineProperties(lineId);
           }
@@ -1425,7 +1576,7 @@
           taskCard.style.backgroundColor = task.style.backgroundColor || '#ffffff';
           taskCard.style.borderColor = task.style.borderColor || '#4a90e2';
           taskCard.style.width = task.style.width || '250px';
-          if (task.style.height !== 'auto') {
+          if (task.style.height && task.style.height !== 'auto') {
             taskCard.style.height = task.style.height;
           }
         }
@@ -1436,16 +1587,9 @@
               <span class="task-status status-${task.status}"></span>
               <span class="task-title">${task.title}</span>
             </div>
-            <div class="task-actions">
-              <button class="task-action" onclick="taskManager.toggleTaskExpand('${task.id}')">
-                <svg class="icon" style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M6 9l6 6 6-6"/>
-                </svg>
-              </button>
-            </div>
           </div>
           <div class="task-body">
-            ${task.description && task.description !== 'Click to edit description' ? `<p class="task-description">${task.description}</p>` : ''}
+            ${task.description ? `<p class="task-description">${task.description}</p>` : ''}
             <div class="task-meta">
               ${task.dueDate ? `<span>Due: ${new Date(task.dueDate).toLocaleDateString()}</span>` : ''}
               ${task.subtasks.length > 0 ? `<span>${task.subtasks.filter(s => s.completed).length}/${task.subtasks.length} subtasks</span>` : ''}
@@ -1466,39 +1610,9 @@
         
         canvas.appendChild(taskCard);
         this.makeDraggable(taskCard);
-        this.makeResizable(taskCard);
         
         // Update sidebar
         this.updateTaskList();
-      }
-
-      makeResizable(element) {
-        element.style.resize = 'both';
-        element.style.overflow = 'hidden';
-        
-        let lastWidth = element.offsetWidth;
-        let lastHeight = element.offsetHeight;
-        
-        const checkResize = () => {
-          const currentWidth = element.offsetWidth;
-          const currentHeight = element.offsetHeight;
-          
-          if (currentWidth !== lastWidth || currentHeight !== lastHeight) {
-            const taskId = element.dataset.taskId;
-            const task = this.projects[this.currentProject].tasks[taskId];
-            if (task) {
-              if (!task.style) task.style = {};
-              task.style.width = `${currentWidth}px`;
-              task.style.height = `${currentHeight}px`;
-              this.updateConnections();
-              this.saveToLocalStorage();
-            }
-            lastWidth = currentWidth;
-            lastHeight = currentHeight;
-          }
-        };
-        
-        setInterval(checkResize, 500);
       }
 
       makeDraggable(element) {
@@ -1557,6 +1671,22 @@
             this.selectTask(element.dataset.taskId);
           }
         });
+        
+        // Monitor resize
+        const resizeObserver = new ResizeObserver((entries) => {
+          for (let entry of entries) {
+            const taskId = entry.target.dataset.taskId;
+            const task = this.projects[this.currentProject].tasks[taskId];
+            if (task) {
+              if (!task.style) task.style = {};
+              task.style.width = `${entry.contentRect.width}px`;
+              task.style.height = `${entry.contentRect.height}px`;
+              this.updateConnections();
+            }
+          }
+        });
+        
+        resizeObserver.observe(element);
       }
 
       selectTask(taskId) {
@@ -1564,6 +1694,9 @@
         document.querySelectorAll('.task-card').forEach(card => {
           card.classList.remove('selected');
         });
+        
+        this.selectTextBox(null);
+        this.selectLine(null);
         
         if (taskId) {
           const taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
@@ -1594,8 +1727,6 @@
         if (task.style) {
           document.getElementById('taskFillColor').value = task.style.backgroundColor || '#ffffff';
           document.getElementById('taskBorderColor').value = task.style.borderColor || '#4a90e2';
-          document.getElementById('taskWidth').value = parseInt(task.style.width) || 250;
-          document.getElementById('taskHeight').value = task.style.height || 'auto';
         }
         
         // Render subtasks
@@ -1859,8 +1990,10 @@
         const canvas = document.getElementById('canvas');
         if (tool === 'connect') {
           canvas.style.cursor = 'crosshair';
+          this.showNotification('Click to start drawing a line');
         } else if (tool === 'textbox') {
           canvas.style.cursor = 'text';
+          this.showNotification('Click where you want to place text');
         } else {
           canvas.style.cursor = 'default';
         }
@@ -2410,23 +2543,24 @@
         }, 3000);
       }
 
-      // Additional utility methods
-      toggleTaskExpand(taskId) {
-        const taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
-        if (taskCard) {
-          const description = taskCard.querySelector('.task-description');
-          if (description) {
-            description.classList.toggle('expanded');
-            
-            // Update the expand button icon
-            const expandBtn = taskCard.querySelector('.task-action svg path');
-            if (description.classList.contains('expanded')) {
-              expandBtn.setAttribute('d', 'M18 15l-6-6-6 6'); // Up arrow
-            } else {
-              expandBtn.setAttribute('d', 'M6 9l6 6 6-6'); // Down arrow
-            }
+      // Connection methods
+      startConnection(fromId) {
+        this.connectionStart = fromId;
+        this.showNotification('Click on another task to connect');
+        
+        // Add temporary click handler
+        const tempHandler = (e) => {
+          const taskCard = e.target.closest('.task-card');
+          if (taskCard && taskCard.dataset.taskId !== fromId) {
+            this.createConnection(fromId, taskCard.dataset.taskId);
+            document.removeEventListener('click', tempHandler);
+            this.connectionStart = null;
           }
-        }
+        };
+        
+        setTimeout(() => {
+          document.addEventListener('click', tempHandler);
+        }, 100);
       }
     }
 
