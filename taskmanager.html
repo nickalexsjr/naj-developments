@@ -863,8 +863,19 @@
         });
         
         // Hide context menu on click
-        document.addEventListener('click', () => {
-          document.getElementById('contextMenu').classList.remove('active');
+        document.addEventListener('click', (e) => {
+          const menu = document.getElementById('contextMenu');
+          const isClickOnMenu = e.target.closest('#contextMenu');
+          
+          // Only hide if click is outside the menu
+          if (!isClickOnMenu && menu.classList.contains('active')) {
+            menu.classList.remove('active');
+            // Clear menu data
+            delete menu.dataset.taskId;
+            delete menu.dataset.canvasX;
+            delete menu.dataset.canvasY;
+            delete menu.dataset.isCanvas;
+          }
         });
         
         // Keyboard shortcuts
@@ -908,6 +919,12 @@
 
       handleContextMenu(e) {
         e.preventDefault();
+        e.stopPropagation();
+        
+        // Close any existing context menu
+        const menu = document.getElementById('contextMenu');
+        menu.classList.remove('active');
+        
         const taskCard = e.target.closest('.task-card');
         const lineElement = e.target.closest('.drawn-line');
         
@@ -923,10 +940,10 @@
       showCanvasContextMenu(x, y, e) {
         const menu = document.getElementById('contextMenu');
         menu.innerHTML = `
-          <div class="context-item" onclick="taskManager.contextAction('add')">Add Task Here</div>
+          <div class="context-item" onclick="event.stopPropagation(); taskManager.contextAction('add')">Add Task Here</div>
           <div class="context-divider"></div>
-          <div class="context-item" onclick="taskManager.toggleGrid()">Toggle Grid</div>
-          <div class="context-item" onclick="taskManager.promptBackgroundColor()">Change Background Color</div>
+          <div class="context-item" onclick="event.stopPropagation(); taskManager.toggleGrid()">Toggle Grid</div>
+          <div class="context-item" onclick="event.stopPropagation(); taskManager.promptBackgroundColor()">Change Background Color</div>
         `;
         
         const rect = e.target.getBoundingClientRect();
@@ -945,7 +962,7 @@
       showLineContextMenu(x, y, lineId) {
         const menu = document.getElementById('contextMenu');
         menu.innerHTML = `
-          <div class="context-item" onclick="taskManager.deleteLine('${lineId}')">Delete Line</div>
+          <div class="context-item" onclick="event.stopPropagation(); taskManager.deleteLine('${lineId}')">Delete Line</div>
         `;
         
         menu.style.left = `${x}px`;
@@ -956,13 +973,10 @@
       showContextMenu(x, y, taskId) {
         const menu = document.getElementById('contextMenu');
         menu.innerHTML = `
-          <div class="context-item" onclick="taskManager.contextAction('edit')">Edit Task</div>
-          <div class="context-item" onclick="taskManager.contextAction('duplicate')">Duplicate</div>
+          <div class="context-item" onclick="event.stopPropagation(); taskManager.contextAction('edit')">Edit Task</div>
+          <div class="context-item" onclick="event.stopPropagation(); taskManager.contextAction('duplicate')">Duplicate</div>
           <div class="context-divider"></div>
-          <div class="context-item" onclick="taskManager.contextAction('connect')">Connect To...</div>
-          <div class="context-item" onclick="taskManager.contextAction('disconnect')">Remove Connections</div>
-          <div class="context-divider"></div>
-          <div class="context-item" onclick="taskManager.contextAction('delete')">Delete</div>
+          <div class="context-item" onclick="event.stopPropagation(); taskManager.contextAction('delete')">Delete</div>
         `;
         
         menu.style.left = `${x}px`;
@@ -976,33 +990,37 @@
         const menu = document.getElementById('contextMenu');
         const isCanvas = menu.dataset.isCanvas === 'true';
         
-        if (isCanvas && action === 'add') {
-          const x = parseFloat(menu.dataset.canvasX);
-          const y = parseFloat(menu.dataset.canvasY);
-          this.createTask(x, y);
-        } else {
-          const taskId = menu.dataset.taskId;
-          
-          switch(action) {
-            case 'edit':
-              this.selectTask(taskId);
-              break;
-            case 'duplicate':
-              this.duplicateTask(taskId);
-              break;
-            case 'delete':
-              this.deleteTask(taskId);
-              break;
-            case 'connect':
-              this.startConnection(taskId);
-              break;
-            case 'disconnect':
-              this.removeConnections(taskId);
-              break;
-          }
-        }
-        
+        // Hide menu immediately
         menu.classList.remove('active');
+        
+        // Small delay to ensure menu is hidden before action
+        setTimeout(() => {
+          if (isCanvas && action === 'add') {
+            const x = parseFloat(menu.dataset.canvasX);
+            const y = parseFloat(menu.dataset.canvasY);
+            this.createTask(x, y);
+          } else {
+            const taskId = menu.dataset.taskId;
+            
+            switch(action) {
+              case 'edit':
+                this.selectTask(taskId);
+                break;
+              case 'duplicate':
+                this.duplicateTask(taskId);
+                break;
+              case 'delete':
+                this.deleteTask(taskId);
+                break;
+            }
+          }
+          
+          // Clear menu data
+          delete menu.dataset.taskId;
+          delete menu.dataset.canvasX;
+          delete menu.dataset.canvasY;
+          delete menu.dataset.isCanvas;
+        }, 10);
       }
 
       createTask(x, y) {
@@ -1726,6 +1744,13 @@
           }
         });
         
+        // Add context menu handler explicitly
+        element.addEventListener('contextmenu', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          this.showContextMenu(e.clientX, e.clientY, element.dataset.taskId);
+        });
+        
         // Also add click handler to task body
         const taskBody = element.querySelector('.task-body');
         if (taskBody) {
@@ -2249,8 +2274,9 @@
           
           this.projects[this.currentProject].tasks[newTask.id] = newTask;
           
-          // Re-render all tasks to ensure proper display
-          this.renderTasks();
+          // Only render the new task instead of re-rendering everything
+          this.renderTask(newTask);
+          this.updateTaskList();
           this.saveToLocalStorage();
           this.saveState();
           this.showNotification('Task duplicated');
@@ -2479,6 +2505,9 @@
       }
 
       toggleGrid() {
+        const menu = document.getElementById('contextMenu');
+        menu.classList.remove('active');
+        
         this.gridVisible = !this.gridVisible;
         const canvasArea = document.getElementById('canvasArea');
         if (this.gridVisible) {
@@ -2499,6 +2528,9 @@
       }
 
       promptBackgroundColor() {
+        const menu = document.getElementById('contextMenu');
+        menu.classList.remove('active');
+        
         const color = prompt('Enter background color (hex code):', this.backgroundColor);
         if (color) {
           this.changeBackgroundColor(color);
