@@ -130,20 +130,6 @@
       background: var(--dark);
       overflow: hidden;
     }
-
-    /* Mouse follow glow effect */
-    .mouse-glow {
-      position: absolute;
-      width: 300px;
-      height: 300px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(0, 230, 168, 0.1) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      transform: translate(-50%, -50%);
-    }
     
     .hero-content {
       max-width: 900px;
@@ -957,11 +943,11 @@
 
     /* Ensure performance on smaller devices */
     @media (max-width: 480px) {
-      .dashboard-hero::after {
+      .shape {
         display: none;
       }
       
-      .shape {
+      .mouse-glow {
         display: none;
       }
     }
