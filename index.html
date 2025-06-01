@@ -118,7 +118,7 @@
       padding: 0 20px;
     }
     
-    /* Simplified hero for better performance */
+    /* Enhanced hero section with consistent dark theme */
     .dashboard-hero {
       height: 100vh;
       display: flex;
@@ -127,31 +127,71 @@
       text-align: center;
       padding: 0 20px;
       position: relative;
-      background: linear-gradient(135deg, rgba(0,230,168,0.03) 0%, rgba(108,99,255,0.03) 100%);
+      background: var(--dark);
+      overflow: hidden;
+    }
+
+    /* Mouse follow glow effect */
+    .mouse-glow {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 230, 168, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      transform: translate(-50%, -50%);
     }
     
     .hero-content {
-      max-width: 800px;
+      max-width: 900px;
       z-index: 1;
       position: relative;
     }
+
+    /* Enhanced text styling */
+    .hero-content .hero-tagline {
+      font-size: clamp(0.9rem, 2vw, 1.1rem);
+      color: var(--primary);
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 15px;
+      opacity: 0;
+      animation: fadeInUp 0.8s ease forwards 0.1s;
+    }
     
     .hero-content h1 {
-      font-size: clamp(2.5rem, 8vw, 6rem);
+      font-size: clamp(3rem, 10vw, 7rem);
       margin-bottom: 20px;
-      background: linear-gradient(to right, #00e6a8, #6c63ff);
+      background: linear-gradient(135deg, #00e6a8 0%, #6c63ff 50%, #00e6a8 100%);
+      background-size: 200% 200%;
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: fadeInUp 0.8s ease forwards;
+      animation: fadeInUp 0.8s ease forwards 0.3s, gradientShift 4s ease-in-out infinite;
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 0.9;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
     }
     
     .hero-content p {
-      font-size: clamp(1.1rem, 2vw, 1.5rem);
+      font-size: clamp(1.2rem, 2.5vw, 1.6rem);
       margin-bottom: 40px;
-      color: #fff;
+      color: #ddd;
       opacity: 0;
-      animation: fadeInUp 0.8s ease forwards 0.3s;
+      animation: fadeInUp 0.8s ease forwards 0.5s;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.5;
     }
     
     @keyframes fadeInUp {
@@ -164,55 +204,98 @@
         transform: translateY(30px);
       }
     }
+
+    /* Enhanced CTA button */
+    .cta-container {
+      opacity: 0;
+      animation: fadeInUp 0.8s ease forwards 0.7s;
+    }
     
     .cta-btn {
       display: inline-block;
-      background: #00e6a8;
+      background: linear-gradient(135deg, #00e6a8, #00b386);
       color: #111;
-      padding: 15px 40px;
+      padding: 18px 45px;
       text-decoration: none;
       font-weight: bold;
       border-radius: 50px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      box-shadow: 0 4px 15px rgba(0, 230, 168, 0.3);
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(0, 230, 168, 0.3);
+      font-size: 1.1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
     }
     
     .cta-btn:hover {
       transform: translateY(-3px);
-      box-shadow: 0 6px 20px rgba(0, 230, 168, 0.4);
+      box-shadow: 0 12px 35px rgba(0, 230, 168, 0.4);
     }
 
-    /* Simplified floating dots for performance */
-    .dots-container {
-      position: fixed;
+    .cta-btn:hover::before {
+      left: 100%;
+    }
+
+    /* Floating geometric shapes */
+    .geometric-shapes {
+      position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       overflow: hidden;
-      pointer-events: none;
-      z-index: -1;
+      z-index: 0;
     }
 
-    .dot {
+    .shape {
       position: absolute;
-      width: 4px;
-      height: 4px;
-      background: var(--secondary);
-      border-radius: 50%;
-      opacity: 0.15;
-      animation: float linear infinite;
+      opacity: 0.1;
+      animation: floatShape 20s linear infinite;
     }
 
-    @keyframes float {
-      from {
-        transform: translate(0, 0);
+    .shape.circle {
+      border-radius: 50%;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+    }
+
+    .shape.triangle {
+      width: 0;
+      height: 0;
+      background: transparent;
+      border-style: solid;
+    }
+
+    .shape.square {
+      background: linear-gradient(45deg, var(--secondary), var(--primary));
+    }
+
+    @keyframes floatShape {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
       }
-      to {
-        transform: translate(var(--move-x), var(--move-y));
+      10% {
+        opacity: 0.1;
+      }
+      90% {
+        opacity: 0.1;
+      }
+      100% {
+        transform: translateY(-20vh) rotate(360deg);
+        opacity: 0;
       }
     }
-    
+
     /* Simplified navigation */
     .top-nav {
       position: fixed;
@@ -220,6 +303,7 @@
       left: 0;
       width: 100%;
       background: rgba(17, 17, 17, 0.95);
+      backdrop-filter: blur(10px);
       z-index: 1000;
       padding: 15px 0;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
@@ -696,6 +780,7 @@
       opacity: 0;
       visibility: hidden;
       z-index: 999;
+      border: none;
     }
 
     .back-to-top.active {
@@ -825,6 +910,10 @@
         width: 100%;
         text-align: center;
       }
+
+      .geometric-shapes {
+        display: none;
+      }
     }
 
     @media (max-width: 768px) {
@@ -855,6 +944,26 @@
       .tools-table td {
         padding: 10px;
       }
+
+      .hero-content h1 {
+        letter-spacing: -1px;
+      }
+
+      .cta-btn {
+        padding: 15px 35px;
+        font-size: 1rem;
+      }
+    }
+
+    /* Ensure performance on smaller devices */
+    @media (max-width: 480px) {
+      .dashboard-hero::after {
+        display: none;
+      }
+      
+      .shape {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -878,16 +987,20 @@
     </div>
   </nav>
 
-  <!-- Floating Dots Container -->
-  <div class="dots-container" id="dotsContainer"></div>
+  <!-- Geometric Shapes Container -->
+  <div class="geometric-shapes" id="geometricShapes"></div>
 
   <!-- Hero Section -->
   <section class="content-section active" id="home-section">
     <div class="dashboard-hero">
+      <div class="mouse-glow" id="mouseGlow"></div>
       <div class="hero-content">
+        <span class="hero-tagline">Melbourne Development Studio</span>
         <h1>Just Build It.</h1>
-        <p>Bring your idea to life with NAJ Developments. From concept to reality — we've got your back.</p>
-        <a href="https://calendly.com/nick-alexs-najdevelopments" target="_blank" rel="noopener" class="cta-btn">Schedule a Meeting</a>
+        <p>Transform your boldest ideas into digital reality. From concept to launch, we craft powerful web apps, mobile solutions, and custom software that drives real results.</p>
+        <div class="cta-container">
+          <a href="https://calendly.com/nick-alexs-najdevelopments" target="_blank" rel="noopener" class="cta-btn">Schedule a Meeting</a>
+        </div>
       </div>
     </div>
   </section>
@@ -1272,7 +1385,7 @@
       { name: "Clipchamp", website: "https://clipchamp.com", description: "Browser-based video creation and editing platform (now Microsoft-owned) with templates and easy sharing tools", pricing: "Free & Paid" },
       { name: "ClipDrop", website: "https://clipdrop.co", description: "AI tools for image editing", pricing: "Free" },
       { name: "CodeT5", website: "https://github.com/salesforce/codet5", description: "Open-source code generation and understanding model by Salesforce that assists in completing code and generating functions from comments", pricing: "Free" },
-      { name: "Codedex.io", website: "https://codedex.io", description: "Learn coding with AI assistance", pricing: "Free" },
+      { name: "Codedx.io", website: "https://codedx.io", description: "Learn coding with AI assistance", pricing: "Free" },
       { name: "Coefficient", website: "https://coefficient.io", description: "Automation and data tool that integrates with spreadsheets to provide real-time data access and AI-driven analysis in sheets", pricing: "Free & Paid" },
       { name: "Conker", website: "https://conker.ai", description: "AI tool for creating quizzes", pricing: "Free" },
       { name: "Copy.ai", website: "https://copy.ai", description: "AI content generator that produces text for blogs, social media, and advertisements from short prompts", pricing: "Free & Paid" },
@@ -1510,50 +1623,102 @@
       };
     }
 
-    // Create optimized floating dots
-    function createFloatingDots() {
-      const dotsContainer = document.getElementById('dotsContainer');
-      dotsContainer.innerHTML = '';
+    // Create optimized floating geometric shapes
+    function createGeometricShapes() {
+      const shapesContainer = document.getElementById('geometricShapes');
+      if (!shapesContainer) return;
       
-      // Much fewer dots for better performance
-      const numberOfDots = window.innerWidth <= 768 ? 10 : 30;
+      shapesContainer.innerHTML = '';
+      
+      // Only create shapes on larger screens for performance
+      if (window.innerWidth <= 768) return;
+      
+      const shapes = ['circle', 'square', 'triangle'];
+      const numberOfShapes = 6;
       const fragment = document.createDocumentFragment();
       
-      for (let i = 0; i < numberOfDots; i++) {
-        const dot = document.createElement('div');
-        dot.classList.add('dot');
+      for (let i = 0; i < numberOfShapes; i++) {
+        const shape = document.createElement('div');
+        const shapeType = shapes[Math.floor(Math.random() * shapes.length)];
         
-        const size = Math.random() * 3 + 2;
+        shape.classList.add('shape', shapeType);
+        
+        const size = Math.random() * 30 + 10;
         const posX = Math.random() * 100;
-        const posY = Math.random() * 100;
-        const moveX = (Math.random() - 0.5) * 10;
-        const moveY = (Math.random() - 0.5) * 10;
-        const duration = Math.random() * 30 + 30;
+        const delay = Math.random() * 20;
         
-        dot.style.cssText = `
-          left: ${posX}%;
-          top: ${posY}%;
-          width: ${size}px;
-          height: ${size}px;
-          --move-x: ${moveX}vw;
-          --move-y: ${moveY}vh;
-          animation-duration: ${duration}s;
-        `;
+        if (shapeType === 'triangle') {
+          shape.style.cssText = `
+            left: ${posX}%;
+            border-left: ${size/2}px solid transparent;
+            border-right: ${size/2}px solid transparent;
+            border-bottom: ${size}px solid rgba(108, 99, 255, 0.1);
+            animation-delay: ${delay}s;
+          `;
+        } else {
+          shape.style.cssText = `
+            left: ${posX}%;
+            width: ${size}px;
+            height: ${size}px;
+            animation-delay: ${delay}s;
+          `;
+        }
         
-        fragment.appendChild(dot);
+        fragment.appendChild(shape);
       }
       
-      dotsContainer.appendChild(fragment);
+      shapesContainer.appendChild(fragment);
+    }
+
+    // Performance optimized mouse glow effect
+    function initMouseGlow() {
+      const mouseGlow = document.getElementById('mouseGlow');
+      const heroSection = document.getElementById('home-section');
+      
+      if (!mouseGlow || !heroSection) return;
+      
+      let isMouseInHero = false;
+      let animationId;
+      
+      // Throttled mouse move handler for performance
+      function handleMouseMove(e) {
+        if (!isMouseInHero) return;
+        
+        cancelAnimationFrame(animationId);
+        animationId = requestAnimationFrame(() => {
+          const rect = heroSection.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          
+          mouseGlow.style.left = x + 'px';
+          mouseGlow.style.top = y + 'px';
+          mouseGlow.style.opacity = '1';
+        });
+      }
+      
+      // Only track mouse when in hero section
+      heroSection.addEventListener('mouseenter', () => {
+        isMouseInHero = true;
+        mouseGlow.style.opacity = '1';
+      });
+      
+      heroSection.addEventListener('mouseleave', () => {
+        isMouseInHero = false;
+        mouseGlow.style.opacity = '0';
+        cancelAnimationFrame(animationId);
+      });
+      
+      // Use passive listener for better performance
+      document.addEventListener('mousemove', handleMouseMove, { passive: true });
     }
 
     // Initialize everything when DOM is loaded
     document.addEventListener('DOMContentLoaded', function() {
-      // Create floating dots animation
-      createFloatingDots();
+      // Create geometric shapes animation
+      createGeometricShapes();
       
-      // Debounced resize handler
-      const debouncedResize = debounce(createFloatingDots, 300);
-      window.addEventListener('resize', debouncedResize);
+      // Initialize mouse glow effect (performance optimized)
+      initMouseGlow();
       
       // Navigation elements
       const navLinks = document.querySelectorAll('.nav-link');
@@ -1673,6 +1838,13 @@
 
       // Initialize tools table
       initToolsTable();
+
+      // Recreate shapes on resize (debounced)
+      let resizeTimer;
+      window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(createGeometricShapes, 300);
+      });
     });
     
     // Optimized tools table functionality
