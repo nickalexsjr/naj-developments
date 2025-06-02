@@ -946,10 +946,6 @@
       .shape {
         display: none;
       }
-      
-      .mouse-glow {
-        display: none;
-      }
     }
   </style>
 </head>
@@ -979,7 +975,6 @@
   <!-- Hero Section -->
   <section class="content-section active" id="home-section">
     <div class="dashboard-hero">
-      <div class="mouse-glow" id="mouseGlow"></div>
       <div class="hero-content">
         <span class="hero-tagline">Melbourne Development Studio</span>
         <h1>Just Build It.</h1>
@@ -1656,55 +1651,10 @@
       shapesContainer.appendChild(fragment);
     }
 
-    // Performance optimized mouse glow effect
-    function initMouseGlow() {
-      const mouseGlow = document.getElementById('mouseGlow');
-      const heroSection = document.getElementById('home-section');
-      
-      if (!mouseGlow || !heroSection) return;
-      
-      let isMouseInHero = false;
-      let animationId;
-      
-      // Throttled mouse move handler for performance
-      function handleMouseMove(e) {
-        if (!isMouseInHero) return;
-        
-        cancelAnimationFrame(animationId);
-        animationId = requestAnimationFrame(() => {
-          const rect = heroSection.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-          
-          mouseGlow.style.left = x + 'px';
-          mouseGlow.style.top = y + 'px';
-          mouseGlow.style.opacity = '1';
-        });
-      }
-      
-      // Only track mouse when in hero section
-      heroSection.addEventListener('mouseenter', () => {
-        isMouseInHero = true;
-        mouseGlow.style.opacity = '1';
-      });
-      
-      heroSection.addEventListener('mouseleave', () => {
-        isMouseInHero = false;
-        mouseGlow.style.opacity = '0';
-        cancelAnimationFrame(animationId);
-      });
-      
-      // Use passive listener for better performance
-      document.addEventListener('mousemove', handleMouseMove, { passive: true });
-    }
-
     // Initialize everything when DOM is loaded
     document.addEventListener('DOMContentLoaded', function() {
       // Create geometric shapes animation
       createGeometricShapes();
-      
-      // Initialize mouse glow effect (performance optimized)
-      initMouseGlow();
       
       // Navigation elements
       const navLinks = document.querySelectorAll('.nav-link');
@@ -1762,8 +1712,15 @@
       // Service buttons click handler
       document.addEventListener('click', function(e) {
         if (e.target.classList.contains('pricing-btn')) {
+          // Check if it's an external link (like taskmanager.html) - let it proceed normally
+          const href = e.target.getAttribute('href');
+          if (href && (href.includes('.html') || href.startsWith('http'))) {
+            return; // Don't prevent default, let the link work normally
+          }
+          
+          // For internal section navigation only
           e.preventDefault();
-          const sectionId = e.target.getAttribute('data-section') || e.target.getAttribute('href')?.substring(1);
+          const sectionId = e.target.getAttribute('data-section') || href?.substring(1);
           if (sectionId) {
             showSection(sectionId);
           }
